@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TopicStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum AccessLevel {
+  PREVIEW
+  ENROLLED
+}
+
+enum MaterialType {
+  VIDEO
+  PDF
+  SLIDE
+  DOCUMENT
+}
+
+enum AnswerKey {
+  A
+  B
+  C
+  D
+}
+
+enum QuestionType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  ESSAY
+}
+
+model Topic {
+  id          String       @id @default(cuid())
+  title       String
+  slug        String       @unique
+  category    String
+  difficulty  String
+  summary     String?      @db.Text
+  status      TopicStatus  @default(DRAFT)
+  previewMode AccessLevel
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  materials   Material[]
+  exercises   Exercise[]
+
+  @@index([category])
+}
+
+model Material {
+  id           String       @id @default(cuid())
+  title        String
+  description  String?      @db.Text
+  type         MaterialType
+  accessLevel  AccessLevel
+  fileName     String?
+  coverName    String?
+  filePath     String?
+  coverPath    String?
+  fileUrl      String?      @db.Text
+  coverUrl     String?      @db.Text
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  topicId      String
+  topic        Topic        @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  exercises    Exercise[]
+
+  @@index([topicId])
+}
+
+model Exercise {
+  id            String       @id @default(cuid())
+  title         String
+  questionCount Int?
+  accessLevel   AccessLevel
+  adminNotes    String?      @db.Text
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  topicId       String
+  topic         Topic        @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  materialId    String?
+  material      Material?    @relation(fields: [materialId], references: [id], onDelete: SetNull)
+  questions     Question[]
+
+  @@index([topicId])
+  @@index([materialId])
+}
+
+model Question {
+  id            String     @id @default(cuid())
+  questionType  QuestionType @default(SINGLE_CHOICE)
+  prompt        String     @db.Text
+  optionA       String?    @db.Text
+  optionB       String?    @db.Text
+  optionC       String?    @db.Text
+  optionD       String?    @db.Text
+  correctAnswer AnswerKey?
+  correctAnswers String?   @db.Text
+  sampleAnswer  String?    @db.Text
+  explanation   String?    @db.Text
+  orderNumber   Int
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  exerciseId    String
+  exercise      Exercise   @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@index([exerciseId])
+  @@unique([exerciseId, orderNumber])
+}
