@@ -378,6 +378,7 @@ export async function updateTopicAction(
   const category = String(formData.get("category") ?? "").trim();
   const difficulty = String(formData.get("difficulty") ?? "").trim();
   const previewMode = String(formData.get("previewMode") ?? "").trim();
+  const topicStatus = String(formData.get("topicStatus") ?? "").trim();
   const summary = String(formData.get("summary") ?? "").trim();
 
   if (!topicId || !topicTitle || !category || !difficulty) {
@@ -400,6 +401,7 @@ export async function updateTopicAction(
         category,
         difficulty,
         summary: summary || null,
+        status: topicStatus === "published" ? "PUBLISHED" : "DRAFT",
         previewMode: mapPreviewMode(previewMode),
       },
     });
@@ -416,6 +418,39 @@ export async function updateTopicAction(
   return {
     success: `Perubahan topic "${topicTitle}" berhasil disimpan.`,
   };
+}
+
+export async function updateTopicPublishStatusAction(formData: FormData) {
+  await ensureAuthenticatedRedirect();
+
+  const topicId = String(formData.get("topicId") ?? "").trim();
+  const intent = String(formData.get("intent") ?? "").trim();
+
+  if (!topicId) {
+    redirect("/admin/content?status=topic-missing");
+  }
+
+  const prismaResult = getRequiredPrisma();
+
+  if ("error" in prismaResult) {
+    redirect("/admin/content?status=database-offline");
+  }
+
+  try {
+    await prismaResult.prisma.topic.update({
+      where: { id: topicId },
+      data: {
+        status: intent === "publish" ? "PUBLISHED" : "DRAFT",
+      },
+    });
+  } catch {
+    redirect(`/admin/content?status=${intent === "publish" ? "topic-publish-failed" : "topic-unpublish-failed"}`);
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/content");
+  revalidatePath(`/admin/topics/${topicId}/edit`);
+  redirect(`/admin/content?status=${intent === "publish" ? "topic-published" : "topic-unpublished"}`);
 }
 
 export async function deleteTopicAction(formData: FormData) {

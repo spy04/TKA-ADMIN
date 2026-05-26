@@ -24,6 +24,19 @@ const visibilityOptions = [
   },
 ];
 
+const publishOptions = [
+  {
+    value: "draft",
+    title: "Simpan sebagai draft",
+    copy: "Topik belum tampil di aplikasi user sampai admin publish.",
+  },
+  {
+    value: "published",
+    title: "Publish ke user",
+    copy: "Topik langsung masuk ke katalog user dan bisa dibaca sesuai aksesnya.",
+  },
+];
+
 type TopicEditFormProps = {
   topic: {
     id: string;
@@ -31,6 +44,7 @@ type TopicEditFormProps = {
     category: string;
     difficulty: string;
     summary: string | null;
+    status: "DRAFT" | "PUBLISHED";
     previewMode: "PREVIEW" | "ENROLLED";
   };
 };
@@ -90,6 +104,26 @@ export function TopicEditForm({ topic }: TopicEditFormProps) {
                 defaultChecked={
                   topic.previewMode === "PREVIEW" ? option.value === "preview-only" : option.value === "members-only"
                 }
+              />
+              <div>
+                <h4 className="choice-title">{option.title}</h4>
+                <p className="choice-copy">{option.copy}</p>
+              </div>
+            </label>
+          ))}
+        </div>
+      </section>
+
+      <section className="form-section">
+        <div className="choice-grid">
+          {publishOptions.map((option) => (
+            <label key={option.value} className="choice-card">
+              <input
+                className="choice-input"
+                type="radio"
+                name="topicStatus"
+                value={option.value}
+                defaultChecked={topic.status === "PUBLISHED" ? option.value === "published" : option.value === "draft"}
               />
               <div>
                 <h4 className="choice-title">{option.title}</h4>

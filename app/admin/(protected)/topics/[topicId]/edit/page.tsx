@@ -23,6 +23,7 @@ export default async function TopicEditPage({ params }: TopicEditPageProps) {
       category: true,
       difficulty: true,
       summary: true,
+      status: true,
       previewMode: true,
     },
   });

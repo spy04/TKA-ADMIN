@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { deleteExerciseAction, deleteMaterialAction, deleteTopicAction } from "@/app/admin/actions";
+import { deleteExerciseAction, deleteMaterialAction, deleteTopicAction, updateTopicPublishStatusAction } from "@/app/admin/actions";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,10 @@ const statusCopy: Record<string, string> = {
   "material-deleted": "Materi berhasil dihapus.",
   "exercise-deleted": "Latihan berhasil dihapus.",
   "topic-delete-failed": "Topic gagal dihapus.",
+  "topic-published": "Topic berhasil dipublish ke aplikasi user.",
+  "topic-unpublished": "Topic dikembalikan ke draft.",
+  "topic-publish-failed": "Topic gagal dipublish.",
+  "topic-unpublish-failed": "Topic gagal dikembalikan ke draft.",
   "material-delete-failed": "Materi gagal dihapus.",
   "exercise-delete-failed": "Latihan gagal dihapus.",
   "database-offline": "Database belum aktif.",
@@ -105,6 +109,15 @@ export default async function AdminContentPage({ searchParams }: ContentPageProp
                     <div className="entity-title-row">
                       <h2 className="entity-title">{topic.title}</h2>
                       <Badge variant="secondary">{topic.difficulty}</Badge>
+                      <Badge
+                        variant="outline"
+                        className={topic.status === "PUBLISHED" ? "border-emerald-200 bg-emerald-50 text-emerald-700" : ""}
+                      >
+                        {topic.status === "PUBLISHED" ? "Published" : "Draft"}
+                      </Badge>
+                      <Badge variant="outline">
+                        {topic.previewMode === "PREVIEW" ? "Preview aktif" : "Enrolled only"}
+                      </Badge>
                     </div>
                     <p className="entity-meta">
                       {topic.category} / {topic.materials.length} materi / {totalExercises} latihan
@@ -116,6 +129,17 @@ export default async function AdminContentPage({ searchParams }: ContentPageProp
                     <Button asChild size="sm">
                       <Link href={`/admin/topics/${topic.id}/edit`}>Edit</Link>
                     </Button>
+                    <form action={updateTopicPublishStatusAction}>
+                      <input type="hidden" name="topicId" value={topic.id} />
+                      <input
+                        type="hidden"
+                        name="intent"
+                        value={topic.status === "PUBLISHED" ? "unpublish" : "publish"}
+                      />
+                      <Button size="sm" variant="secondary" type="submit">
+                        {topic.status === "PUBLISHED" ? "Jadikan Draft" : "Publish"}
+                      </Button>
+                    </form>
                     <form action={deleteTopicAction}>
                       <input type="hidden" name="topicId" value={topic.id} />
                       <Button size="sm" variant="outline" type="submit">
