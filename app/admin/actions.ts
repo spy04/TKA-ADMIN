@@ -107,6 +107,10 @@ function mapAccessLevel(value: string) {
   return value === "preview" ? "PREVIEW" : "ENROLLED";
 }
 
+function mapContentStatus(value: string) {
+  return value === "published" ? "PUBLISHED" : "DRAFT";
+}
+
 async function uploadMaterialAssets({
   topicId,
   materialFile,
@@ -494,6 +498,7 @@ export async function createMaterialAction(
   const topicId = String(formData.get("topicId") ?? "").trim();
   const materialTitle = String(formData.get("materialTitle") ?? "").trim();
   const materialType = String(formData.get("materialType") ?? "").trim();
+  const materialStatus = String(formData.get("materialStatus") ?? "").trim();
   const materialAccess = String(formData.get("materialAccess") ?? "").trim();
   const materialDescription = String(formData.get("materialDescription") ?? "").trim();
   const materialFile = formData.get("materialFile");
@@ -543,6 +548,7 @@ export async function createMaterialAction(
         title: materialTitle,
         description: materialDescription || null,
         type: mapMaterialType(materialType),
+        status: mapContentStatus(materialStatus),
         accessLevel: mapAccessLevel(materialAccess),
         fileName: materialFile instanceof File && materialFile.size > 0 ? materialFile.name : null,
         coverName: materialCover instanceof File && materialCover.size > 0 ? materialCover.name : null,
@@ -580,6 +586,7 @@ export async function updateMaterialAction(
   const topicId = String(formData.get("topicId") ?? "").trim();
   const materialTitle = String(formData.get("materialTitle") ?? "").trim();
   const materialType = String(formData.get("materialType") ?? "").trim();
+  const materialStatus = String(formData.get("materialStatus") ?? "").trim();
   const materialAccess = String(formData.get("materialAccess") ?? "").trim();
   const materialDescription = String(formData.get("materialDescription") ?? "").trim();
   const materialFile = formData.get("materialFile");
@@ -611,6 +618,7 @@ export async function updateMaterialAction(
         title: materialTitle,
         description: materialDescription || null,
         type: mapMaterialType(materialType),
+        status: mapContentStatus(materialStatus),
         accessLevel: mapAccessLevel(materialAccess),
         fileName: materialFile instanceof File && materialFile.size > 0 ? materialFile.name : undefined,
         coverName: materialCover instanceof File && materialCover.size > 0 ? materialCover.name : undefined,
@@ -663,6 +671,38 @@ export async function deleteMaterialAction(formData: FormData) {
   redirect("/admin/content?status=material-deleted");
 }
 
+export async function updateMaterialPublishStatusAction(formData: FormData) {
+  await ensureAuthenticatedRedirect();
+
+  const materialId = String(formData.get("materialId") ?? "").trim();
+  const intent = String(formData.get("intent") ?? "").trim();
+
+  if (!materialId) {
+    redirect("/admin/content?status=material-missing");
+  }
+
+  const prismaResult = getRequiredPrisma();
+
+  if ("error" in prismaResult) {
+    redirect("/admin/content?status=database-offline");
+  }
+
+  try {
+    await prismaResult.prisma.material.update({
+      where: { id: materialId },
+      data: {
+        status: intent === "publish" ? "PUBLISHED" : "DRAFT",
+      },
+    });
+  } catch {
+    redirect(`/admin/content?status=${intent === "publish" ? "material-publish-failed" : "material-unpublish-failed"}`);
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/content");
+  redirect(`/admin/content?status=${intent === "publish" ? "material-published" : "material-unpublished"}`);
+}
+
 export async function createExerciseAction(
   _prevState: ExerciseFormState,
   formData: FormData,
@@ -677,6 +717,7 @@ export async function createExerciseAction(
   const relationMode = String(formData.get("relationMode") ?? "").trim();
   const materialId = String(formData.get("materialId") ?? "").trim();
   const exerciseTitle = String(formData.get("exerciseTitle") ?? "").trim();
+  const exerciseStatus = String(formData.get("exerciseStatus") ?? "").trim();
   const exerciseAccess = String(formData.get("exerciseAccess") ?? "").trim();
   const adminNotes = String(formData.get("adminNotes") ?? "").trim();
 
@@ -748,6 +789,7 @@ export async function createExerciseAction(
         materialId: relationMode === "material" ? materialId : null,
         title: exerciseTitle,
         questionCount: 0,
+        status: mapContentStatus(exerciseStatus),
         accessLevel: mapAccessLevel(exerciseAccess),
         adminNotes: adminNotes || null,
       },
@@ -784,6 +826,7 @@ export async function updateExerciseAction(
   const relationMode = String(formData.get("relationMode") ?? "").trim();
   const materialId = String(formData.get("materialId") ?? "").trim();
   const exerciseTitle = String(formData.get("exerciseTitle") ?? "").trim();
+  const exerciseStatus = String(formData.get("exerciseStatus") ?? "").trim();
   const exerciseAccess = String(formData.get("exerciseAccess") ?? "").trim();
   const adminNotes = String(formData.get("adminNotes") ?? "").trim();
 
@@ -828,6 +871,7 @@ export async function updateExerciseAction(
         topicId,
         materialId: relationMode === "material" ? materialId : null,
         title: exerciseTitle,
+        status: mapContentStatus(exerciseStatus),
         accessLevel: mapAccessLevel(exerciseAccess),
         adminNotes: adminNotes || null,
       },
@@ -845,6 +889,38 @@ export async function updateExerciseAction(
   return {
     success: `Perubahan latihan "${exerciseTitle}" berhasil disimpan.`,
   };
+}
+
+export async function updateExercisePublishStatusAction(formData: FormData) {
+  await ensureAuthenticatedRedirect();
+
+  const exerciseId = String(formData.get("exerciseId") ?? "").trim();
+  const intent = String(formData.get("intent") ?? "").trim();
+
+  if (!exerciseId) {
+    redirect("/admin/content?status=exercise-missing");
+  }
+
+  const prismaResult = getRequiredPrisma();
+
+  if ("error" in prismaResult) {
+    redirect("/admin/content?status=database-offline");
+  }
+
+  try {
+    await prismaResult.prisma.exercise.update({
+      where: { id: exerciseId },
+      data: {
+        status: intent === "publish" ? "PUBLISHED" : "DRAFT",
+      },
+    });
+  } catch {
+    redirect(`/admin/content?status=${intent === "publish" ? "exercise-publish-failed" : "exercise-unpublish-failed"}`);
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/content");
+  redirect(`/admin/content?status=${intent === "publish" ? "exercise-published" : "exercise-unpublished"}`);
 }
 
 export async function deleteExerciseAction(formData: FormData) {

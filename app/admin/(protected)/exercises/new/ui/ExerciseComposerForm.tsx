@@ -87,6 +87,14 @@ export function ExerciseComposerForm({ topics }: { topics: TopicOption[] }) {
             </select>
           </label>
 
+          <label className="field">
+            <Label htmlFor="exerciseStatus">Status tayang</Label>
+            <select className="shad-select" id="exerciseStatus" name="exerciseStatus" defaultValue="draft">
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
+          </label>
+
           <label className="field field-span-2">
             <Label htmlFor="adminNotes">Catatan admin</Label>
             <Textarea id="adminNotes" name="adminNotes" placeholder="Catatan penempatan latihan." />

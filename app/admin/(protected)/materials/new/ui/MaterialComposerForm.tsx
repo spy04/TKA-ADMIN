@@ -68,6 +68,14 @@ export function MaterialComposerForm({ topics }: { topics: TopicOption[] }) {
             </select>
           </label>
 
+          <label className="field">
+            <Label htmlFor="materialStatus">Status tayang</Label>
+            <select className="shad-select" id="materialStatus" name="materialStatus" defaultValue="draft">
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
+          </label>
+
           <label className="field field-span-2">
             <Label htmlFor="materialDescription">Deskripsi materi</Label>
             <Textarea id="materialDescription" name="materialDescription" placeholder="Ringkasan isi materi." />

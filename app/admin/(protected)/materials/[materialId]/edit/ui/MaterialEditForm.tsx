@@ -22,6 +22,7 @@ type MaterialEditFormProps = {
     topicId: string;
     title: string;
     type: "VIDEO" | "PDF" | "SLIDE" | "DOCUMENT";
+    status: "DRAFT" | "PUBLISHED";
     accessLevel: "PREVIEW" | "ENROLLED";
     description: string | null;
     fileName: string | null;
@@ -89,6 +90,19 @@ export function MaterialEditForm({ material, topics }: MaterialEditFormProps) {
             >
               <option value="preview">Bisa dilihat dulu</option>
               <option value="enrolled">Khusus user enrolled</option>
+            </select>
+          </label>
+
+          <label className="field">
+            <Label htmlFor="materialStatus">Status tayang</Label>
+            <select
+              className="shad-select"
+              id="materialStatus"
+              name="materialStatus"
+              defaultValue={material.status === "PUBLISHED" ? "published" : "draft"}
+            >
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
             </select>
           </label>
 

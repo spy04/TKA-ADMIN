@@ -35,6 +35,7 @@ export default async function ExerciseEditPage({ params, searchParams }: Exercis
       select: {
         id: true,
         title: true,
+        status: true,
         accessLevel: true,
         adminNotes: true,
         topicId: true,
@@ -102,6 +103,7 @@ export default async function ExerciseEditPage({ params, searchParams }: Exercis
             exercise={{
               id: exercise.id,
               title: exercise.title,
+              status: exercise.status,
               accessLevel: exercise.accessLevel,
               adminNotes: exercise.adminNotes,
               topicId: exercise.topicId,

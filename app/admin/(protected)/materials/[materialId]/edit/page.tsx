@@ -23,6 +23,7 @@ export default async function MaterialEditPage({ params }: MaterialEditPageProps
         topicId: true,
         title: true,
         type: true,
+        status: true,
         accessLevel: true,
         description: true,
         fileName: true,

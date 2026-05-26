@@ -22,6 +22,7 @@ type ExerciseEditFormProps = {
   exercise: {
     id: string;
     title: string;
+    status: "DRAFT" | "PUBLISHED";
     accessLevel: "PREVIEW" | "ENROLLED";
     adminNotes: string | null;
     topicId: string;
@@ -93,6 +94,19 @@ export function ExerciseEditForm({ exercise, topics }: ExerciseEditFormProps) {
             >
               <option value="preview">Bisa dicoba user umum</option>
               <option value="enrolled">Khusus user enrolled</option>
+            </select>
+          </label>
+
+          <label className="field">
+            <Label htmlFor="exerciseStatus">Status tayang</Label>
+            <select
+              className="shad-select"
+              id="exerciseStatus"
+              name="exerciseStatus"
+              defaultValue={exercise.status === "PUBLISHED" ? "published" : "draft"}
+            >
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
             </select>
           </label>
 

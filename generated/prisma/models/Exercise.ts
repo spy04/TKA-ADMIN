@@ -38,6 +38,7 @@ export type ExerciseMinAggregateOutputType = {
   id: string | null
   title: string | null
   questionCount: number | null
+  status: $Enums.TopicStatus | null
   accessLevel: $Enums.AccessLevel | null
   adminNotes: string | null
   createdAt: Date | null
@@ -50,6 +51,7 @@ export type ExerciseMaxAggregateOutputType = {
   id: string | null
   title: string | null
   questionCount: number | null
+  status: $Enums.TopicStatus | null
   accessLevel: $Enums.AccessLevel | null
   adminNotes: string | null
   createdAt: Date | null
@@ -62,6 +64,7 @@ export type ExerciseCountAggregateOutputType = {
   id: number
   title: number
   questionCount: number
+  status: number
   accessLevel: number
   adminNotes: number
   createdAt: number
@@ -84,6 +87,7 @@ export type ExerciseMinAggregateInputType = {
   id?: true
   title?: true
   questionCount?: true
+  status?: true
   accessLevel?: true
   adminNotes?: true
   createdAt?: true
@@ -96,6 +100,7 @@ export type ExerciseMaxAggregateInputType = {
   id?: true
   title?: true
   questionCount?: true
+  status?: true
   accessLevel?: true
   adminNotes?: true
   createdAt?: true
@@ -108,6 +113,7 @@ export type ExerciseCountAggregateInputType = {
   id?: true
   title?: true
   questionCount?: true
+  status?: true
   accessLevel?: true
   adminNotes?: true
   createdAt?: true
@@ -207,6 +213,7 @@ export type ExerciseGroupByOutputType = {
   id: string
   title: string
   questionCount: number | null
+  status: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   adminNotes: string | null
   createdAt: Date
@@ -242,6 +249,7 @@ export type ExerciseWhereInput = {
   id?: Prisma.StringFilter<"Exercise"> | string
   title?: Prisma.StringFilter<"Exercise"> | string
   questionCount?: Prisma.IntNullableFilter<"Exercise"> | number | null
+  status?: Prisma.EnumTopicStatusFilter<"Exercise"> | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFilter<"Exercise"> | $Enums.AccessLevel
   adminNotes?: Prisma.StringNullableFilter<"Exercise"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
@@ -257,6 +265,7 @@ export type ExerciseOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   questionCount?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   accessLevel?: Prisma.SortOrder
   adminNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -275,6 +284,7 @@ export type ExerciseWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ExerciseWhereInput | Prisma.ExerciseWhereInput[]
   title?: Prisma.StringFilter<"Exercise"> | string
   questionCount?: Prisma.IntNullableFilter<"Exercise"> | number | null
+  status?: Prisma.EnumTopicStatusFilter<"Exercise"> | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFilter<"Exercise"> | $Enums.AccessLevel
   adminNotes?: Prisma.StringNullableFilter<"Exercise"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
@@ -290,6 +300,7 @@ export type ExerciseOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   questionCount?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   accessLevel?: Prisma.SortOrder
   adminNotes?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -310,6 +321,7 @@ export type ExerciseScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Exercise"> | string
   title?: Prisma.StringWithAggregatesFilter<"Exercise"> | string
   questionCount?: Prisma.IntNullableWithAggregatesFilter<"Exercise"> | number | null
+  status?: Prisma.EnumTopicStatusWithAggregatesFilter<"Exercise"> | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelWithAggregatesFilter<"Exercise"> | $Enums.AccessLevel
   adminNotes?: Prisma.StringNullableWithAggregatesFilter<"Exercise"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Exercise"> | Date | string
@@ -322,6 +334,7 @@ export type ExerciseCreateInput = {
   id?: string
   title: string
   questionCount?: number | null
+  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   adminNotes?: string | null
   createdAt?: Date | string
@@ -335,6 +348,7 @@ export type ExerciseUncheckedCreateInput = {
   id?: string
   title: string
   questionCount?: number | null
+  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   adminNotes?: string | null
   createdAt?: Date | string
@@ -348,6 +362,7 @@ export type ExerciseUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -361,6 +376,7 @@ export type ExerciseUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -374,6 +390,7 @@ export type ExerciseCreateManyInput = {
   id?: string
   title: string
   questionCount?: number | null
+  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   adminNotes?: string | null
   createdAt?: Date | string
@@ -386,6 +403,7 @@ export type ExerciseUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -396,6 +414,7 @@ export type ExerciseUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -418,6 +437,7 @@ export type ExerciseCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   questionCount?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   accessLevel?: Prisma.SortOrder
   adminNotes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -434,6 +454,7 @@ export type ExerciseMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   questionCount?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   accessLevel?: Prisma.SortOrder
   adminNotes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -446,6 +467,7 @@ export type ExerciseMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   questionCount?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   accessLevel?: Prisma.SortOrder
   adminNotes?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -573,6 +595,7 @@ export type ExerciseCreateWithoutTopicInput = {
   id?: string
   title: string
   questionCount?: number | null
+  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   adminNotes?: string | null
   createdAt?: Date | string
@@ -585,6 +608,7 @@ export type ExerciseUncheckedCreateWithoutTopicInput = {
   id?: string
   title: string
   questionCount?: number | null
+  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   adminNotes?: string | null
   createdAt?: Date | string
@@ -626,6 +650,7 @@ export type ExerciseScalarWhereInput = {
   id?: Prisma.StringFilter<"Exercise"> | string
   title?: Prisma.StringFilter<"Exercise"> | string
   questionCount?: Prisma.IntNullableFilter<"Exercise"> | number | null
+  status?: Prisma.EnumTopicStatusFilter<"Exercise"> | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFilter<"Exercise"> | $Enums.AccessLevel
   adminNotes?: Prisma.StringNullableFilter<"Exercise"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
@@ -638,6 +663,7 @@ export type ExerciseCreateWithoutMaterialInput = {
   id?: string
   title: string
   questionCount?: number | null
+  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   adminNotes?: string | null
   createdAt?: Date | string
@@ -650,6 +676,7 @@ export type ExerciseUncheckedCreateWithoutMaterialInput = {
   id?: string
   title: string
   questionCount?: number | null
+  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   adminNotes?: string | null
   createdAt?: Date | string
@@ -688,6 +715,7 @@ export type ExerciseCreateWithoutQuestionsInput = {
   id?: string
   title: string
   questionCount?: number | null
+  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   adminNotes?: string | null
   createdAt?: Date | string
@@ -700,6 +728,7 @@ export type ExerciseUncheckedCreateWithoutQuestionsInput = {
   id?: string
   title: string
   questionCount?: number | null
+  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   adminNotes?: string | null
   createdAt?: Date | string
@@ -728,6 +757,7 @@ export type ExerciseUpdateWithoutQuestionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -740,6 +770,7 @@ export type ExerciseUncheckedUpdateWithoutQuestionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -752,6 +783,7 @@ export type ExerciseCreateManyTopicInput = {
   id?: string
   title: string
   questionCount?: number | null
+  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   adminNotes?: string | null
   createdAt?: Date | string
@@ -763,6 +795,7 @@ export type ExerciseUpdateWithoutTopicInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -775,6 +808,7 @@ export type ExerciseUncheckedUpdateWithoutTopicInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -787,6 +821,7 @@ export type ExerciseUncheckedUpdateManyWithoutTopicInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -798,6 +833,7 @@ export type ExerciseCreateManyMaterialInput = {
   id?: string
   title: string
   questionCount?: number | null
+  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   adminNotes?: string | null
   createdAt?: Date | string
@@ -809,6 +845,7 @@ export type ExerciseUpdateWithoutMaterialInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -821,6 +858,7 @@ export type ExerciseUncheckedUpdateWithoutMaterialInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -833,6 +871,7 @@ export type ExerciseUncheckedUpdateManyWithoutMaterialInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -875,6 +914,7 @@ export type ExerciseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   id?: boolean
   title?: boolean
   questionCount?: boolean
+  status?: boolean
   accessLevel?: boolean
   adminNotes?: boolean
   createdAt?: boolean
@@ -891,6 +931,7 @@ export type ExerciseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   title?: boolean
   questionCount?: boolean
+  status?: boolean
   accessLevel?: boolean
   adminNotes?: boolean
   createdAt?: boolean
@@ -905,6 +946,7 @@ export type ExerciseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   id?: boolean
   title?: boolean
   questionCount?: boolean
+  status?: boolean
   accessLevel?: boolean
   adminNotes?: boolean
   createdAt?: boolean
@@ -919,6 +961,7 @@ export type ExerciseSelectScalar = {
   id?: boolean
   title?: boolean
   questionCount?: boolean
+  status?: boolean
   accessLevel?: boolean
   adminNotes?: boolean
   createdAt?: boolean
@@ -927,7 +970,7 @@ export type ExerciseSelectScalar = {
   materialId?: boolean
 }
 
-export type ExerciseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "questionCount" | "accessLevel" | "adminNotes" | "createdAt" | "updatedAt" | "topicId" | "materialId", ExtArgs["result"]["exercise"]>
+export type ExerciseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "questionCount" | "status" | "accessLevel" | "adminNotes" | "createdAt" | "updatedAt" | "topicId" | "materialId", ExtArgs["result"]["exercise"]>
 export type ExerciseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
   material?: boolean | Prisma.Exercise$materialArgs<ExtArgs>
@@ -954,6 +997,7 @@ export type $ExercisePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     id: string
     title: string
     questionCount: number | null
+    status: $Enums.TopicStatus
     accessLevel: $Enums.AccessLevel
     adminNotes: string | null
     createdAt: Date
@@ -1389,6 +1433,7 @@ export interface ExerciseFieldRefs {
   readonly id: Prisma.FieldRef<"Exercise", 'String'>
   readonly title: Prisma.FieldRef<"Exercise", 'String'>
   readonly questionCount: Prisma.FieldRef<"Exercise", 'Int'>
+  readonly status: Prisma.FieldRef<"Exercise", 'TopicStatus'>
   readonly accessLevel: Prisma.FieldRef<"Exercise", 'AccessLevel'>
   readonly adminNotes: Prisma.FieldRef<"Exercise", 'String'>
   readonly createdAt: Prisma.FieldRef<"Exercise", 'DateTime'>

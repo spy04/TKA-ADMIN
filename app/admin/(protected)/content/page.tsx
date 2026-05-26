@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { deleteExerciseAction, deleteMaterialAction, deleteTopicAction, updateTopicPublishStatusAction } from "@/app/admin/actions";
+import {
+  deleteExerciseAction,
+  deleteMaterialAction,
+  deleteTopicAction,
+  updateExercisePublishStatusAction,
+  updateMaterialPublishStatusAction,
+  updateTopicPublishStatusAction,
+} from "@/app/admin/actions";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,6 +21,14 @@ const statusCopy: Record<string, string> = {
   "topic-unpublished": "Topic dikembalikan ke draft.",
   "topic-publish-failed": "Topic gagal dipublish.",
   "topic-unpublish-failed": "Topic gagal dikembalikan ke draft.",
+  "material-published": "Materi berhasil dipublish ke aplikasi user.",
+  "material-unpublished": "Materi dikembalikan ke draft.",
+  "material-publish-failed": "Materi gagal dipublish.",
+  "material-unpublish-failed": "Materi gagal dikembalikan ke draft.",
+  "exercise-published": "Latihan berhasil dipublish ke aplikasi user.",
+  "exercise-unpublished": "Latihan dikembalikan ke draft.",
+  "exercise-publish-failed": "Latihan gagal dipublish.",
+  "exercise-unpublish-failed": "Latihan gagal dikembalikan ke draft.",
   "material-delete-failed": "Materi gagal dihapus.",
   "exercise-delete-failed": "Latihan gagal dihapus.",
   "database-offline": "Database belum aktif.",
@@ -43,6 +58,7 @@ export default async function AdminContentPage({ searchParams }: ContentPageProp
                   id: true,
                   title: true,
                   questionCount: true,
+                  status: true,
                 },
               },
             },
@@ -54,6 +70,7 @@ export default async function AdminContentPage({ searchParams }: ContentPageProp
               id: true,
               title: true,
               questionCount: true,
+              status: true,
               accessLevel: true,
             },
           },
@@ -168,9 +185,26 @@ export default async function AdminContentPage({ searchParams }: ContentPageProp
                               </p>
                             </div>
                             <div className="entity-actions">
+                              <Badge
+                                variant="outline"
+                                className={exercise.status === "PUBLISHED" ? "border-emerald-200 bg-emerald-50 text-emerald-700" : ""}
+                              >
+                                {exercise.status === "PUBLISHED" ? "Published" : "Draft"}
+                              </Badge>
                               <Button asChild size="sm" variant="secondary">
                                 <Link href={`/admin/exercises/${exercise.id}/edit`}>Soal</Link>
                               </Button>
+                              <form action={updateExercisePublishStatusAction}>
+                                <input type="hidden" name="exerciseId" value={exercise.id} />
+                                <input
+                                  type="hidden"
+                                  name="intent"
+                                  value={exercise.status === "PUBLISHED" ? "unpublish" : "publish"}
+                                />
+                                <Button size="sm" variant="secondary" type="submit">
+                                  {exercise.status === "PUBLISHED" ? "Jadikan Draft" : "Publish"}
+                                </Button>
+                              </form>
                               <form action={deleteExerciseAction}>
                                 <input type="hidden" name="exerciseId" value={exercise.id} />
                                 <Button size="sm" variant="outline" type="submit">
@@ -203,9 +237,26 @@ export default async function AdminContentPage({ searchParams }: ContentPageProp
                                 </p>
                               </div>
                               <div className="entity-actions">
+                                <Badge
+                                  variant="outline"
+                                  className={material.status === "PUBLISHED" ? "border-emerald-200 bg-emerald-50 text-emerald-700" : ""}
+                                >
+                                  {material.status === "PUBLISHED" ? "Published" : "Draft"}
+                                </Badge>
                                 <Button asChild size="sm">
                                   <Link href={`/admin/materials/${material.id}/edit`}>Edit</Link>
                                 </Button>
+                                <form action={updateMaterialPublishStatusAction}>
+                                  <input type="hidden" name="materialId" value={material.id} />
+                                  <input
+                                    type="hidden"
+                                    name="intent"
+                                    value={material.status === "PUBLISHED" ? "unpublish" : "publish"}
+                                  />
+                                  <Button size="sm" variant="secondary" type="submit">
+                                    {material.status === "PUBLISHED" ? "Jadikan Draft" : "Publish"}
+                                  </Button>
+                                </form>
                                 <form action={deleteMaterialAction}>
                                   <input type="hidden" name="materialId" value={material.id} />
                                   <Button size="sm" variant="outline" type="submit">
@@ -225,12 +276,31 @@ export default async function AdminContentPage({ searchParams }: ContentPageProp
                                     <div key={exercise.id} className="sub-item">
                                       <div>
                                         <p className="sub-item-title">{exercise.title}</p>
-                                        <p className="sub-item-copy">{exercise.questionCount ?? 0} soal</p>
+                                        <p className="sub-item-copy">
+                                          {exercise.questionCount ?? 0} soal / {exercise.status === "PUBLISHED" ? "Published" : "Draft"}
+                                        </p>
                                       </div>
                                       <div className="entity-actions">
+                                        <Badge
+                                          variant="outline"
+                                          className={exercise.status === "PUBLISHED" ? "border-emerald-200 bg-emerald-50 text-emerald-700" : ""}
+                                        >
+                                          {exercise.status === "PUBLISHED" ? "Published" : "Draft"}
+                                        </Badge>
                                         <Button asChild size="sm" variant="secondary">
                                           <Link href={`/admin/exercises/${exercise.id}/edit`}>Soal</Link>
                                         </Button>
+                                        <form action={updateExercisePublishStatusAction}>
+                                          <input type="hidden" name="exerciseId" value={exercise.id} />
+                                          <input
+                                            type="hidden"
+                                            name="intent"
+                                            value={exercise.status === "PUBLISHED" ? "unpublish" : "publish"}
+                                          />
+                                          <Button size="sm" variant="secondary" type="submit">
+                                            {exercise.status === "PUBLISHED" ? "Jadikan Draft" : "Publish"}
+                                          </Button>
+                                        </form>
                                         <form action={deleteExerciseAction}>
                                           <input type="hidden" name="exerciseId" value={exercise.id} />
                                           <Button size="sm" variant="outline" type="submit">
