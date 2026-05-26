@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { createQuestionAction, deleteQuestionAction, type QuestionFormState, updateQuestionAction } from "@/app/admin/actions";
-import { MathEditorField } from "@/components/admin/MathEditorField";
+import { MathEditorField } from "@/components/editor/math-editor";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

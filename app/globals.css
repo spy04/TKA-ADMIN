@@ -552,64 +552,121 @@ button {
   padding: 20px;
 }
 
-.math-toolbar {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+.math-editor-shell {
+  border: 1px solid var(--input);
+  border-radius: var(--radius-sm);
+  background: #fbfdff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
-.math-chip {
-  min-height: 32px;
-  padding: 0 10px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: #ffffff;
-  color: var(--foreground);
-  font-size: 0.8rem;
+.math-editor-shell {
+  overflow: hidden;
 }
 
-.math-chip:hover {
-  border-color: var(--primary);
+.math-host {
+  width: 100%;
 }
 
-.math-preview {
+.math-editor-loading {
   display: grid;
-  gap: 8px;
+  place-items: center;
+  min-height: 72px;
+  padding: 16px;
+  color: var(--muted-foreground);
+  background:
+    linear-gradient(90deg, rgba(238, 245, 249, 0.92), rgba(251, 253, 255, 0.98), rgba(238, 245, 249, 0.92));
 }
 
-.math-preview-label {
-  font-size: 0.8rem;
-  font-weight: 700;
+.math-editor-loading-multiline {
+  min-height: 148px;
+}
+
+.math-field-control {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--foreground);
+  --caret-color: var(--primary);
+  --selection-background-color: color-mix(in srgb, var(--primary) 18%, white);
+  --selection-color: var(--foreground);
+  --contains-highlight-background-color: color-mix(in srgb, var(--primary) 10%, white);
+  --placeholder-color: color-mix(in srgb, var(--muted-foreground) 72%, white);
+  --primary: var(--primary);
+  --smart-fence-color: var(--primary);
+  --smart-fence-opacity: 0.4;
+  --text-font-family: Arial, Helvetica, sans-serif;
+}
+
+.math-field-control {
+  min-height: 72px;
+  padding: 12px 14px;
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.math-field-control.math-field-multiline {
+  min-height: 148px;
+}
+
+.math-field-control.math-field-singleline {
+  min-height: 56px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.math-editor-shell:focus-within {
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
+}
+
+.math-field-control::part(container) {
+  align-items: flex-start;
+}
+
+.math-field-control::part(content) {
+  padding: 0;
+}
+
+.math-field-control::part(menu-toggle) {
   color: var(--muted-foreground);
 }
 
-.math-preview-surface {
-  min-height: 54px;
-  padding: 12px 14px;
-  border: 1px dashed var(--border);
-  border-radius: var(--radius-sm);
-  background: #fbfdff;
-  line-height: 1.7;
-  white-space: pre-wrap;
+.math-field-control::part(virtual-keyboard-toggle) {
+  color: var(--primary);
 }
 
-.math-preview-inline .katex,
-.math-preview-block .katex {
-  font-size: 1.05em;
+@media (prefers-color-scheme: dark) {
+  .math-editor-shell {
+    background: #12202a;
+    border-color: #274153;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .math-editor-loading {
+    background: linear-gradient(90deg, rgba(18, 32, 42, 0.96), rgba(22, 39, 52, 0.98), rgba(18, 32, 42, 0.96));
+    color: #dbe8f0;
+  }
+
+  .math-field-control {
+    color: #eef7fb;
+    --selection-background-color: rgba(77, 177, 197, 0.24);
+    --selection-color: #eef7fb;
+    --contains-highlight-background-color: rgba(77, 177, 197, 0.18);
+    --placeholder-color: rgba(196, 216, 227, 0.72);
+  }
+
+  .math-editor-shell:focus-within {
+    background: #162734;
+    border-color: #4db1c5;
+    box-shadow: 0 0 0 3px rgba(77, 177, 197, 0.18);
+  }
 }
 
-.math-preview-block {
-  display: block;
-  margin: 8px 0;
-  overflow-x: auto;
-}
-
-.math-preview-text {
-  white-space: pre-wrap;
-}
-
-.math-preview-error {
-  color: var(--destructive);
+.hidden-field {
+  display: none;
 }
 
 .action-grid {

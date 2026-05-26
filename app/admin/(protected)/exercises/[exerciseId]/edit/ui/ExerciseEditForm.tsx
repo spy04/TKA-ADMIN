@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { type ExerciseFormState, updateExerciseAction } from "@/app/admin/actions";
-import { MathEditorField } from "@/components/admin/MathEditorField";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 type TopicOption = {
   id: string;
@@ -96,13 +96,10 @@ export function ExerciseEditForm({ exercise, topics }: ExerciseEditFormProps) {
             </select>
           </label>
 
-          <MathEditorField
-            id="adminNotes"
-            label="Catatan admin"
-            name="adminNotes"
-            defaultValue={exercise.adminNotes ?? ""}
-            placeholder="Catatan tambahan atau rumus bantu."
-          />
+          <label className="field field-span-2">
+            <Label htmlFor="adminNotes">Catatan admin</Label>
+            <Textarea id="adminNotes" name="adminNotes" defaultValue={exercise.adminNotes ?? ""} />
+          </label>
         </div>
       </section>
 

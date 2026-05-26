@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { type MaterialFormState, updateMaterialAction } from "@/app/admin/actions";
-import { MathEditorField } from "@/components/admin/MathEditorField";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 type TopicOption = {
   id: string;
@@ -92,13 +92,10 @@ export function MaterialEditForm({ material, topics }: MaterialEditFormProps) {
             </select>
           </label>
 
-          <MathEditorField
-            id="materialDescription"
-            label="Deskripsi materi"
-            name="materialDescription"
-            defaultValue={material.description ?? ""}
-            placeholder="Ringkasan isi materi atau rumus yang ingin dijelaskan."
-          />
+          <label className="field field-span-2">
+            <Label htmlFor="materialDescription">Deskripsi materi</Label>
+            <Textarea id="materialDescription" name="materialDescription" defaultValue={material.description ?? ""} />
+          </label>
 
           <label className="field">
             <Label htmlFor="materialFile">Upload file materi baru</Label>

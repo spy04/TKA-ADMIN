@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { type TopicFormState, updateTopicAction } from "@/app/admin/actions";
-import { MathEditorField } from "@/components/admin/MathEditorField";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 const initialState: TopicFormState = {};
 
@@ -71,13 +71,10 @@ export function TopicEditForm({ topic }: TopicEditFormProps) {
             </select>
           </label>
 
-          <MathEditorField
-            id="summary"
-            label="Ringkasan topic"
-            name="summary"
-            defaultValue={topic.summary ?? ""}
-            placeholder="Jelaskan tujuan belajar atau tempel rumus bila perlu."
-          />
+          <label className="field field-span-2">
+            <Label htmlFor="summary">Ringkasan topic</Label>
+            <Textarea id="summary" name="summary" defaultValue={topic.summary ?? ""} />
+          </label>
         </div>
       </section>
 

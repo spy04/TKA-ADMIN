@@ -2,11 +2,11 @@
 
 import { useActionState } from "react";
 import { createExerciseAction, type ExerciseFormState } from "@/app/admin/actions";
-import { MathEditorField } from "@/components/admin/MathEditorField";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 type TopicOption = {
   id: string;
@@ -87,12 +87,10 @@ export function ExerciseComposerForm({ topics }: { topics: TopicOption[] }) {
             </select>
           </label>
 
-          <MathEditorField
-            id="adminNotes"
-            label="Catatan admin"
-            name="adminNotes"
-            placeholder="Catatan penempatan latihan atau rumus bantu."
-          />
+          <label className="field field-span-2">
+            <Label htmlFor="adminNotes">Catatan admin</Label>
+            <Textarea id="adminNotes" name="adminNotes" placeholder="Catatan penempatan latihan." />
+          </label>
         </div>
       </section>
 
