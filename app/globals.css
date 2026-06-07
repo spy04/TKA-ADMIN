@@ -552,6 +552,139 @@ button {
   padding: 20px;
 }
 
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.import-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.import-help {
+  display: grid;
+  gap: 12px;
+}
+
+.import-help-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.rich-field-shell {
+  display: grid;
+  gap: 10px;
+}
+
+.question-image-field {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: #f8fafc;
+}
+
+.question-image-toolbar {
+  display: grid;
+  gap: 8px;
+}
+
+.question-image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.question-image-card {
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+}
+
+.question-image-preview {
+  width: 100%;
+  height: 160px;
+  border-radius: 12px;
+  object-fit: contain;
+  background: #ffffff;
+}
+
+.question-preview-card {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+}
+
+.question-preview-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.question-preview-body {
+  display: grid;
+  gap: 12px;
+}
+
+.question-preview-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+  color: var(--foreground);
+}
+
+.question-preview-image {
+  width: 100%;
+  max-height: 320px;
+  border-radius: 16px;
+  object-fit: contain;
+  background: #f8fafc;
+}
+
+.upload-note {
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+}
+
+.upload-error {
+  font-size: 0.9rem;
+  color: #b42318;
+}
+
+.bulk-save-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: #f8fafc;
+}
+
+@media (max-width: 768px) {
+  .import-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bulk-save-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 .math-editor-shell {
   border: 1px solid var(--input);
   border-radius: var(--radius-sm);

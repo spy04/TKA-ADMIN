@@ -29,6 +29,7 @@ enum AnswerKey {
   B
   C
   D
+  E
 }
 
 enum QuestionType {
@@ -103,10 +104,12 @@ model Question {
   optionB       String?    @db.Text
   optionC       String?    @db.Text
   optionD       String?    @db.Text
+  optionE       String?    @db.Text
   correctAnswer AnswerKey?
   correctAnswers String?   @db.Text
   sampleAnswer  String?    @db.Text
   explanation   String?    @db.Text
+  points        Int        @default(10)
   orderNumber   Int
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt

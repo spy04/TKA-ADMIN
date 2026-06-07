@@ -39,7 +39,8 @@ export const AnswerKey = {
   A: 'A',
   B: 'B',
   C: 'C',
-  D: 'D'
+  D: 'D',
+  E: 'E'
 } as const
 
 export type AnswerKey = (typeof AnswerKey)[keyof typeof AnswerKey]

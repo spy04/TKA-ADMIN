@@ -27,10 +27,12 @@ export type AggregateQuestion = {
 }
 
 export type QuestionAvgAggregateOutputType = {
+  points: number | null
   orderNumber: number | null
 }
 
 export type QuestionSumAggregateOutputType = {
+  points: number | null
   orderNumber: number | null
 }
 
@@ -42,10 +44,12 @@ export type QuestionMinAggregateOutputType = {
   optionB: string | null
   optionC: string | null
   optionD: string | null
+  optionE: string | null
   correctAnswer: $Enums.AnswerKey | null
   correctAnswers: string | null
   sampleAnswer: string | null
   explanation: string | null
+  points: number | null
   orderNumber: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -60,10 +64,12 @@ export type QuestionMaxAggregateOutputType = {
   optionB: string | null
   optionC: string | null
   optionD: string | null
+  optionE: string | null
   correctAnswer: $Enums.AnswerKey | null
   correctAnswers: string | null
   sampleAnswer: string | null
   explanation: string | null
+  points: number | null
   orderNumber: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -78,10 +84,12 @@ export type QuestionCountAggregateOutputType = {
   optionB: number
   optionC: number
   optionD: number
+  optionE: number
   correctAnswer: number
   correctAnswers: number
   sampleAnswer: number
   explanation: number
+  points: number
   orderNumber: number
   createdAt: number
   updatedAt: number
@@ -91,10 +99,12 @@ export type QuestionCountAggregateOutputType = {
 
 
 export type QuestionAvgAggregateInputType = {
+  points?: true
   orderNumber?: true
 }
 
 export type QuestionSumAggregateInputType = {
+  points?: true
   orderNumber?: true
 }
 
@@ -106,10 +116,12 @@ export type QuestionMinAggregateInputType = {
   optionB?: true
   optionC?: true
   optionD?: true
+  optionE?: true
   correctAnswer?: true
   correctAnswers?: true
   sampleAnswer?: true
   explanation?: true
+  points?: true
   orderNumber?: true
   createdAt?: true
   updatedAt?: true
@@ -124,10 +136,12 @@ export type QuestionMaxAggregateInputType = {
   optionB?: true
   optionC?: true
   optionD?: true
+  optionE?: true
   correctAnswer?: true
   correctAnswers?: true
   sampleAnswer?: true
   explanation?: true
+  points?: true
   orderNumber?: true
   createdAt?: true
   updatedAt?: true
@@ -142,10 +156,12 @@ export type QuestionCountAggregateInputType = {
   optionB?: true
   optionC?: true
   optionD?: true
+  optionE?: true
   correctAnswer?: true
   correctAnswers?: true
   sampleAnswer?: true
   explanation?: true
+  points?: true
   orderNumber?: true
   createdAt?: true
   updatedAt?: true
@@ -247,10 +263,12 @@ export type QuestionGroupByOutputType = {
   optionB: string | null
   optionC: string | null
   optionD: string | null
+  optionE: string | null
   correctAnswer: $Enums.AnswerKey | null
   correctAnswers: string | null
   sampleAnswer: string | null
   explanation: string | null
+  points: number
   orderNumber: number
   createdAt: Date
   updatedAt: Date
@@ -288,10 +306,12 @@ export type QuestionWhereInput = {
   optionB?: Prisma.StringNullableFilter<"Question"> | string | null
   optionC?: Prisma.StringNullableFilter<"Question"> | string | null
   optionD?: Prisma.StringNullableFilter<"Question"> | string | null
+  optionE?: Prisma.StringNullableFilter<"Question"> | string | null
   correctAnswer?: Prisma.EnumAnswerKeyNullableFilter<"Question"> | $Enums.AnswerKey | null
   correctAnswers?: Prisma.StringNullableFilter<"Question"> | string | null
   sampleAnswer?: Prisma.StringNullableFilter<"Question"> | string | null
   explanation?: Prisma.StringNullableFilter<"Question"> | string | null
+  points?: Prisma.IntFilter<"Question"> | number
   orderNumber?: Prisma.IntFilter<"Question"> | number
   createdAt?: Prisma.DateTimeFilter<"Question"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Question"> | Date | string
@@ -307,10 +327,12 @@ export type QuestionOrderByWithRelationInput = {
   optionB?: Prisma.SortOrderInput | Prisma.SortOrder
   optionC?: Prisma.SortOrderInput | Prisma.SortOrder
   optionD?: Prisma.SortOrderInput | Prisma.SortOrder
+  optionE?: Prisma.SortOrderInput | Prisma.SortOrder
   correctAnswer?: Prisma.SortOrderInput | Prisma.SortOrder
   correctAnswers?: Prisma.SortOrderInput | Prisma.SortOrder
   sampleAnswer?: Prisma.SortOrderInput | Prisma.SortOrder
   explanation?: Prisma.SortOrderInput | Prisma.SortOrder
+  points?: Prisma.SortOrder
   orderNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -330,10 +352,12 @@ export type QuestionWhereUniqueInput = Prisma.AtLeast<{
   optionB?: Prisma.StringNullableFilter<"Question"> | string | null
   optionC?: Prisma.StringNullableFilter<"Question"> | string | null
   optionD?: Prisma.StringNullableFilter<"Question"> | string | null
+  optionE?: Prisma.StringNullableFilter<"Question"> | string | null
   correctAnswer?: Prisma.EnumAnswerKeyNullableFilter<"Question"> | $Enums.AnswerKey | null
   correctAnswers?: Prisma.StringNullableFilter<"Question"> | string | null
   sampleAnswer?: Prisma.StringNullableFilter<"Question"> | string | null
   explanation?: Prisma.StringNullableFilter<"Question"> | string | null
+  points?: Prisma.IntFilter<"Question"> | number
   orderNumber?: Prisma.IntFilter<"Question"> | number
   createdAt?: Prisma.DateTimeFilter<"Question"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Question"> | Date | string
@@ -349,10 +373,12 @@ export type QuestionOrderByWithAggregationInput = {
   optionB?: Prisma.SortOrderInput | Prisma.SortOrder
   optionC?: Prisma.SortOrderInput | Prisma.SortOrder
   optionD?: Prisma.SortOrderInput | Prisma.SortOrder
+  optionE?: Prisma.SortOrderInput | Prisma.SortOrder
   correctAnswer?: Prisma.SortOrderInput | Prisma.SortOrder
   correctAnswers?: Prisma.SortOrderInput | Prisma.SortOrder
   sampleAnswer?: Prisma.SortOrderInput | Prisma.SortOrder
   explanation?: Prisma.SortOrderInput | Prisma.SortOrder
+  points?: Prisma.SortOrder
   orderNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -375,10 +401,12 @@ export type QuestionScalarWhereWithAggregatesInput = {
   optionB?: Prisma.StringNullableWithAggregatesFilter<"Question"> | string | null
   optionC?: Prisma.StringNullableWithAggregatesFilter<"Question"> | string | null
   optionD?: Prisma.StringNullableWithAggregatesFilter<"Question"> | string | null
+  optionE?: Prisma.StringNullableWithAggregatesFilter<"Question"> | string | null
   correctAnswer?: Prisma.EnumAnswerKeyNullableWithAggregatesFilter<"Question"> | $Enums.AnswerKey | null
   correctAnswers?: Prisma.StringNullableWithAggregatesFilter<"Question"> | string | null
   sampleAnswer?: Prisma.StringNullableWithAggregatesFilter<"Question"> | string | null
   explanation?: Prisma.StringNullableWithAggregatesFilter<"Question"> | string | null
+  points?: Prisma.IntWithAggregatesFilter<"Question"> | number
   orderNumber?: Prisma.IntWithAggregatesFilter<"Question"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Question"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Question"> | Date | string
@@ -393,10 +421,12 @@ export type QuestionCreateInput = {
   optionB?: string | null
   optionC?: string | null
   optionD?: string | null
+  optionE?: string | null
   correctAnswer?: $Enums.AnswerKey | null
   correctAnswers?: string | null
   sampleAnswer?: string | null
   explanation?: string | null
+  points?: number
   orderNumber: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -411,10 +441,12 @@ export type QuestionUncheckedCreateInput = {
   optionB?: string | null
   optionC?: string | null
   optionD?: string | null
+  optionE?: string | null
   correctAnswer?: $Enums.AnswerKey | null
   correctAnswers?: string | null
   sampleAnswer?: string | null
   explanation?: string | null
+  points?: number
   orderNumber: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -429,10 +461,12 @@ export type QuestionUpdateInput = {
   optionB?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   optionC?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   optionD?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  optionE?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correctAnswer?: Prisma.NullableEnumAnswerKeyFieldUpdateOperationsInput | $Enums.AnswerKey | null
   correctAnswers?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sampleAnswer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  points?: Prisma.IntFieldUpdateOperationsInput | number
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -447,10 +481,12 @@ export type QuestionUncheckedUpdateInput = {
   optionB?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   optionC?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   optionD?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  optionE?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correctAnswer?: Prisma.NullableEnumAnswerKeyFieldUpdateOperationsInput | $Enums.AnswerKey | null
   correctAnswers?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sampleAnswer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  points?: Prisma.IntFieldUpdateOperationsInput | number
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -465,10 +501,12 @@ export type QuestionCreateManyInput = {
   optionB?: string | null
   optionC?: string | null
   optionD?: string | null
+  optionE?: string | null
   correctAnswer?: $Enums.AnswerKey | null
   correctAnswers?: string | null
   sampleAnswer?: string | null
   explanation?: string | null
+  points?: number
   orderNumber: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -483,10 +521,12 @@ export type QuestionUpdateManyMutationInput = {
   optionB?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   optionC?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   optionD?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  optionE?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correctAnswer?: Prisma.NullableEnumAnswerKeyFieldUpdateOperationsInput | $Enums.AnswerKey | null
   correctAnswers?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sampleAnswer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  points?: Prisma.IntFieldUpdateOperationsInput | number
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -500,10 +540,12 @@ export type QuestionUncheckedUpdateManyInput = {
   optionB?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   optionC?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   optionD?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  optionE?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correctAnswer?: Prisma.NullableEnumAnswerKeyFieldUpdateOperationsInput | $Enums.AnswerKey | null
   correctAnswers?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sampleAnswer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  points?: Prisma.IntFieldUpdateOperationsInput | number
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -533,10 +575,12 @@ export type QuestionCountOrderByAggregateInput = {
   optionB?: Prisma.SortOrder
   optionC?: Prisma.SortOrder
   optionD?: Prisma.SortOrder
+  optionE?: Prisma.SortOrder
   correctAnswer?: Prisma.SortOrder
   correctAnswers?: Prisma.SortOrder
   sampleAnswer?: Prisma.SortOrder
   explanation?: Prisma.SortOrder
+  points?: Prisma.SortOrder
   orderNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -544,6 +588,7 @@ export type QuestionCountOrderByAggregateInput = {
 }
 
 export type QuestionAvgOrderByAggregateInput = {
+  points?: Prisma.SortOrder
   orderNumber?: Prisma.SortOrder
 }
 
@@ -555,10 +600,12 @@ export type QuestionMaxOrderByAggregateInput = {
   optionB?: Prisma.SortOrder
   optionC?: Prisma.SortOrder
   optionD?: Prisma.SortOrder
+  optionE?: Prisma.SortOrder
   correctAnswer?: Prisma.SortOrder
   correctAnswers?: Prisma.SortOrder
   sampleAnswer?: Prisma.SortOrder
   explanation?: Prisma.SortOrder
+  points?: Prisma.SortOrder
   orderNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -573,10 +620,12 @@ export type QuestionMinOrderByAggregateInput = {
   optionB?: Prisma.SortOrder
   optionC?: Prisma.SortOrder
   optionD?: Prisma.SortOrder
+  optionE?: Prisma.SortOrder
   correctAnswer?: Prisma.SortOrder
   correctAnswers?: Prisma.SortOrder
   sampleAnswer?: Prisma.SortOrder
   explanation?: Prisma.SortOrder
+  points?: Prisma.SortOrder
   orderNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -584,6 +633,7 @@ export type QuestionMinOrderByAggregateInput = {
 }
 
 export type QuestionSumOrderByAggregateInput = {
+  points?: Prisma.SortOrder
   orderNumber?: Prisma.SortOrder
 }
 
@@ -653,10 +703,12 @@ export type QuestionCreateWithoutExerciseInput = {
   optionB?: string | null
   optionC?: string | null
   optionD?: string | null
+  optionE?: string | null
   correctAnswer?: $Enums.AnswerKey | null
   correctAnswers?: string | null
   sampleAnswer?: string | null
   explanation?: string | null
+  points?: number
   orderNumber: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -670,10 +722,12 @@ export type QuestionUncheckedCreateWithoutExerciseInput = {
   optionB?: string | null
   optionC?: string | null
   optionD?: string | null
+  optionE?: string | null
   correctAnswer?: $Enums.AnswerKey | null
   correctAnswers?: string | null
   sampleAnswer?: string | null
   explanation?: string | null
+  points?: number
   orderNumber: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -716,10 +770,12 @@ export type QuestionScalarWhereInput = {
   optionB?: Prisma.StringNullableFilter<"Question"> | string | null
   optionC?: Prisma.StringNullableFilter<"Question"> | string | null
   optionD?: Prisma.StringNullableFilter<"Question"> | string | null
+  optionE?: Prisma.StringNullableFilter<"Question"> | string | null
   correctAnswer?: Prisma.EnumAnswerKeyNullableFilter<"Question"> | $Enums.AnswerKey | null
   correctAnswers?: Prisma.StringNullableFilter<"Question"> | string | null
   sampleAnswer?: Prisma.StringNullableFilter<"Question"> | string | null
   explanation?: Prisma.StringNullableFilter<"Question"> | string | null
+  points?: Prisma.IntFilter<"Question"> | number
   orderNumber?: Prisma.IntFilter<"Question"> | number
   createdAt?: Prisma.DateTimeFilter<"Question"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Question"> | Date | string
@@ -734,10 +790,12 @@ export type QuestionCreateManyExerciseInput = {
   optionB?: string | null
   optionC?: string | null
   optionD?: string | null
+  optionE?: string | null
   correctAnswer?: $Enums.AnswerKey | null
   correctAnswers?: string | null
   sampleAnswer?: string | null
   explanation?: string | null
+  points?: number
   orderNumber: number
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -751,10 +809,12 @@ export type QuestionUpdateWithoutExerciseInput = {
   optionB?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   optionC?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   optionD?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  optionE?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correctAnswer?: Prisma.NullableEnumAnswerKeyFieldUpdateOperationsInput | $Enums.AnswerKey | null
   correctAnswers?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sampleAnswer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  points?: Prisma.IntFieldUpdateOperationsInput | number
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -768,10 +828,12 @@ export type QuestionUncheckedUpdateWithoutExerciseInput = {
   optionB?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   optionC?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   optionD?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  optionE?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correctAnswer?: Prisma.NullableEnumAnswerKeyFieldUpdateOperationsInput | $Enums.AnswerKey | null
   correctAnswers?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sampleAnswer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  points?: Prisma.IntFieldUpdateOperationsInput | number
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -785,10 +847,12 @@ export type QuestionUncheckedUpdateManyWithoutExerciseInput = {
   optionB?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   optionC?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   optionD?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  optionE?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   correctAnswer?: Prisma.NullableEnumAnswerKeyFieldUpdateOperationsInput | $Enums.AnswerKey | null
   correctAnswers?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sampleAnswer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   explanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  points?: Prisma.IntFieldUpdateOperationsInput | number
   orderNumber?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -804,10 +868,12 @@ export type QuestionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   optionB?: boolean
   optionC?: boolean
   optionD?: boolean
+  optionE?: boolean
   correctAnswer?: boolean
   correctAnswers?: boolean
   sampleAnswer?: boolean
   explanation?: boolean
+  points?: boolean
   orderNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -823,10 +889,12 @@ export type QuestionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   optionB?: boolean
   optionC?: boolean
   optionD?: boolean
+  optionE?: boolean
   correctAnswer?: boolean
   correctAnswers?: boolean
   sampleAnswer?: boolean
   explanation?: boolean
+  points?: boolean
   orderNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -842,10 +910,12 @@ export type QuestionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   optionB?: boolean
   optionC?: boolean
   optionD?: boolean
+  optionE?: boolean
   correctAnswer?: boolean
   correctAnswers?: boolean
   sampleAnswer?: boolean
   explanation?: boolean
+  points?: boolean
   orderNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -861,17 +931,19 @@ export type QuestionSelectScalar = {
   optionB?: boolean
   optionC?: boolean
   optionD?: boolean
+  optionE?: boolean
   correctAnswer?: boolean
   correctAnswers?: boolean
   sampleAnswer?: boolean
   explanation?: boolean
+  points?: boolean
   orderNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   exerciseId?: boolean
 }
 
-export type QuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "questionType" | "prompt" | "optionA" | "optionB" | "optionC" | "optionD" | "correctAnswer" | "correctAnswers" | "sampleAnswer" | "explanation" | "orderNumber" | "createdAt" | "updatedAt" | "exerciseId", ExtArgs["result"]["question"]>
+export type QuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "questionType" | "prompt" | "optionA" | "optionB" | "optionC" | "optionD" | "optionE" | "correctAnswer" | "correctAnswers" | "sampleAnswer" | "explanation" | "points" | "orderNumber" | "createdAt" | "updatedAt" | "exerciseId", ExtArgs["result"]["question"]>
 export type QuestionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   exercise?: boolean | Prisma.ExerciseDefaultArgs<ExtArgs>
 }
@@ -895,10 +967,12 @@ export type $QuestionPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     optionB: string | null
     optionC: string | null
     optionD: string | null
+    optionE: string | null
     correctAnswer: $Enums.AnswerKey | null
     correctAnswers: string | null
     sampleAnswer: string | null
     explanation: string | null
+    points: number
     orderNumber: number
     createdAt: Date
     updatedAt: Date
@@ -1334,10 +1408,12 @@ export interface QuestionFieldRefs {
   readonly optionB: Prisma.FieldRef<"Question", 'String'>
   readonly optionC: Prisma.FieldRef<"Question", 'String'>
   readonly optionD: Prisma.FieldRef<"Question", 'String'>
+  readonly optionE: Prisma.FieldRef<"Question", 'String'>
   readonly correctAnswer: Prisma.FieldRef<"Question", 'AnswerKey'>
   readonly correctAnswers: Prisma.FieldRef<"Question", 'String'>
   readonly sampleAnswer: Prisma.FieldRef<"Question", 'String'>
   readonly explanation: Prisma.FieldRef<"Question", 'String'>
+  readonly points: Prisma.FieldRef<"Question", 'Int'>
   readonly orderNumber: Prisma.FieldRef<"Question", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Question", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Question", 'DateTime'>
