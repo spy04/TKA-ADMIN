@@ -1351,7 +1351,9 @@ export async function importQuestionsAction(
     return parsedResult;
   }
 
-  const normalizedQuestions = [];
+  const normalizedQuestions: Array<
+    NonNullable<ReturnType<typeof buildQuestionPayloadFromInput>["data"]>
+  > = [];
 
   for (const [index, importedQuestion] of parsedResult.questions.entries()) {
     const uploadedQuestion = await uploadImportedQuestionImages(importedQuestion, exerciseId, index);
