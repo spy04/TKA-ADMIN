@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState, useMemo, useState, type ChangeEvent } from "react";
+import { Fragment, useActionState, useMemo, useState, type ChangeEvent, type ReactNode } from "react";
 import {
   bulkUpdateQuestionsAction,
   createQuestionAction,
@@ -59,6 +59,111 @@ function toUiQuestionType(value: QuestionManagerProps["questions"][number]["ques
   return "single-choice";
 }
 
+type PreviewBlock =
+  | { type: "paragraph"; text: string }
+  | { type: "table"; rows: string[][] };
+
+function isTableLine(line: string) {
+  return /^\|.+\|$/.test(line.trim());
+}
+
+function parseTableRow(line: string) {
+  return line
+    .trim()
+    .replace(/^\|/, "")
+    .replace(/\|$/, "")
+    .split("|")
+    .map((cell) => cell.trim());
+}
+
+function parsePreviewBlocks(text: string): PreviewBlock[] {
+  const lines = text.split("\n");
+  const blocks: PreviewBlock[] = [];
+  let paragraphLines: string[] = [];
+  let tableRows: string[][] = [];
+
+  const flushParagraph = () => {
+    const paragraph = paragraphLines.join("\n").trim();
+
+    if (paragraph) {
+      blocks.push({ type: "paragraph", text: paragraph });
+    }
+
+    paragraphLines = [];
+  };
+
+  const flushTable = () => {
+    if (tableRows.length > 0) {
+      blocks.push({ type: "table", rows: tableRows });
+    }
+
+    tableRows = [];
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trimEnd();
+
+    if (isTableLine(line)) {
+      flushParagraph();
+      tableRows.push(parseTableRow(line));
+      continue;
+    }
+
+    if (!line.trim()) {
+      flushParagraph();
+      flushTable();
+      continue;
+    }
+
+    flushTable();
+    paragraphLines.push(line);
+  }
+
+  flushParagraph();
+  flushTable();
+
+  return blocks;
+}
+
+function renderPreviewBlocks(text: string): ReactNode {
+  return parsePreviewBlocks(text).map((block, index) => {
+    if (block.type === "table") {
+      const [headRow, ...bodyRows] = block.rows;
+
+      return (
+        <div key={`table-${index}`} className="question-preview-table-wrap">
+          <table className="question-preview-table">
+            {headRow ? (
+              <thead>
+                <tr>
+                  {headRow.map((cell, cellIndex) => (
+                    <th key={`head-${cellIndex}`}>{cell}</th>
+                  ))}
+                </tr>
+              </thead>
+            ) : null}
+            <tbody>
+              {bodyRows.map((row, rowIndex) => (
+                <tr key={`row-${rowIndex}`}>
+                  {row.map((cell, cellIndex) => (
+                    <td key={`cell-${rowIndex}-${cellIndex}`}>{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+
+    return (
+      <p key={`paragraph-${index}`} className="question-preview-text">
+        {block.text}
+      </p>
+    );
+  });
+}
+
 export function QuestionManager({ exerciseId, exerciseTitle, questions }: QuestionManagerProps) {
   const [createState, createFormAction, isCreatePending] = useActionState(createQuestionAction, initialState);
   const [bulkState, bulkFormAction, isBulkPending] = useActionState(bulkUpdateQuestionsAction, initialState);
@@ -71,7 +176,7 @@ export function QuestionManager({ exerciseId, exerciseTitle, questions }: Questi
         <div className="section-heading">
           <div>
             <h3 className="form-section-title">Import soal</h3>
-            <p className="page-copy">Upload bank soal dari DOCX atau XLSX. Soal akan disimpan berurutan sesuai isi file.</p>
+            <p className="page-copy">Upload bank soal dari DOCX. Soal akan disimpan berurutan sesuai isi file.</p>
           </div>
         </div>
 
@@ -84,7 +189,7 @@ export function QuestionManager({ exerciseId, exerciseTitle, questions }: Questi
           <div className="import-grid">
             <label className="field field-span-2">
               <Label htmlFor="import-file">File soal</Label>
-              <Input id="import-file" name="importFile" type="file" accept=".docx,.xlsx" />
+              <Input id="import-file" name="importFile" type="file" accept=".docx" />
             </label>
 
             <label className="field">
@@ -103,13 +208,7 @@ export function QuestionManager({ exerciseId, exerciseTitle, questions }: Questi
               <p className="page-copy">Soal pilihan boleh punya 2 sampai 5 opsi. Untuk benar/salah cukup isi `A:` dan `B:` saja. Jika ada opsi kelima, pakai `E:`.</p>
               <p className="page-copy">Kalau ada nilai per soal, tambahkan `Poin: 15`. Label `Level:` akan diabaikan.</p>
               <p className="page-copy">Jika ada gambar di dokumen Word, gambar akan ikut diupload ke storage dan ditempel ke soal atau opsi yang posisinya berdekatan.</p>
-            </div>
-
-            <div className="nested-surface">
-              <p className="import-help-title">Format XLSX</p>
-              <p className="page-copy">Gunakan sheet pertama dengan kolom seperti `prompt`, `type`, `option_a`, `option_b`, `option_c`, `option_d`, `option_e`, `correct_answer`, `correct_answers`, `sample_answer`, `explanation`.</p>
-              <p className="page-copy">Jika ingin set poin per soal, tambahkan kolom `points` atau `poin`.</p>
-              <p className="page-copy">Untuk gambar, isi URL publik di kolom `image_question`, `image_option_a`, `image_option_b`, `image_option_c`, atau `image_option_d`. Saat import, gambar akan disalin ke storage aplikasi.</p>
+              <p className="page-copy">Kalau di dalam soal ada tabel Word, isi tabel akan ikut dibaca sebagai bagian dari pertanyaan atau pembahasan.</p>
             </div>
           </div>
 
@@ -644,7 +743,7 @@ function QuestionContentPreview({
       <p className="question-preview-title">Preview {label.toLowerCase()}</p>
       {hasContent ? (
         <div className="question-preview-body">
-          {text.trim() ? <div className="question-preview-text">{text}</div> : null}
+          {text.trim() ? renderPreviewBlocks(text) : null}
           {imageUrls.map((url, index) => (
             <Image
               key={`${url}-${index}`}

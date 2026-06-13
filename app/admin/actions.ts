@@ -349,7 +349,20 @@ function buildQuestionPayloadFromInput({
     return { error: "Pertanyaan wajib diisi." } as const;
   }
 
-  if (normalizedQuestionType === "essay") {
+  const options = {
+    A: normalizedOptionA,
+    B: normalizedOptionB,
+    C: normalizedOptionC,
+    D: normalizedOptionD,
+    E: normalizedOptionE,
+  } satisfies Record<(typeof optionKeys)[number], string>;
+  const filledOptionKeys = optionKeys.filter((key) => Boolean(options[key]));
+  const hasChoiceAnswers = Boolean(normalizedCorrectAnswer || normalizedCorrectAnswers);
+  const shouldTreatAsEssay =
+    normalizedQuestionType === "essay" ||
+    (!hasChoiceAnswers && Boolean(normalizedSampleAnswer || normalizedExplanation));
+
+  if (shouldTreatAsEssay) {
     if (!normalizedSampleAnswer && !normalizedExplanation) {
       return { error: "Untuk soal esai, isi jawaban contoh atau pembahasan." } as const;
     }
@@ -371,16 +384,6 @@ function buildQuestionPayloadFromInput({
       },
     } as const;
   }
-
-  const options = {
-    A: normalizedOptionA,
-    B: normalizedOptionB,
-    C: normalizedOptionC,
-    D: normalizedOptionD,
-    E: normalizedOptionE,
-  } satisfies Record<(typeof optionKeys)[number], string>;
-
-  const filledOptionKeys = optionKeys.filter((key) => Boolean(options[key]));
 
   if (filledOptionKeys.length < 2) {
     return { error: "Untuk soal pilihan, isi minimal dua opsi jawaban." } as const;
@@ -1316,7 +1319,7 @@ export async function importQuestionsAction(
 
   if (!(importFile instanceof File) || importFile.size === 0) {
     return {
-      error: "Pilih file .docx atau .xlsx terlebih dahulu sebelum import.",
+      error: "Pilih file .docx terlebih dahulu sebelum import.",
     };
   }
 

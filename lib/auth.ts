@@ -14,6 +14,8 @@ type SessionPayload = {
   username: string;
 };
 
+type CookieReader = Pick<RequestCookies, "get">;
+
 export const loginSchema = {
   safeParse(input: { password: string; username: string }) {
     const username = input.username.trim();
@@ -134,7 +136,7 @@ export async function isAdminAuthenticated() {
   return session?.username === auth.username;
 }
 
-export function isAdminAuthenticatedInRequest(requestCookies: RequestCookies) {
+export function isAdminAuthenticatedInRequest(requestCookies: CookieReader) {
   if (!hasAuthConfig()) {
     return false;
   }

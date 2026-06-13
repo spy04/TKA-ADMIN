@@ -2,26 +2,28 @@
 @import "tw-animate-css";
 
 :root {
-  --background: oklch(0.98 0.01 220);
-  --foreground: oklch(0.27 0.04 236);
+  --background: oklch(0.98 0.012 238);
+  --foreground: oklch(0.22 0.045 250);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.27 0.04 236);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.27 0.04 236);
-  --primary: oklch(0.5 0.1 198);
+  --primary: oklch(0.28 0.09 255);
+  --primary-strong: oklch(0.22 0.09 255);
+  --primary-soft: oklch(0.94 0.03 252);
   --primary-foreground: oklch(0.98 0.01 220);
   --secondary: oklch(0.95 0.02 220);
   --secondary-foreground: oklch(0.3 0.04 236);
   --muted: oklch(0.95 0.02 220);
   --muted-foreground: oklch(0.53 0.03 228);
-  --accent: oklch(0.94 0.03 188);
+  --accent: oklch(0.94 0.035 248);
   --accent-foreground: oklch(0.3 0.04 236);
   --destructive: oklch(0.57 0.2 27);
   --destructive-foreground: oklch(0.98 0.01 220);
   --border: oklch(0.9 0.02 228);
   --input: oklch(0.9 0.02 228);
-  --ring: oklch(0.5 0.1 198);
-  --shadow: 0 24px 60px rgba(17, 51, 77, 0.12);
+  --ring: oklch(0.28 0.09 255);
+  --shadow: 0 24px 60px rgba(15, 34, 70, 0.12);
   --radius-lg: 24px;
   --radius-md: 18px;
   --radius-sm: 12px;
@@ -59,14 +61,14 @@
 
 html {
   font-family: Arial, Helvetica, sans-serif;
-  background: #f4f7fa;
+  background: #f4f7fb;
   color: var(--foreground);
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background: #f4f7fa;
+  background: #f4f7fb;
   color: var(--foreground);
 }
 
@@ -104,8 +106,8 @@ button {
   border-radius: var(--radius-lg);
   padding: 48px;
   background:
-    radial-gradient(circle at top right, rgba(132, 222, 210, 0.4), transparent 28%),
-    linear-gradient(160deg, #103450 0%, #215f7f 100%);
+    radial-gradient(circle at top right, rgba(120, 153, 218, 0.35), transparent 28%),
+    linear-gradient(160deg, #071832 0%, #112f63 100%);
   color: #f6fbff;
   box-shadow: var(--shadow);
 }
@@ -233,7 +235,7 @@ button {
 .field-input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(13, 110, 110, 0.12);
+  box-shadow: 0 0 0 4px rgba(18, 49, 103, 0.12);
 }
 
 .field-textarea {
@@ -324,6 +326,138 @@ button {
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+.admin-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  padding: 28px;
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(135deg, rgba(8, 27, 57, 0.98) 0%, rgba(18, 49, 103, 0.96) 58%, rgba(33, 79, 140, 0.92) 100%);
+  color: #f7fbff;
+  box-shadow: var(--shadow);
+}
+
+.admin-hero .section-kicker {
+  background: rgba(255, 255, 255, 0.12);
+  color: #f7fbff;
+}
+
+.admin-hero-title {
+  max-width: 760px;
+  margin-bottom: 10px;
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.admin-hero-copy {
+  max-width: 720px;
+  margin: 0;
+  color: rgba(247, 251, 255, 0.82);
+  line-height: 1.6;
+}
+
+.admin-hero-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  max-width: 480px;
+}
+
+.workflow-panel,
+.quick-panel {
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: #ffffff;
+  box-shadow: var(--shadow);
+}
+
+.workflow-heading,
+.quick-panel {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+}
+
+.workflow-heading {
+  display: grid;
+  gap: 16px;
+}
+
+.workflow-heading h2,
+.quick-panel h2 {
+  margin: 10px 0 0;
+  font-size: 1.45rem;
+}
+
+.workflow-heading p,
+.workflow-copy {
+  margin: 0;
+  color: var(--muted-foreground);
+  line-height: 1.55;
+}
+
+.section-kicker-soft {
+  background: var(--primary-soft);
+  color: var(--primary-strong);
+}
+
+.workflow-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.workflow-step {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-height: 260px;
+  padding: 16px;
+  border: 1px solid color-mix(in srgb, var(--primary) 16%, var(--border));
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, #ffffff 0%, #f7f9fd 100%);
+}
+
+.workflow-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 38px;
+  right: -12px;
+  width: 12px;
+  height: 2px;
+  background: color-mix(in srgb, var(--primary) 38%, var(--border));
+}
+
+.workflow-step-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--primary);
+}
+
+.workflow-number {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 800;
+}
+
+.workflow-title {
+  margin: 0;
+  font-size: 1.08rem;
+  color: var(--foreground);
 }
 
 .pill {
@@ -427,7 +561,7 @@ button {
 
 .choice-card:has(.choice-input:checked) {
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(13, 110, 110, 0.12);
+  box-shadow: 0 0 0 4px rgba(18, 49, 103, 0.12);
   transform: translateY(-1px);
 }
 
@@ -639,10 +773,51 @@ button {
 }
 
 .question-preview-text {
+  margin: 0;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   line-height: 1.7;
   color: var(--foreground);
+}
+
+.question-preview-table-wrap {
+  overflow-x: auto;
+  border: 2px solid #9fb7d3;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #f9fcff 0%, #ffffff 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65);
+}
+
+.question-preview-table {
+  width: 100%;
+  min-width: 320px;
+  border-collapse: collapse;
+}
+
+.question-preview-table th,
+.question-preview-table td {
+  padding: 12px 14px;
+  border-bottom: 1.5px solid #b7cae1;
+  border-right: 1.5px solid #b7cae1;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.6;
+  color: var(--foreground);
+  background: transparent;
+}
+
+.question-preview-table th:last-child,
+.question-preview-table td:last-child {
+  border-right: 0;
+}
+
+.question-preview-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.question-preview-table thead th {
+  font-weight: 700;
+  background: #e7f1fb;
 }
 
 .question-preview-image {
@@ -842,6 +1017,25 @@ button {
     grid-template-columns: 1fr;
   }
 
+  .admin-hero,
+  .workflow-heading,
+  .quick-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-hero-actions {
+    justify-content: flex-start;
+    max-width: none;
+  }
+
+  .workflow-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .workflow-step:not(:last-child)::after {
+    display: none;
+  }
+
   .auth-panel,
   .login-card,
   .topbar,
@@ -876,5 +1070,24 @@ button {
   .topbar {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .admin-hero,
+  .workflow-panel,
+  .quick-panel {
+    padding: 20px;
+  }
+
+  .admin-hero-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .workflow-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .workflow-step {
+    min-height: auto;
   }
 }
