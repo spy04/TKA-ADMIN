@@ -152,6 +152,18 @@ function extractAnswerKeys(value: string) {
   return Array.from(new Set(matches));
 }
 
+function isChoiceAnswerValue(value: string) {
+  const normalized = value
+    .toUpperCase()
+    .replace(/\bDAN\b/g, ",")
+    .replace(/[;&/|]+/g, ",")
+    .replace(/[\s.]+/g, "")
+    .replace(/,+/g, ",")
+    .replace(/^,|,$/g, "");
+
+  return /^([A-E],)*[A-E]$/.test(normalized);
+}
+
 function parseDocxQuestionBlock(block: string): ImportedQuestionInput {
   const question = createEmptyQuestion();
   const lines = block
@@ -211,17 +223,22 @@ function parseDocxQuestionBlock(block: string): ImportedQuestionInput {
       }
 
       if (normalizedLabel === "jawaban") {
-        sawAnswerLabel = true;
-        const answerKeys = extractAnswerKeys(labeledValue);
+        if (isChoiceAnswerValue(labeledValue)) {
+          sawAnswerLabel = true;
+          const answerKeys = extractAnswerKeys(labeledValue);
 
-        if (answerKeys.length > 1) {
-          question.questionType = "multiple-choice";
-          question.correctAnswers = answerKeys.join(",");
-          currentField = "correctAnswers";
-        } else if (answerKeys.length === 1) {
-          question.questionType = "single-choice";
-          question.correctAnswer = answerKeys[0];
-          currentField = "correctAnswer";
+          if (answerKeys.length > 1) {
+            question.questionType = "multiple-choice";
+            question.correctAnswers = answerKeys.join(",");
+            currentField = "correctAnswers";
+          } else if (answerKeys.length === 1) {
+            question.questionType = "single-choice";
+            question.correctAnswer = answerKeys[0];
+            currentField = "correctAnswer";
+          }
+        } else {
+          currentField = "sampleAnswer";
+          appendFieldValue(question, currentField, labeledValue);
         }
 
         continue;
@@ -241,12 +258,12 @@ function parseDocxQuestionBlock(block: string): ImportedQuestionInput {
 
   question.prompt = stripPromptNumbering(question.prompt);
 
-  if (!sawAnswerLabel) {
+  if (sawAnswerLabel || question.correctAnswer.trim() || question.correctAnswers.trim()) {
+    question.questionType = question.correctAnswers ? "multiple-choice" : "single-choice";
+  } else {
     question.questionType = "essay";
     question.correctAnswer = "";
     question.correctAnswers = "";
-  } else {
-    question.questionType = question.correctAnswers ? "multiple-choice" : "single-choice";
   }
 
   question.questionType = normalizeQuestionType(question.questionType);
