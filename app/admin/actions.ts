@@ -36,6 +36,7 @@ export type QuestionFormState = {
 export type ImportQuestionFormState = {
   error?: string;
   success?: string;
+  importedFileName?: string;
 };
 
 const defaultError = "Login gagal. Periksa username dan password lalu coba lagi.";
@@ -1323,6 +1324,8 @@ export async function importQuestionsAction(
     };
   }
 
+  const importedFileName = importFile.name.trim() || "file tanpa nama";
+
   const prismaResult = getRequiredPrisma();
 
   if ("error" in prismaResult) {
@@ -1414,7 +1417,8 @@ export async function importQuestionsAction(
   revalidatePath(`/admin/exercises/${exerciseId}/edit`);
 
   return {
-    success: `${normalizedQuestions.length} soal berhasil diimport ke latihan "${exercise.title}".`,
+    importedFileName,
+    success: `${normalizedQuestions.length} soal dari file "${importedFileName}" berhasil diimport ke latihan "${exercise.title}" dengan mode ${importMode === "replace" ? '"ganti soal lama"' : '"tambahkan ke soal yang sudah ada"'}.`,
   };
 }
 

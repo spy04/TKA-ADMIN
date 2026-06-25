@@ -169,6 +169,12 @@ export function QuestionManager({ exerciseId, exerciseTitle, questions }: Questi
   const [bulkState, bulkFormAction, isBulkPending] = useActionState(bulkUpdateQuestionsAction, initialState);
   const [importState, importAction, isImportPending] = useActionState(importQuestionsAction, initialImportState);
   const [questionType, setQuestionType] = useState<QuestionTypeValue>("single-choice");
+  const [selectedImportFileName, setSelectedImportFileName] = useState("");
+
+  function handleImportFileChange(event: ChangeEvent<HTMLInputElement>) {
+    const nextFile = event.target.files?.[0];
+    setSelectedImportFileName(nextFile?.name ?? "");
+  }
 
   return (
     <div className="question-manager">
@@ -189,7 +195,12 @@ export function QuestionManager({ exerciseId, exerciseTitle, questions }: Questi
           <div className="import-grid">
             <label className="field field-span-2">
               <Label htmlFor="import-file">File soal</Label>
-              <Input id="import-file" name="importFile" type="file" accept=".docx" />
+              <Input id="import-file" name="importFile" type="file" accept=".docx" onChange={handleImportFileChange} />
+              <p className="field-hint">
+                {selectedImportFileName
+                  ? `File terpilih sekarang: ${selectedImportFileName}`
+                  : "Belum ada file yang dipilih."}
+              </p>
             </label>
 
             <label className="field">
@@ -209,6 +220,10 @@ export function QuestionManager({ exerciseId, exerciseTitle, questions }: Questi
               <p className="page-copy">Kalau ada nilai per soal, tambahkan `Poin: 15`. Label `Level:` akan diabaikan.</p>
               <p className="page-copy">Jika ada gambar di dokumen Word, gambar akan ikut diupload ke storage dan ditempel ke soal atau opsi yang posisinya berdekatan.</p>
               <p className="page-copy">Kalau di dalam soal ada tabel Word, isi tabel akan ikut dibaca sebagai bagian dari pertanyaan atau pembahasan.</p>
+              <p className="page-copy">Mode `Tambahkan` tidak mengganti soal lama. Kalau ingin isi latihan benar-benar mengikuti file baru, pilih mode `Hapus soal lama lalu ganti dari file`.</p>
+              {importState.importedFileName ? (
+                <p className="page-copy">File terakhir yang berhasil diproses: {importState.importedFileName}</p>
+              ) : null}
             </div>
           </div>
 
