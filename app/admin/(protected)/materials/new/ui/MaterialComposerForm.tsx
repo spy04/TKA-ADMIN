@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { useActionState } from "react";
 import { createMaterialAction, type MaterialFormState } from "@/app/admin/actions";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
 type TopicOption = {
@@ -17,11 +20,19 @@ type TopicOption = {
 
 const initialState: MaterialFormState = {};
 
-export function MaterialComposerForm({ topics }: { topics: TopicOption[] }) {
+export function MaterialComposerForm({
+  topics,
+  defaultTopicId,
+}: {
+  topics: TopicOption[];
+  defaultTopicId?: string;
+}) {
   const [state, formAction, isPending] = useActionState(createMaterialAction, initialState);
+  const [materialType, setMaterialType] = useState("video");
+  const isVideoMaterial = materialType === "video";
 
   return (
-    <form className="topic-form" action={formAction}>
+    <form className="space-y-4" action={formAction}>
       {state.error ? <Alert variant="destructive">{state.error}</Alert> : null}
       {state.success ? <Alert variant="success">{state.success}</Alert> : null}
 
@@ -29,71 +40,106 @@ export function MaterialComposerForm({ topics }: { topics: TopicOption[] }) {
         <Alert variant="destructive">Belum ada topic yang tersedia. Buat topic dulu sebelum menambah materi.</Alert>
       ) : null}
 
-      <section className="form-section">
-        <div className="form-grid">
-          <label className="field field-span-2">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Informasi materi</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-4 pt-0 md:grid-cols-2">
+          <div className="space-y-2 md:col-span-2">
             <Label htmlFor="topicId">Pilih topic</Label>
-            <select className="shad-select" id="topicId" name="topicId" defaultValue="">
-              <option value="" disabled>
-                Pilih topic tujuan
-              </option>
-              {topics.map((topic) => (
-                <option key={topic.id} value={topic.id}>
-                  {topic.title} - {topic.category} - {topic.difficulty}
-                </option>
-              ))}
-            </select>
-          </label>
+            <Select name="topicId" defaultValue={defaultTopicId}>
+              <SelectTrigger id="topicId">
+                <SelectValue placeholder="Pilih topic tujuan" />
+              </SelectTrigger>
+              <SelectContent>
+                {topics.map((topic) => (
+                  <SelectItem key={topic.id} value={topic.id}>
+                    {topic.title} - {topic.category} - {topic.difficulty}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-          <label className="field field-span-2">
+          <label className="space-y-2 md:col-span-2">
             <Label htmlFor="materialTitle">Judul materi</Label>
             <Input id="materialTitle" name="materialTitle" type="text" placeholder="Contoh: Pengenalan Pecahan" />
           </label>
 
-          <label className="field">
+          <div className="space-y-2">
             <Label htmlFor="materialType">Tipe materi</Label>
-            <select className="shad-select" id="materialType" name="materialType" defaultValue="video">
-              <option value="video">Video</option>
-              <option value="pdf">PDF</option>
-              <option value="slide">Slide</option>
-              <option value="dokumen">Dokumen</option>
-            </select>
-          </label>
+            <Select name="materialType" value={materialType} onValueChange={setMaterialType}>
+              <SelectTrigger id="materialType">
+                <SelectValue placeholder="Pilih tipe materi" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="video">Video</SelectItem>
+                <SelectItem value="pdf">PDF</SelectItem>
+                <SelectItem value="slide">Slide</SelectItem>
+                <SelectItem value="dokumen">Dokumen</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-          <label className="field">
+          <div className="space-y-2">
             <Label htmlFor="materialAccess">Status akses materi</Label>
-            <select className="shad-select" id="materialAccess" name="materialAccess" defaultValue="preview">
-              <option value="preview">Bisa dilihat dulu</option>
-              <option value="enrolled">Khusus user enrolled</option>
-            </select>
-          </label>
+            <Select name="materialAccess" defaultValue="preview">
+              <SelectTrigger id="materialAccess">
+                <SelectValue placeholder="Pilih akses" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="preview">Bisa dilihat dulu</SelectItem>
+                <SelectItem value="enrolled">Khusus user enrolled</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-          <label className="field">
+          <div className="space-y-2">
             <Label htmlFor="materialStatus">Status tayang</Label>
-            <select className="shad-select" id="materialStatus" name="materialStatus" defaultValue="draft">
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </label>
+            <Select name="materialStatus" defaultValue="draft">
+              <SelectTrigger id="materialStatus">
+                <SelectValue placeholder="Pilih status tayang" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="published">Published</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-          <label className="field field-span-2">
+          <label className="space-y-2 md:col-span-2">
             <Label htmlFor="materialDescription">Deskripsi materi</Label>
             <Textarea id="materialDescription" name="materialDescription" placeholder="Ringkasan isi materi." />
           </label>
 
-          <label className="field">
-            <Label htmlFor="materialFile">Upload file materi</Label>
-            <Input id="materialFile" className="file:mr-3" name="materialFile" type="file" />
-          </label>
+          {isVideoMaterial ? (
+            <label className="space-y-2 md:col-span-2">
+              <Label htmlFor="materialVideoUrl">Link video</Label>
+              <Input
+                id="materialVideoUrl"
+                name="materialVideoUrl"
+                type="url"
+                placeholder="https://youtu.be/... atau https://drive.google.com/file/d/..."
+              />
+              <p className="text-sm text-muted-foreground">
+                Untuk materi video, gunakan link YouTube atau Google Drive. Upload file video tidak diperlukan.
+              </p>
+            </label>
+          ) : (
+            <label className="space-y-2">
+              <Label htmlFor="materialFile">Upload file materi</Label>
+              <Input id="materialFile" className="file:mr-3" name="materialFile" type="file" />
+            </label>
+          )}
 
-          <label className="field">
+          <label className="space-y-2">
             <Label htmlFor="materialCover">Thumbnail atau cover</Label>
             <Input id="materialCover" className="file:mr-3" name="materialCover" type="file" />
           </label>
-        </div>
-      </section>
+        </CardContent>
+      </Card>
 
-      <div className="button-row">
+      <div className="flex flex-wrap items-center gap-2">
         <Button type="submit" disabled={isPending || topics.length === 0}>
           {isPending ? "Menyimpan materi..." : "Simpan Materi"}
         </Button>

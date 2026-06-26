@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { AdminPageHeader, AdminPageSection, AdminPageShell } from "@/components/admin/admin-page-shell";
+import { Button } from "@/components/ui/button";
 import { getPrismaClient } from "@/lib/prisma";
 import { ExerciseComposerForm } from "./ui/ExerciseComposerForm";
 
@@ -10,36 +12,28 @@ export default async function NewExercisePage() {
         select: {
           id: true,
           title: true,
-          materials: {
-            orderBy: { createdAt: "asc" },
-            select: { id: true, title: true },
-          },
+          category: true,
+          difficulty: true,
         },
       })
     : [];
 
   return (
-    <main className="dashboard-shell">
-      <div className="dashboard-grid">
-        <header className="card topbar">
-          <div>
-            <span className="section-kicker">Latihan</span>
-            <h1 className="page-title" style={{ fontSize: "2.2rem", marginBottom: 8 }}>
-              Tambah latihan
-            </h1>
-          </div>
+    <AdminPageShell maxWidthClassName="max-w-4xl">
+      <AdminPageHeader
+        kicker="Latihan"
+        title="Tambah latihan"
+        description="Tempatkan latihan sebagai paket kategori atau latihan topic, lalu atur akses dan statusnya."
+        actions={
+          <Button asChild variant="outline">
+            <Link href="/admin/exercises">Kembali</Link>
+          </Button>
+        }
+      />
 
-          <div className="topbar-meta">
-            <Link className="button-secondary" href="/admin/content">
-              Kembali
-            </Link>
-          </div>
-        </header>
-
-        <article className="card panel single-panel">
-          <ExerciseComposerForm topics={topics} />
-        </article>
-      </div>
-    </main>
+      <AdminPageSection>
+        <ExerciseComposerForm topics={topics} />
+      </AdminPageSection>
+    </AdminPageShell>
   );
 }

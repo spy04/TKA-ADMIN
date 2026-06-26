@@ -54,7 +54,11 @@ export const ModelName = {
   Topic: 'Topic',
   Material: 'Material',
   Exercise: 'Exercise',
-  Question: 'Question'
+  Question: 'Question',
+  ExerciseAttempt: 'ExerciseAttempt',
+  ExerciseAttemptAnswer: 'ExerciseAttemptAnswer',
+  Session: 'Session',
+  User: 'User'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -94,7 +98,6 @@ export const MaterialScalarFieldEnum = {
   title: 'title',
   description: 'description',
   type: 'type',
-  status: 'status',
   accessLevel: 'accessLevel',
   fileName: 'fileName',
   coverName: 'coverName',
@@ -104,7 +107,8 @@ export const MaterialScalarFieldEnum = {
   coverUrl: 'coverUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  topicId: 'topicId'
+  topicId: 'topicId',
+  status: 'status'
 } as const
 
 export type MaterialScalarFieldEnum = (typeof MaterialScalarFieldEnum)[keyof typeof MaterialScalarFieldEnum]
@@ -114,13 +118,14 @@ export const ExerciseScalarFieldEnum = {
   id: 'id',
   title: 'title',
   questionCount: 'questionCount',
-  status: 'status',
+  scope: 'scope',
   accessLevel: 'accessLevel',
   adminNotes: 'adminNotes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   topicId: 'topicId',
-  materialId: 'materialId'
+  materialId: 'materialId',
+  status: 'status'
 } as const
 
 export type ExerciseScalarFieldEnum = (typeof ExerciseScalarFieldEnum)[keyof typeof ExerciseScalarFieldEnum]
@@ -134,19 +139,79 @@ export const QuestionScalarFieldEnum = {
   optionB: 'optionB',
   optionC: 'optionC',
   optionD: 'optionD',
-  optionE: 'optionE',
   correctAnswer: 'correctAnswer',
   correctAnswers: 'correctAnswers',
   sampleAnswer: 'sampleAnswer',
   explanation: 'explanation',
-  points: 'points',
   orderNumber: 'orderNumber',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  exerciseId: 'exerciseId'
+  exerciseId: 'exerciseId',
+  points: 'points',
+  optionE: 'optionE'
 } as const
 
 export type QuestionScalarFieldEnum = (typeof QuestionScalarFieldEnum)[keyof typeof QuestionScalarFieldEnum]
+
+
+export const ExerciseAttemptScalarFieldEnum = {
+  id: 'id',
+  score: 'score',
+  maxScore: 'maxScore',
+  correctCount: 'correctCount',
+  incorrectCount: 'incorrectCount',
+  unansweredCount: 'unansweredCount',
+  essayCount: 'essayCount',
+  answeredCount: 'answeredCount',
+  totalQuestions: 'totalQuestions',
+  submittedAt: 'submittedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  exerciseId: 'exerciseId',
+  userId: 'userId'
+} as const
+
+export type ExerciseAttemptScalarFieldEnum = (typeof ExerciseAttemptScalarFieldEnum)[keyof typeof ExerciseAttemptScalarFieldEnum]
+
+
+export const ExerciseAttemptAnswerScalarFieldEnum = {
+  id: 'id',
+  selectedOptions: 'selectedOptions',
+  essayAnswer: 'essayAnswer',
+  isCorrect: 'isCorrect',
+  awardedPoints: 'awardedPoints',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  attemptId: 'attemptId',
+  questionId: 'questionId'
+} as const
+
+export type ExerciseAttemptAnswerScalarFieldEnum = (typeof ExerciseAttemptAnswerScalarFieldEnum)[keyof typeof ExerciseAttemptAnswerScalarFieldEnum]
+
+
+export const SessionScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  userId: 'userId'
+} as const
+
+export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
+
+
+export const UserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  passwordHash: 'passwordHash',
+  role: 'role',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
 export const SortOrder = {

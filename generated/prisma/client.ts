@@ -61,3 +61,23 @@ export type Exercise = Prisma.ExerciseModel
  * 
  */
 export type Question = Prisma.QuestionModel
+/**
+ * Model ExerciseAttempt
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type ExerciseAttempt = Prisma.ExerciseAttemptModel
+/**
+ * Model ExerciseAttemptAnswer
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type ExerciseAttemptAnswer = Prisma.ExerciseAttemptAnswerModel
+/**
+ * Model Session
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type Session = Prisma.SessionModel
+/**
+ * Model User
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type User = Prisma.UserModel

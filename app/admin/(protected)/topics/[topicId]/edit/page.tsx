@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AdminPageHeader, AdminPageSection, AdminPageShell } from "@/components/admin/admin-page-shell";
+import { Button } from "@/components/ui/button";
 import { getPrismaClient } from "@/lib/prisma";
 import { TopicEditForm } from "./ui/TopicEditForm";
 
@@ -33,27 +35,26 @@ export default async function TopicEditPage({ params }: TopicEditPageProps) {
   }
 
   return (
-    <main className="dashboard-shell">
-      <div className="dashboard-grid">
-        <header className="card topbar">
-          <div>
-            <span className="section-kicker">Topic</span>
-            <h1 className="page-title" style={{ fontSize: "2.2rem", marginBottom: 8 }}>
-              Edit topic
-            </h1>
-          </div>
+    <AdminPageShell maxWidthClassName="max-w-4xl">
+      <AdminPageHeader
+        kicker="Topic"
+        title="Edit topic"
+        description="Perbarui nama, kategori, ringkasan, dan visibilitas topic dengan tampilan yang lebih ringkas."
+        actions={
+          <>
+            <Button asChild variant="secondary">
+              <Link href={`/admin/topics/${topic.id}`}>Detail Topic</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/admin/topics">Kembali</Link>
+            </Button>
+          </>
+        }
+      />
 
-          <div className="topbar-meta">
-            <Link className="button-secondary" href="/admin/content">
-              Kembali
-            </Link>
-          </div>
-        </header>
-
-        <article className="card panel single-panel">
-          <TopicEditForm topic={topic} />
-        </article>
-      </div>
-    </main>
+      <AdminPageSection>
+        <TopicEditForm topic={topic} />
+      </AdminPageSection>
+    </AdminPageShell>
   );
 }

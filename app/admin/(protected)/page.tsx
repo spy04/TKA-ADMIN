@@ -1,39 +1,41 @@
 import Link from "next/link";
 import { ArrowRight, BookOpen, ClipboardList, FileText, LayoutDashboard, Rocket, UploadCloud } from "lucide-react";
 import { logoutAction } from "@/app/admin/actions";
+import { AdminPageHeader, AdminPageSection, AdminPageShell } from "@/components/admin/admin-page-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 const workflowSteps = [
   {
     label: "Langkah 1",
-    title: "Buat topic",
-    copy: "Tentukan kategori, level, ringkasan, dan akses awal sebelum konten lain dibuat.",
-    href: "/admin/topics/new",
-    action: "Mulai dari topic",
+    title: "Kelola topic",
+    copy: "Masuk ke daftar topic untuk filter, tambah topic baru, lalu buka detail topic saat ingin lanjut menambah materi.",
+    href: "/admin/topics",
+    action: "Buka topic",
     icon: BookOpen,
   },
   {
     label: "Langkah 2",
-    title: "Tambah materi",
-    copy: "Upload file, cover, dan deskripsi materi yang akan dipelajari siswa.",
-    href: "/admin/materials/new",
-    action: "Tambah materi",
+    title: "Detail topic",
+    copy: "Di dalam detail topic, admin bisa lanjut tambah materi tanpa kehilangan konteks topic yang sedang dikerjakan.",
+    href: "/admin/topics",
+    action: "Lihat detail",
     icon: FileText,
   },
   {
     label: "Langkah 3",
-    title: "Buat latihan",
-    copy: "Hubungkan latihan ke topic atau materi tertentu agar alur belajar lebih jelas.",
-    href: "/admin/exercises/new",
-    action: "Buat latihan",
+    title: "Kelola latihan",
+    copy: "Buka daftar latihan untuk filter paket kategori atau latihan topic, lalu tambah latihan baru dari halaman yang sama.",
+    href: "/admin/exercises",
+    action: "Buka latihan",
     icon: ClipboardList,
   },
   {
     label: "Langkah 4",
     title: "Isi soal",
-    copy: "Masuk ke daftar konten untuk import DOCX, edit soal, upload gambar, dan cek preview.",
-    href: "/admin/content",
+    copy: "Masuk ke halaman detail latihan saat ingin import DOCX, edit soal, upload gambar, dan cek preview.",
+    href: "/admin/exercises",
     action: "Kelola soal",
     icon: UploadCloud,
   },
@@ -49,87 +51,96 @@ const workflowSteps = [
 
 export default function AdminDashboardPage() {
   return (
-    <main className="dashboard-shell">
-      <div className="dashboard-grid">
-        <header className="admin-hero">
-          <div>
-            <span className="section-kicker">Dashboard Admin</span>
-            <h1 className="page-title admin-hero-title">
-              Alur kelola konten TKA Mudah
-            </h1>
-            <p className="admin-hero-copy">
-              Ikuti urutan kerja dari membuat topic sampai publish supaya konten lebih rapi dan tidak ada langkah yang terlewat.
-            </p>
-          </div>
-
-          <div className="admin-hero-actions">
+    <AdminPageShell>
+      <AdminPageHeader
+        kicker="Dashboard Admin"
+        title="Alur kelola konten TKA Mudah"
+        description="Ikuti urutan kerja dari membuat topic sampai publish supaya konten lebih rapi, konsisten, dan tidak ada langkah yang terlewat."
+        actions={
+          <>
             <Badge>Auth aktif</Badge>
-            <Button asChild size="lg">
-              <Link href="/admin/topics/new">
+            <Button asChild>
+              <Link href="/admin/topics">
                 <BookOpen size={18} />
-                Mulai Buat Topic
+                Buka Topic
               </Link>
             </Button>
-            <Button asChild variant="secondary" size="lg">
-              <Link href="/admin/content">
+            <Button asChild variant="secondary">
+              <Link href="/admin/exercises">
                 <LayoutDashboard size={18} />
-                Lihat Konten
+                Buka Latihan
               </Link>
             </Button>
             <form action={logoutAction}>
-              <Button variant="secondary" type="submit">Logout</Button>
+              <Button variant="outline" type="submit">Logout</Button>
             </form>
-          </div>
-        </header>
+          </>
+        }
+      />
 
-        <section className="workflow-panel">
-          <div className="workflow-heading">
-            <div>
-              <span className="section-kicker section-kicker-soft">Workflow</span>
-              <h2>Kerjakan berurutan</h2>
-            </div>
-            <p>Admin cukup mengikuti step ini dari kiri ke kanan. Setiap step punya aksi utama yang jelas.</p>
-          </div>
+      <AdminPageSection
+        title="Workflow"
+        description="Admin cukup mengikuti step ini dari kiri ke kanan. Setiap step punya aksi utama yang jelas."
+      >
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+          {workflowSteps.map((step, index) => {
+            const Icon = step.icon;
 
-          <div className="workflow-steps">
-            {workflowSteps.map((step, index) => {
-              const Icon = step.icon;
-
-              return (
-                <article key={step.title} className="workflow-step">
-                  <div className="workflow-step-top">
-                    <span className="workflow-number">{index + 1}</span>
-                    <Icon size={22} />
+            return (
+              <Card key={step.title} className="border-border/70">
+                <CardContent className="flex h-full flex-col gap-4 pt-6">
+                  <div className="flex items-center justify-between text-primary">
+                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+                      {index + 1}
+                    </span>
+                    <Icon size={20} />
                   </div>
-                  <span className="action-label">{step.label}</span>
-                  <h3 className="workflow-title">{step.title}</h3>
-                  <p className="workflow-copy">{step.copy}</p>
-                  <Button asChild variant={index === 0 ? "default" : "secondary"}>
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{step.label}</p>
+                    <h3 className="text-base font-semibold">{step.title}</h3>
+                  </div>
+                  <p className="flex-1 text-sm leading-6 text-muted-foreground">{step.copy}</p>
+                  <Button asChild variant={index === 0 ? "default" : "outline"}>
                     <Link href={step.href}>
                       {step.action}
                       <ArrowRight size={16} />
                     </Link>
                   </Button>
-                </article>
-              );
-            })}
-          </div>
-        </section>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </AdminPageSection>
 
-        <section className="quick-panel">
-          <div>
-            <span className="section-kicker section-kicker-soft">Shortcut</span>
-            <h2>Butuh edit cepat?</h2>
-            <p className="page-copy">Kalau kontennya sudah ada, langsung masuk ke daftar konten untuk publish, edit, atau hapus data.</p>
+      <AdminPageSection
+        title="Shortcut"
+        description="Masuk langsung ke pusat kerja utama sesuai kebutuhan admin hari ini."
+      >
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-muted-foreground">Topic untuk struktur belajar, latihan untuk pengelolaan soal.</p>
+          <div className="flex flex-wrap gap-2">
+            <Button asChild>
+              <Link href="/admin/topics">
+                Kelola topic
+                <ArrowRight size={16} />
+              </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/admin/exercises">
+                Kelola latihan
+                <ArrowRight size={16} />
+              </Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/admin/content">
+                Konten gabungan
+                <ArrowRight size={16} />
+              </Link>
+            </Button>
           </div>
-          <Button asChild>
-            <Link href="/admin/content">
-              Kelola semua konten
-              <ArrowRight size={16} />
-            </Link>
-          </Button>
-        </section>
-      </div>
-    </main>
+        </div>
+      </AdminPageSection>
+    </AdminPageShell>
   );
 }

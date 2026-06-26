@@ -29,7 +29,6 @@ export type MaterialMinAggregateOutputType = {
   title: string | null
   description: string | null
   type: $Enums.MaterialType | null
-  status: $Enums.TopicStatus | null
   accessLevel: $Enums.AccessLevel | null
   fileName: string | null
   coverName: string | null
@@ -40,6 +39,7 @@ export type MaterialMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   topicId: string | null
+  status: $Enums.TopicStatus | null
 }
 
 export type MaterialMaxAggregateOutputType = {
@@ -47,7 +47,6 @@ export type MaterialMaxAggregateOutputType = {
   title: string | null
   description: string | null
   type: $Enums.MaterialType | null
-  status: $Enums.TopicStatus | null
   accessLevel: $Enums.AccessLevel | null
   fileName: string | null
   coverName: string | null
@@ -58,6 +57,7 @@ export type MaterialMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   topicId: string | null
+  status: $Enums.TopicStatus | null
 }
 
 export type MaterialCountAggregateOutputType = {
@@ -65,7 +65,6 @@ export type MaterialCountAggregateOutputType = {
   title: number
   description: number
   type: number
-  status: number
   accessLevel: number
   fileName: number
   coverName: number
@@ -76,6 +75,7 @@ export type MaterialCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   topicId: number
+  status: number
   _all: number
 }
 
@@ -85,7 +85,6 @@ export type MaterialMinAggregateInputType = {
   title?: true
   description?: true
   type?: true
-  status?: true
   accessLevel?: true
   fileName?: true
   coverName?: true
@@ -96,6 +95,7 @@ export type MaterialMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   topicId?: true
+  status?: true
 }
 
 export type MaterialMaxAggregateInputType = {
@@ -103,7 +103,6 @@ export type MaterialMaxAggregateInputType = {
   title?: true
   description?: true
   type?: true
-  status?: true
   accessLevel?: true
   fileName?: true
   coverName?: true
@@ -114,6 +113,7 @@ export type MaterialMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   topicId?: true
+  status?: true
 }
 
 export type MaterialCountAggregateInputType = {
@@ -121,7 +121,6 @@ export type MaterialCountAggregateInputType = {
   title?: true
   description?: true
   type?: true
-  status?: true
   accessLevel?: true
   fileName?: true
   coverName?: true
@@ -132,6 +131,7 @@ export type MaterialCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   topicId?: true
+  status?: true
   _all?: true
 }
 
@@ -212,7 +212,6 @@ export type MaterialGroupByOutputType = {
   title: string
   description: string | null
   type: $Enums.MaterialType
-  status: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   fileName: string | null
   coverName: string | null
@@ -223,6 +222,7 @@ export type MaterialGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   topicId: string
+  status: $Enums.TopicStatus
   _count: MaterialCountAggregateOutputType | null
   _min: MaterialMinAggregateOutputType | null
   _max: MaterialMaxAggregateOutputType | null
@@ -251,7 +251,6 @@ export type MaterialWhereInput = {
   title?: Prisma.StringFilter<"Material"> | string
   description?: Prisma.StringNullableFilter<"Material"> | string | null
   type?: Prisma.EnumMaterialTypeFilter<"Material"> | $Enums.MaterialType
-  status?: Prisma.EnumTopicStatusFilter<"Material"> | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFilter<"Material"> | $Enums.AccessLevel
   fileName?: Prisma.StringNullableFilter<"Material"> | string | null
   coverName?: Prisma.StringNullableFilter<"Material"> | string | null
@@ -262,8 +261,9 @@ export type MaterialWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Material"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Material"> | Date | string
   topicId?: Prisma.StringFilter<"Material"> | string
-  topic?: Prisma.XOR<Prisma.TopicScalarRelationFilter, Prisma.TopicWhereInput>
+  status?: Prisma.EnumTopicStatusFilter<"Material"> | $Enums.TopicStatus
   exercises?: Prisma.ExerciseListRelationFilter
+  topic?: Prisma.XOR<Prisma.TopicScalarRelationFilter, Prisma.TopicWhereInput>
 }
 
 export type MaterialOrderByWithRelationInput = {
@@ -271,7 +271,6 @@ export type MaterialOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   accessLevel?: Prisma.SortOrder
   fileName?: Prisma.SortOrderInput | Prisma.SortOrder
   coverName?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -282,8 +281,9 @@ export type MaterialOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   topicId?: Prisma.SortOrder
-  topic?: Prisma.TopicOrderByWithRelationInput
+  status?: Prisma.SortOrder
   exercises?: Prisma.ExerciseOrderByRelationAggregateInput
+  topic?: Prisma.TopicOrderByWithRelationInput
 }
 
 export type MaterialWhereUniqueInput = Prisma.AtLeast<{
@@ -294,7 +294,6 @@ export type MaterialWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Material"> | string
   description?: Prisma.StringNullableFilter<"Material"> | string | null
   type?: Prisma.EnumMaterialTypeFilter<"Material"> | $Enums.MaterialType
-  status?: Prisma.EnumTopicStatusFilter<"Material"> | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFilter<"Material"> | $Enums.AccessLevel
   fileName?: Prisma.StringNullableFilter<"Material"> | string | null
   coverName?: Prisma.StringNullableFilter<"Material"> | string | null
@@ -305,8 +304,9 @@ export type MaterialWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Material"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Material"> | Date | string
   topicId?: Prisma.StringFilter<"Material"> | string
-  topic?: Prisma.XOR<Prisma.TopicScalarRelationFilter, Prisma.TopicWhereInput>
+  status?: Prisma.EnumTopicStatusFilter<"Material"> | $Enums.TopicStatus
   exercises?: Prisma.ExerciseListRelationFilter
+  topic?: Prisma.XOR<Prisma.TopicScalarRelationFilter, Prisma.TopicWhereInput>
 }, "id">
 
 export type MaterialOrderByWithAggregationInput = {
@@ -314,7 +314,6 @@ export type MaterialOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   accessLevel?: Prisma.SortOrder
   fileName?: Prisma.SortOrderInput | Prisma.SortOrder
   coverName?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -325,6 +324,7 @@ export type MaterialOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   topicId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   _count?: Prisma.MaterialCountOrderByAggregateInput
   _max?: Prisma.MaterialMaxOrderByAggregateInput
   _min?: Prisma.MaterialMinOrderByAggregateInput
@@ -338,7 +338,6 @@ export type MaterialScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"Material"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Material"> | string | null
   type?: Prisma.EnumMaterialTypeWithAggregatesFilter<"Material"> | $Enums.MaterialType
-  status?: Prisma.EnumTopicStatusWithAggregatesFilter<"Material"> | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelWithAggregatesFilter<"Material"> | $Enums.AccessLevel
   fileName?: Prisma.StringNullableWithAggregatesFilter<"Material"> | string | null
   coverName?: Prisma.StringNullableWithAggregatesFilter<"Material"> | string | null
@@ -349,6 +348,7 @@ export type MaterialScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Material"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Material"> | Date | string
   topicId?: Prisma.StringWithAggregatesFilter<"Material"> | string
+  status?: Prisma.EnumTopicStatusWithAggregatesFilter<"Material"> | $Enums.TopicStatus
 }
 
 export type MaterialCreateInput = {
@@ -356,7 +356,6 @@ export type MaterialCreateInput = {
   title: string
   description?: string | null
   type: $Enums.MaterialType
-  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   fileName?: string | null
   coverName?: string | null
@@ -366,8 +365,9 @@ export type MaterialCreateInput = {
   coverUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  topic: Prisma.TopicCreateNestedOneWithoutMaterialsInput
+  status?: $Enums.TopicStatus
   exercises?: Prisma.ExerciseCreateNestedManyWithoutMaterialInput
+  topic: Prisma.TopicCreateNestedOneWithoutMaterialsInput
 }
 
 export type MaterialUncheckedCreateInput = {
@@ -375,7 +375,6 @@ export type MaterialUncheckedCreateInput = {
   title: string
   description?: string | null
   type: $Enums.MaterialType
-  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   fileName?: string | null
   coverName?: string | null
@@ -386,6 +385,7 @@ export type MaterialUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   topicId: string
+  status?: $Enums.TopicStatus
   exercises?: Prisma.ExerciseUncheckedCreateNestedManyWithoutMaterialInput
 }
 
@@ -394,7 +394,6 @@ export type MaterialUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -404,8 +403,9 @@ export type MaterialUpdateInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  topic?: Prisma.TopicUpdateOneRequiredWithoutMaterialsNestedInput
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   exercises?: Prisma.ExerciseUpdateManyWithoutMaterialNestedInput
+  topic?: Prisma.TopicUpdateOneRequiredWithoutMaterialsNestedInput
 }
 
 export type MaterialUncheckedUpdateInput = {
@@ -413,7 +413,6 @@ export type MaterialUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -424,6 +423,7 @@ export type MaterialUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   topicId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   exercises?: Prisma.ExerciseUncheckedUpdateManyWithoutMaterialNestedInput
 }
 
@@ -432,7 +432,6 @@ export type MaterialCreateManyInput = {
   title: string
   description?: string | null
   type: $Enums.MaterialType
-  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   fileName?: string | null
   coverName?: string | null
@@ -443,6 +442,7 @@ export type MaterialCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   topicId: string
+  status?: $Enums.TopicStatus
 }
 
 export type MaterialUpdateManyMutationInput = {
@@ -450,7 +450,6 @@ export type MaterialUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -460,6 +459,7 @@ export type MaterialUpdateManyMutationInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
 }
 
 export type MaterialUncheckedUpdateManyInput = {
@@ -467,7 +467,6 @@ export type MaterialUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -478,6 +477,7 @@ export type MaterialUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   topicId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
 }
 
 export type MaterialListRelationFilter = {
@@ -495,7 +495,6 @@ export type MaterialCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   accessLevel?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   coverName?: Prisma.SortOrder
@@ -506,6 +505,7 @@ export type MaterialCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   topicId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type MaterialMaxOrderByAggregateInput = {
@@ -513,7 +513,6 @@ export type MaterialMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   accessLevel?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   coverName?: Prisma.SortOrder
@@ -524,6 +523,7 @@ export type MaterialMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   topicId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type MaterialMinOrderByAggregateInput = {
@@ -531,7 +531,6 @@ export type MaterialMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   type?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   accessLevel?: Prisma.SortOrder
   fileName?: Prisma.SortOrder
   coverName?: Prisma.SortOrder
@@ -542,6 +541,7 @@ export type MaterialMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   topicId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
 }
 
 export type MaterialNullableScalarRelationFilter = {
@@ -616,7 +616,6 @@ export type MaterialCreateWithoutTopicInput = {
   title: string
   description?: string | null
   type: $Enums.MaterialType
-  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   fileName?: string | null
   coverName?: string | null
@@ -626,6 +625,7 @@ export type MaterialCreateWithoutTopicInput = {
   coverUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  status?: $Enums.TopicStatus
   exercises?: Prisma.ExerciseCreateNestedManyWithoutMaterialInput
 }
 
@@ -634,7 +634,6 @@ export type MaterialUncheckedCreateWithoutTopicInput = {
   title: string
   description?: string | null
   type: $Enums.MaterialType
-  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   fileName?: string | null
   coverName?: string | null
@@ -644,6 +643,7 @@ export type MaterialUncheckedCreateWithoutTopicInput = {
   coverUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  status?: $Enums.TopicStatus
   exercises?: Prisma.ExerciseUncheckedCreateNestedManyWithoutMaterialInput
 }
 
@@ -681,7 +681,6 @@ export type MaterialScalarWhereInput = {
   title?: Prisma.StringFilter<"Material"> | string
   description?: Prisma.StringNullableFilter<"Material"> | string | null
   type?: Prisma.EnumMaterialTypeFilter<"Material"> | $Enums.MaterialType
-  status?: Prisma.EnumTopicStatusFilter<"Material"> | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFilter<"Material"> | $Enums.AccessLevel
   fileName?: Prisma.StringNullableFilter<"Material"> | string | null
   coverName?: Prisma.StringNullableFilter<"Material"> | string | null
@@ -692,6 +691,7 @@ export type MaterialScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Material"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Material"> | Date | string
   topicId?: Prisma.StringFilter<"Material"> | string
+  status?: Prisma.EnumTopicStatusFilter<"Material"> | $Enums.TopicStatus
 }
 
 export type MaterialCreateWithoutExercisesInput = {
@@ -699,7 +699,6 @@ export type MaterialCreateWithoutExercisesInput = {
   title: string
   description?: string | null
   type: $Enums.MaterialType
-  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   fileName?: string | null
   coverName?: string | null
@@ -709,6 +708,7 @@ export type MaterialCreateWithoutExercisesInput = {
   coverUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  status?: $Enums.TopicStatus
   topic: Prisma.TopicCreateNestedOneWithoutMaterialsInput
 }
 
@@ -717,7 +717,6 @@ export type MaterialUncheckedCreateWithoutExercisesInput = {
   title: string
   description?: string | null
   type: $Enums.MaterialType
-  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   fileName?: string | null
   coverName?: string | null
@@ -728,6 +727,7 @@ export type MaterialUncheckedCreateWithoutExercisesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   topicId: string
+  status?: $Enums.TopicStatus
 }
 
 export type MaterialCreateOrConnectWithoutExercisesInput = {
@@ -751,7 +751,6 @@ export type MaterialUpdateWithoutExercisesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -761,6 +760,7 @@ export type MaterialUpdateWithoutExercisesInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   topic?: Prisma.TopicUpdateOneRequiredWithoutMaterialsNestedInput
 }
 
@@ -769,7 +769,6 @@ export type MaterialUncheckedUpdateWithoutExercisesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -780,6 +779,7 @@ export type MaterialUncheckedUpdateWithoutExercisesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   topicId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
 }
 
 export type MaterialCreateManyTopicInput = {
@@ -787,7 +787,6 @@ export type MaterialCreateManyTopicInput = {
   title: string
   description?: string | null
   type: $Enums.MaterialType
-  status?: $Enums.TopicStatus
   accessLevel: $Enums.AccessLevel
   fileName?: string | null
   coverName?: string | null
@@ -797,6 +796,7 @@ export type MaterialCreateManyTopicInput = {
   coverUrl?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  status?: $Enums.TopicStatus
 }
 
 export type MaterialUpdateWithoutTopicInput = {
@@ -804,7 +804,6 @@ export type MaterialUpdateWithoutTopicInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -814,6 +813,7 @@ export type MaterialUpdateWithoutTopicInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   exercises?: Prisma.ExerciseUpdateManyWithoutMaterialNestedInput
 }
 
@@ -822,7 +822,6 @@ export type MaterialUncheckedUpdateWithoutTopicInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -832,6 +831,7 @@ export type MaterialUncheckedUpdateWithoutTopicInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   exercises?: Prisma.ExerciseUncheckedUpdateManyWithoutMaterialNestedInput
 }
 
@@ -840,7 +840,6 @@ export type MaterialUncheckedUpdateManyWithoutTopicInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
   accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   fileName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -850,6 +849,7 @@ export type MaterialUncheckedUpdateManyWithoutTopicInput = {
   coverUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
 }
 
 
@@ -888,7 +888,6 @@ export type MaterialSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   title?: boolean
   description?: boolean
   type?: boolean
-  status?: boolean
   accessLevel?: boolean
   fileName?: boolean
   coverName?: boolean
@@ -899,8 +898,9 @@ export type MaterialSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   updatedAt?: boolean
   topicId?: boolean
-  topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
+  status?: boolean
   exercises?: boolean | Prisma.Material$exercisesArgs<ExtArgs>
+  topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.MaterialCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["material"]>
 
@@ -909,7 +909,6 @@ export type MaterialSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   title?: boolean
   description?: boolean
   type?: boolean
-  status?: boolean
   accessLevel?: boolean
   fileName?: boolean
   coverName?: boolean
@@ -920,6 +919,7 @@ export type MaterialSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   createdAt?: boolean
   updatedAt?: boolean
   topicId?: boolean
+  status?: boolean
   topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["material"]>
 
@@ -928,7 +928,6 @@ export type MaterialSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   title?: boolean
   description?: boolean
   type?: boolean
-  status?: boolean
   accessLevel?: boolean
   fileName?: boolean
   coverName?: boolean
@@ -939,6 +938,7 @@ export type MaterialSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   createdAt?: boolean
   updatedAt?: boolean
   topicId?: boolean
+  status?: boolean
   topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["material"]>
 
@@ -947,7 +947,6 @@ export type MaterialSelectScalar = {
   title?: boolean
   description?: boolean
   type?: boolean
-  status?: boolean
   accessLevel?: boolean
   fileName?: boolean
   coverName?: boolean
@@ -958,12 +957,13 @@ export type MaterialSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   topicId?: boolean
+  status?: boolean
 }
 
-export type MaterialOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "type" | "status" | "accessLevel" | "fileName" | "coverName" | "filePath" | "coverPath" | "fileUrl" | "coverUrl" | "createdAt" | "updatedAt" | "topicId", ExtArgs["result"]["material"]>
+export type MaterialOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "type" | "accessLevel" | "fileName" | "coverName" | "filePath" | "coverPath" | "fileUrl" | "coverUrl" | "createdAt" | "updatedAt" | "topicId" | "status", ExtArgs["result"]["material"]>
 export type MaterialInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
   exercises?: boolean | Prisma.Material$exercisesArgs<ExtArgs>
+  topic?: boolean | Prisma.TopicDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.MaterialCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MaterialIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -976,15 +976,14 @@ export type MaterialIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type $MaterialPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Material"
   objects: {
-    topic: Prisma.$TopicPayload<ExtArgs>
     exercises: Prisma.$ExercisePayload<ExtArgs>[]
+    topic: Prisma.$TopicPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     title: string
     description: string | null
     type: $Enums.MaterialType
-    status: $Enums.TopicStatus
     accessLevel: $Enums.AccessLevel
     fileName: string | null
     coverName: string | null
@@ -995,6 +994,7 @@ export type $MaterialPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     createdAt: Date
     updatedAt: Date
     topicId: string
+    status: $Enums.TopicStatus
   }, ExtArgs["result"]["material"]>
   composites: {}
 }
@@ -1389,8 +1389,8 @@ readonly fields: MaterialFieldRefs;
  */
 export interface Prisma__MaterialClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  topic<T extends Prisma.TopicDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TopicDefaultArgs<ExtArgs>>): Prisma.Prisma__TopicClient<runtime.Types.Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   exercises<T extends Prisma.Material$exercisesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Material$exercisesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExercisePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  topic<T extends Prisma.TopicDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TopicDefaultArgs<ExtArgs>>): Prisma.Prisma__TopicClient<runtime.Types.Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1424,7 +1424,6 @@ export interface MaterialFieldRefs {
   readonly title: Prisma.FieldRef<"Material", 'String'>
   readonly description: Prisma.FieldRef<"Material", 'String'>
   readonly type: Prisma.FieldRef<"Material", 'MaterialType'>
-  readonly status: Prisma.FieldRef<"Material", 'TopicStatus'>
   readonly accessLevel: Prisma.FieldRef<"Material", 'AccessLevel'>
   readonly fileName: Prisma.FieldRef<"Material", 'String'>
   readonly coverName: Prisma.FieldRef<"Material", 'String'>
@@ -1435,6 +1434,7 @@ export interface MaterialFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Material", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Material", 'DateTime'>
   readonly topicId: Prisma.FieldRef<"Material", 'String'>
+  readonly status: Prisma.FieldRef<"Material", 'TopicStatus'>
 }
     
 

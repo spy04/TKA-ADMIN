@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useActionState } from "react";
 import { type MaterialFormState, updateMaterialAction } from "@/app/admin/actions";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
 type TopicOption = {
@@ -44,103 +47,151 @@ function toMaterialTypeValue(type: MaterialEditFormProps["material"]["type"]) {
 
 export function MaterialEditForm({ material, topics }: MaterialEditFormProps) {
   const [state, formAction, isPending] = useActionState(updateMaterialAction, initialState);
+  const [materialType, setMaterialType] = useState(toMaterialTypeValue(material.type));
+  const isVideoMaterial = materialType === "video";
 
   return (
-    <form className="topic-form" action={formAction}>
+    <form className="space-y-4" action={formAction}>
       <input type="hidden" name="materialId" value={material.id} />
 
       {state.error ? <Alert variant="destructive">{state.error}</Alert> : null}
       {state.success ? <Alert variant="success">{state.success}</Alert> : null}
 
-      <section className="form-section">
-        <div className="form-grid">
-          <label className="field field-span-2">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Informasi materi</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-4 pt-0 md:grid-cols-2">
+          <div className="space-y-2 md:col-span-2">
             <Label htmlFor="topicId">Pilih topic</Label>
-            <select className="shad-select" id="topicId" name="topicId" defaultValue={material.topicId}>
-              {topics.map((topic) => (
-                <option key={topic.id} value={topic.id}>
-                  {topic.title} - {topic.category} - {topic.difficulty}
-                </option>
-              ))}
-            </select>
-          </label>
+            <Select name="topicId" defaultValue={material.topicId}>
+              <SelectTrigger id="topicId">
+                <SelectValue placeholder="Pilih topic tujuan" />
+              </SelectTrigger>
+              <SelectContent>
+                {topics.map((topic) => (
+                  <SelectItem key={topic.id} value={topic.id}>
+                    {topic.title} - {topic.category} - {topic.difficulty}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-          <label className="field field-span-2">
+          <label className="space-y-2 md:col-span-2">
             <Label htmlFor="materialTitle">Judul materi</Label>
             <Input id="materialTitle" name="materialTitle" type="text" defaultValue={material.title} />
           </label>
 
-          <label className="field">
+          <div className="space-y-2">
             <Label htmlFor="materialType">Tipe materi</Label>
-            <select className="shad-select" id="materialType" name="materialType" defaultValue={toMaterialTypeValue(material.type)}>
-              <option value="video">Video</option>
-              <option value="pdf">PDF</option>
-              <option value="slide">Slide</option>
-              <option value="dokumen">Dokumen</option>
-            </select>
-          </label>
+            <Select name="materialType" value={materialType} onValueChange={setMaterialType}>
+              <SelectTrigger id="materialType">
+                <SelectValue placeholder="Pilih tipe materi" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="video">Video</SelectItem>
+                <SelectItem value="pdf">PDF</SelectItem>
+                <SelectItem value="slide">Slide</SelectItem>
+                <SelectItem value="dokumen">Dokumen</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-          <label className="field">
+          <div className="space-y-2">
             <Label htmlFor="materialAccess">Status akses materi</Label>
-            <select
-              className="shad-select"
-              id="materialAccess"
-              name="materialAccess"
-              defaultValue={material.accessLevel === "PREVIEW" ? "preview" : "enrolled"}
-            >
-              <option value="preview">Bisa dilihat dulu</option>
-              <option value="enrolled">Khusus user enrolled</option>
-            </select>
-          </label>
+            <Select name="materialAccess" defaultValue={material.accessLevel === "PREVIEW" ? "preview" : "enrolled"}>
+              <SelectTrigger id="materialAccess">
+                <SelectValue placeholder="Pilih akses" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="preview">Bisa dilihat dulu</SelectItem>
+                <SelectItem value="enrolled">Khusus user enrolled</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-          <label className="field">
+          <div className="space-y-2">
             <Label htmlFor="materialStatus">Status tayang</Label>
-            <select
-              className="shad-select"
-              id="materialStatus"
-              name="materialStatus"
-              defaultValue={material.status === "PUBLISHED" ? "published" : "draft"}
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </label>
+            <Select name="materialStatus" defaultValue={material.status === "PUBLISHED" ? "published" : "draft"}>
+              <SelectTrigger id="materialStatus">
+                <SelectValue placeholder="Pilih status tayang" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="published">Published</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-          <label className="field field-span-2">
+          <label className="space-y-2 md:col-span-2">
             <Label htmlFor="materialDescription">Deskripsi materi</Label>
             <Textarea id="materialDescription" name="materialDescription" defaultValue={material.description ?? ""} />
           </label>
 
-          <label className="field">
-            <Label htmlFor="materialFile">Upload file materi baru</Label>
-            <Input id="materialFile" className="file:mr-3" name="materialFile" type="file" />
-            <span className="helper-text">File saat ini: {material.fileName ?? "Belum ada file tersimpan."}</span>
-            {material.fileUrl ? (
-              <a className="helper-text" href={material.fileUrl} target="_blank" rel="noreferrer">
-                Buka file saat ini
-              </a>
-            ) : null}
-          </label>
+          {isVideoMaterial ? (
+            <label className="space-y-2 md:col-span-2">
+              <Label htmlFor="materialVideoUrl">Link video</Label>
+              <Input
+                id="materialVideoUrl"
+                name="materialVideoUrl"
+                type="url"
+                defaultValue={material.type === "VIDEO" ? (material.fileUrl ?? "") : ""}
+                placeholder="https://youtu.be/... atau https://drive.google.com/file/d/..."
+              />
+              <p className="text-sm text-muted-foreground">
+                Materi video menggunakan link YouTube atau Google Drive. Kalau tipe diubah ke video, isi link ini sebelum menyimpan.
+              </p>
+              {material.type === "VIDEO" && material.fileUrl ? (
+                <a
+                  className="text-sm text-primary underline-offset-4 hover:underline"
+                  href={material.fileUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Buka link video saat ini
+                </a>
+              ) : null}
+            </label>
+          ) : (
+            <label className="space-y-2">
+              <Label htmlFor="materialFile">Upload file materi baru</Label>
+              <Input id="materialFile" className="file:mr-3" name="materialFile" type="file" />
+              <span className="text-sm text-muted-foreground">
+                File saat ini: {material.fileName ?? "Belum ada file tersimpan."}
+              </span>
+              {material.fileUrl ? (
+                <a
+                  className="text-sm text-primary underline-offset-4 hover:underline"
+                  href={material.fileUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Buka file saat ini
+                </a>
+              ) : null}
+            </label>
+          )}
 
-          <label className="field">
+          <label className="space-y-2">
             <Label htmlFor="materialCover">Thumbnail atau cover baru</Label>
             <Input id="materialCover" className="file:mr-3" name="materialCover" type="file" />
-            <span className="helper-text">Cover saat ini: {material.coverName ?? "Belum ada cover tersimpan."}</span>
+            <span className="text-sm text-muted-foreground">Cover saat ini: {material.coverName ?? "Belum ada cover tersimpan."}</span>
             {material.coverUrl ? (
-              <a className="helper-text" href={material.coverUrl} target="_blank" rel="noreferrer">
+              <a className="text-sm text-primary underline-offset-4 hover:underline" href={material.coverUrl} target="_blank" rel="noreferrer">
                 Buka cover saat ini
               </a>
             ) : null}
           </label>
-        </div>
-      </section>
+        </CardContent>
+      </Card>
 
-      <div className="button-row">
+      <div className="flex flex-wrap items-center gap-2">
         <Button type="submit" disabled={isPending}>
           {isPending ? "Menyimpan perubahan..." : "Simpan Perubahan Materi"}
         </Button>
         <Button asChild variant="secondary">
-          <Link href="/admin/content">Kembali ke Daftar</Link>
+          <Link href={`/admin/topics/${material.topicId}`}>Kembali ke Detail Topic</Link>
         </Button>
       </div>
     </form>

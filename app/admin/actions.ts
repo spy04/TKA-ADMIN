@@ -33,10 +33,65 @@ export type QuestionFormState = {
   success?: string;
 };
 
+export type ImportReviewStatus = "valid" | "warning" | "error";
+
+export type ImportReviewQuestion = {
+  questionType: "SINGLE_CHOICE" | "MULTIPLE_CHOICE" | "ESSAY" | "TRUE_FALSE";
+  prompt: string;
+  optionA: string | null;
+  optionB: string | null;
+  optionC: string | null;
+  optionD: string | null;
+  optionE: string | null;
+  correctAnswer: "A" | "B" | "C" | "D" | "E" | null;
+  correctAnswers: string | null;
+  sampleAnswer: string | null;
+  explanation: string | null;
+  points: number;
+};
+
+export type ImportQuestionReviewItem = {
+  id: string;
+  orderNumber: number;
+  status: ImportReviewStatus;
+  warnings: string[];
+  errors: string[];
+  imageCount: number;
+  promptPreview: string;
+  question: ImportReviewQuestion;
+  debug: {
+    parserQuestion: ImportedQuestionInput;
+    payloadInput: {
+      questionType: string;
+      prompt: string;
+      optionA: string;
+      optionB: string;
+      optionC: string;
+      optionD: string;
+      optionE: string;
+      correctAnswer: string;
+      correctAnswers: string;
+      sampleAnswer: string;
+      explanation: string;
+      points: string;
+    };
+    normalizedQuestion: ImportReviewQuestion | null;
+  };
+};
+
+export type ImportQuestionReview = {
+  total: number;
+  validCount: number;
+  warningCount: number;
+  errorCount: number;
+  items: ImportQuestionReviewItem[];
+};
+
 export type ImportQuestionFormState = {
   error?: string;
   success?: string;
   importedFileName?: string;
+  importReview?: ImportQuestionReview;
 };
 
 const defaultError = "Login gagal. Periksa username dan password lalu coba lagi.";
@@ -110,12 +165,76 @@ function mapMaterialType(value: string) {
   return "VIDEO";
 }
 
+function isUploadedFile(value: FormDataEntryValue | null): value is File {
+  return value instanceof File && value.size > 0;
+}
+
+function normalizeVideoMaterialUrl(value: string) {
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return null;
+  }
+
+  try {
+    const url = new URL(trimmed);
+    const hostname = url.hostname.toLowerCase().replace(/^www\./, "");
+
+    const isYoutubeHost = hostname === "youtu.be" || hostname.endsWith("youtube.com");
+    const isGoogleDriveHost = hostname === "drive.google.com" || hostname === "docs.google.com";
+
+    if (!["http:", "https:"].includes(url.protocol) || (!isYoutubeHost && !isGoogleDriveHost)) {
+      return null;
+    }
+
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
+function describeVideoMaterialSource(videoUrl: string) {
+  try {
+    const url = new URL(videoUrl);
+    const hostname = url.hostname.toLowerCase().replace(/^www\./, "");
+
+    if (hostname === "youtu.be" || hostname.endsWith("youtube.com")) {
+      return "Link Video YouTube";
+    }
+
+    if (hostname === "drive.google.com" || hostname === "docs.google.com") {
+      return "Link Video Google Drive";
+    }
+  } catch {
+    return "Link Video";
+  }
+
+  return "Link Video";
+}
+
 function mapAccessLevel(value: string) {
   return value === "preview" ? "PREVIEW" : "ENROLLED";
 }
 
 function mapContentStatus(value: string) {
   return value === "published" ? "PUBLISHED" : "DRAFT";
+}
+
+function normalizeExerciseScope(value: string) {
+  return value === "category" ? "CATEGORY" : "TOPIC";
+}
+
+function buildExerciseCategoryKey(category: string, difficulty: string) {
+  return `${category}:::${difficulty}`;
+}
+
+function parseExerciseCategoryKey(value: string) {
+  const [category = "", difficulty = ""] = value.split(":::");
+
+  return {
+    category: category.trim(),
+    difficulty: difficulty.trim(),
+  };
 }
 
 async function uploadMaterialAssets({
@@ -128,7 +247,7 @@ async function uploadMaterialAssets({
   materialCover: FormDataEntryValue | null;
 }) {
   const fileUpload =
-    materialFile instanceof File && materialFile.size > 0
+    isUploadedFile(materialFile)
       ? await uploadToSupabaseStorage({
           file: materialFile,
           folder: `materials/${topicId}/files`,
@@ -136,7 +255,7 @@ async function uploadMaterialAssets({
       : null;
 
   const coverUpload =
-    materialCover instanceof File && materialCover.size > 0
+    isUploadedFile(materialCover)
       ? await uploadToSupabaseStorage({
           file: materialCover,
           folder: `materials/${topicId}/covers`,
@@ -171,6 +290,10 @@ function normalizeAnswerKeys(value: string) {
   return validAnswers;
 }
 
+function normalizeTrueFalseAnswerKeys(value: string) {
+  return normalizeAnswerKeys(value).filter((item) => item !== "E");
+}
+
 const optionKeys = ["A", "B", "C", "D", "E"] as const;
 
 type QuestionPayloadInput = {
@@ -187,6 +310,127 @@ type QuestionPayloadInput = {
   explanation: string;
   points: string;
 };
+
+function mapQuestionTypeToReviewType(value: string): ImportReviewQuestion["questionType"] {
+  const normalized = value.trim().toLowerCase();
+
+  if (normalized === "multiple-choice" || normalized === "multiple_choice") {
+    return "MULTIPLE_CHOICE";
+  }
+
+  if (normalized === "essay") {
+    return "ESSAY";
+  }
+
+  if (normalized === "true-false" || normalized === "true_false") {
+    return "TRUE_FALSE";
+  }
+
+  return "SINGLE_CHOICE";
+}
+
+function summarizePromptPreview(value: string) {
+  return value.replace(/\s+/g, " ").trim().slice(0, 180);
+}
+
+function countMarkdownImages(value: string) {
+  return (value.match(/!\[[^\]]*]\([^)]+\)/g) ?? []).length;
+}
+
+function countReviewQuestionImages(question: ImportReviewQuestion) {
+  return [
+    question.prompt,
+    question.optionA,
+    question.optionB,
+    question.optionC,
+    question.optionD,
+    question.optionE,
+    question.sampleAnswer,
+    question.explanation,
+  ].reduce((count, value) => count + countMarkdownImages(value ?? ""), 0);
+}
+
+function createReviewQuestionFromPayloadInput(payloadInput: QuestionPayloadInput): ImportReviewQuestion {
+  return {
+    questionType: mapQuestionTypeToReviewType(payloadInput.questionType),
+    prompt: payloadInput.prompt,
+    optionA: payloadInput.optionA || null,
+    optionB: payloadInput.optionB || null,
+    optionC: payloadInput.optionC || null,
+    optionD: payloadInput.optionD || null,
+    optionE: payloadInput.optionE || null,
+    correctAnswer: (payloadInput.correctAnswer.trim().toUpperCase() as ImportReviewQuestion["correctAnswer"]) || null,
+    correctAnswers: payloadInput.correctAnswers.trim().toUpperCase() || null,
+    sampleAnswer: payloadInput.sampleAnswer || null,
+    explanation: payloadInput.explanation || null,
+    points: parseQuestionPoints(payloadInput.points.trim() || "10") ?? 10,
+  };
+}
+
+function createImportReviewItem({
+  errors,
+  orderNumber,
+  parserQuestion,
+  payloadInput,
+  payloadResult,
+  warnings = [],
+}: {
+  errors?: string[];
+  orderNumber: number;
+  parserQuestion: ImportedQuestionInput;
+  payloadInput: QuestionPayloadInput;
+  payloadResult: ReturnType<typeof buildQuestionPayloadFromInput>;
+  warnings?: string[];
+}): ImportQuestionReviewItem {
+  const normalizedQuestion =
+    "data" in payloadResult && payloadResult.data
+      ? {
+          questionType: payloadResult.data.questionType,
+          prompt: payloadResult.data.prompt,
+          optionA: payloadResult.data.optionA,
+          optionB: payloadResult.data.optionB,
+          optionC: payloadResult.data.optionC,
+          optionD: payloadResult.data.optionD,
+          optionE: payloadResult.data.optionE,
+          correctAnswer: payloadResult.data.correctAnswer,
+          correctAnswers: payloadResult.data.correctAnswers,
+          sampleAnswer: payloadResult.data.sampleAnswer,
+          explanation: payloadResult.data.explanation,
+          points: payloadResult.data.points,
+        }
+      : null;
+  const questionForReview = normalizedQuestion ?? createReviewQuestionFromPayloadInput(payloadInput);
+  const itemErrors = (errors ?? ("error" in payloadResult ? [payloadResult.error] : [])).filter(
+    (value): value is string => Boolean(value),
+  );
+  const status: ImportReviewStatus = itemErrors.length > 0 ? "error" : warnings.length > 0 ? "warning" : "valid";
+
+  return {
+    id: `import-review-${orderNumber}`,
+    orderNumber,
+    status,
+    warnings,
+    errors: itemErrors,
+    imageCount: countReviewQuestionImages(questionForReview),
+    promptPreview: summarizePromptPreview(questionForReview.prompt),
+    question: questionForReview,
+    debug: {
+      parserQuestion,
+      payloadInput,
+      normalizedQuestion,
+    },
+  };
+}
+
+function createImportReview(items: ImportQuestionReviewItem[]): ImportQuestionReview {
+  return {
+    total: items.length,
+    validCount: items.filter((item) => item.status === "valid").length,
+    warningCount: items.filter((item) => item.status === "warning").length,
+    errorCount: items.filter((item) => item.status === "error").length,
+    items,
+  };
+}
 
 function parseQuestionPoints(value: string) {
   const normalized = value.trim();
@@ -359,9 +603,10 @@ function buildQuestionPayloadFromInput({
   } satisfies Record<(typeof optionKeys)[number], string>;
   const filledOptionKeys = optionKeys.filter((key) => Boolean(options[key]));
   const hasChoiceAnswers = Boolean(normalizedCorrectAnswer || normalizedCorrectAnswers);
+  const isTrueFalseQuestion = normalizedQuestionType === "true-false";
   const shouldTreatAsEssay =
     normalizedQuestionType === "essay" ||
-    (!hasChoiceAnswers && Boolean(normalizedSampleAnswer || normalizedExplanation));
+    (!isTrueFalseQuestion && !hasChoiceAnswers && Boolean(normalizedSampleAnswer || normalizedExplanation));
 
   if (shouldTreatAsEssay) {
     if (!normalizedSampleAnswer && !normalizedExplanation) {
@@ -380,6 +625,60 @@ function buildQuestionPayloadFromInput({
         correctAnswer: null,
         correctAnswers: null,
         sampleAnswer: normalizedSampleAnswer || normalizedExplanation,
+        explanation: normalizedExplanation || null,
+        points: normalizedPoints,
+      },
+    } as const;
+  }
+
+  if (isTrueFalseQuestion) {
+    const answerSource = normalizedCorrectAnswers || normalizedCorrectAnswer;
+    const normalizedSourceAnswers = normalizeAnswerKeys(answerSource);
+    const answers = normalizeTrueFalseAnswerKeys(answerSource);
+
+    if (!filledOptionKeys.length) {
+      return { error: "Untuk soal benar/salah, isi minimal satu pernyataan." } as const;
+    }
+
+    if (normalizedOptionE) {
+      return { error: "Soal benar/salah saat ini maksimal 4 pernyataan." } as const;
+    }
+
+    const highestFilledIndex = Math.max(...filledOptionKeys.map((key) => optionKeys.indexOf(key)));
+    const missingBeforeHighest = optionKeys
+      .slice(0, highestFilledIndex)
+      .filter((key) => !options[key]);
+
+    if (missingBeforeHighest.length > 0) {
+      return {
+        error: `Pernyataan ${missingBeforeHighest.join(", ")} masih kosong. Isi pernyataan secara berurutan tanpa melompati huruf.`,
+      } as const;
+    }
+
+    if (normalizedSourceAnswers.includes("E")) {
+      return { error: "Soal benar/salah hanya mendukung pernyataan A sampai D." } as const;
+    }
+
+    const invalidAnswers = answers.filter((answer) => !filledOptionKeys.includes(answer as (typeof optionKeys)[number]));
+
+    if (invalidAnswers.length > 0) {
+      return {
+        error: `Pernyataan benar ${invalidAnswers.join(", ")} belum punya isi.`,
+      } as const;
+    }
+
+    return {
+      data: {
+        questionType: "TRUE_FALSE" as const,
+        prompt: normalizedPrompt,
+        optionA: normalizedOptionA,
+        optionB: normalizedOptionB,
+        optionC: normalizedOptionC || null,
+        optionD: normalizedOptionD || null,
+        optionE: null,
+        correctAnswer: null,
+        correctAnswers: answers.length > 0 ? answers.join(",") : null,
+        sampleAnswer: null,
         explanation: normalizedExplanation || null,
         points: normalizedPoints,
       },
@@ -770,12 +1069,30 @@ export async function createMaterialAction(
   const materialStatus = String(formData.get("materialStatus") ?? "").trim();
   const materialAccess = String(formData.get("materialAccess") ?? "").trim();
   const materialDescription = String(formData.get("materialDescription") ?? "").trim();
+  const materialVideoUrl = String(formData.get("materialVideoUrl") ?? "").trim();
   const materialFile = formData.get("materialFile");
   const materialCover = formData.get("materialCover");
+  const nextMaterialType = mapMaterialType(materialType);
+  const isVideoMaterial = nextMaterialType === "VIDEO";
+  const normalizedVideoUrl = isVideoMaterial ? normalizeVideoMaterialUrl(materialVideoUrl) : null;
+  const uploadedMaterialFile = isUploadedFile(materialFile) ? materialFile : null;
+  const uploadedMaterialCover = isUploadedFile(materialCover) ? materialCover : null;
 
   if (!topicId || !materialTitle || !materialType) {
     return {
       error: "Pilih topic lalu lengkapi data materi sebelum menyimpan.",
+    };
+  }
+
+  if (isVideoMaterial && !normalizedVideoUrl) {
+    return {
+      error: "Untuk materi video, masukkan link YouTube atau Google Drive yang valid.",
+    };
+  }
+
+  if (!isVideoMaterial && !uploadedMaterialFile) {
+    return {
+      error: "Untuk materi selain video, upload file materinya terlebih dahulu.",
     };
   }
 
@@ -807,7 +1124,7 @@ export async function createMaterialAction(
   try {
     const { fileUpload, coverUpload } = await uploadMaterialAssets({
       topicId,
-      materialFile,
+      materialFile: isVideoMaterial ? null : materialFile,
       materialCover,
     });
 
@@ -816,14 +1133,14 @@ export async function createMaterialAction(
         topicId,
         title: materialTitle,
         description: materialDescription || null,
-        type: mapMaterialType(materialType),
+        type: nextMaterialType,
         status: mapContentStatus(materialStatus),
         accessLevel: mapAccessLevel(materialAccess),
-        fileName: materialFile instanceof File && materialFile.size > 0 ? materialFile.name : null,
-        coverName: materialCover instanceof File && materialCover.size > 0 ? materialCover.name : null,
-        filePath: fileUpload?.path ?? null,
+        fileName: isVideoMaterial ? describeVideoMaterialSource(normalizedVideoUrl!) : uploadedMaterialFile!.name,
+        coverName: uploadedMaterialCover?.name ?? null,
+        filePath: isVideoMaterial ? null : (fileUpload?.path ?? null),
         coverPath: coverUpload?.path ?? null,
-        fileUrl: fileUpload?.publicUrl ?? null,
+        fileUrl: isVideoMaterial ? normalizedVideoUrl : (fileUpload?.publicUrl ?? null),
         coverUrl: coverUpload?.publicUrl ?? null,
       },
     });
@@ -858,8 +1175,14 @@ export async function updateMaterialAction(
   const materialStatus = String(formData.get("materialStatus") ?? "").trim();
   const materialAccess = String(formData.get("materialAccess") ?? "").trim();
   const materialDescription = String(formData.get("materialDescription") ?? "").trim();
+  const materialVideoUrl = String(formData.get("materialVideoUrl") ?? "").trim();
   const materialFile = formData.get("materialFile");
   const materialCover = formData.get("materialCover");
+  const nextMaterialType = mapMaterialType(materialType);
+  const isVideoMaterial = nextMaterialType === "VIDEO";
+  const normalizedVideoUrl = isVideoMaterial ? normalizeVideoMaterialUrl(materialVideoUrl) : null;
+  const uploadedMaterialFile = isUploadedFile(materialFile) ? materialFile : null;
+  const uploadedMaterialCover = isUploadedFile(materialCover) ? materialCover : null;
 
   if (!materialId || !topicId || !materialTitle || !materialType) {
     return {
@@ -873,10 +1196,39 @@ export async function updateMaterialAction(
     return prismaResult;
   }
 
+  const existingMaterial = await prismaResult.prisma.material.findUnique({
+    where: { id: materialId },
+    select: {
+      id: true,
+      type: true,
+      fileName: true,
+      filePath: true,
+      fileUrl: true,
+    },
+  });
+
+  if (!existingMaterial) {
+    return {
+      error: "Materi yang ingin diubah tidak ditemukan. Buka ulang dari daftar materi lalu coba lagi.",
+    };
+  }
+
+  if (isVideoMaterial && !normalizedVideoUrl) {
+    return {
+      error: "Untuk materi video, masukkan link YouTube atau Google Drive yang valid.",
+    };
+  }
+
+  if (!isVideoMaterial && !uploadedMaterialFile && existingMaterial.type === "VIDEO") {
+    return {
+      error: "Karena tipe materi diubah dari video, upload file baru untuk materi ini.",
+    };
+  }
+
   try {
     const { fileUpload, coverUpload } = await uploadMaterialAssets({
       topicId,
-      materialFile,
+      materialFile: isVideoMaterial ? null : materialFile,
       materialCover,
     });
 
@@ -886,14 +1238,18 @@ export async function updateMaterialAction(
         topicId,
         title: materialTitle,
         description: materialDescription || null,
-        type: mapMaterialType(materialType),
+        type: nextMaterialType,
         status: mapContentStatus(materialStatus),
         accessLevel: mapAccessLevel(materialAccess),
-        fileName: materialFile instanceof File && materialFile.size > 0 ? materialFile.name : undefined,
-        coverName: materialCover instanceof File && materialCover.size > 0 ? materialCover.name : undefined,
-        filePath: fileUpload?.path,
+        fileName: isVideoMaterial
+          ? describeVideoMaterialSource(normalizedVideoUrl!)
+          : uploadedMaterialFile
+            ? uploadedMaterialFile.name
+            : undefined,
+        coverName: uploadedMaterialCover ? uploadedMaterialCover.name : undefined,
+        filePath: isVideoMaterial ? null : fileUpload?.path,
         coverPath: coverUpload?.path,
-        fileUrl: fileUpload?.publicUrl,
+        fileUrl: isVideoMaterial ? normalizedVideoUrl : fileUpload?.publicUrl,
         coverUrl: coverUpload?.publicUrl,
       },
     });
@@ -982,23 +1338,30 @@ export async function createExerciseAction(
     return authError;
   }
 
+  const placementScope = String(formData.get("placementScope") ?? "").trim();
   const topicId = String(formData.get("topicId") ?? "").trim();
-  const relationMode = String(formData.get("relationMode") ?? "").trim();
-  const materialId = String(formData.get("materialId") ?? "").trim();
+  const categoryKey = String(formData.get("categoryKey") ?? "").trim();
   const exerciseTitle = String(formData.get("exerciseTitle") ?? "").trim();
   const exerciseStatus = String(formData.get("exerciseStatus") ?? "").trim();
   const exerciseAccess = String(formData.get("exerciseAccess") ?? "").trim();
   const adminNotes = String(formData.get("adminNotes") ?? "").trim();
+  const normalizedScope = normalizeExerciseScope(placementScope);
 
-  if (!topicId || !exerciseTitle) {
+  if (!exerciseTitle) {
     return {
-      error: "Pilih topic dan isi judul latihan sebelum menyimpan.",
+      error: "Isi judul latihan terlebih dahulu sebelum menyimpan.",
     };
   }
 
-  if (relationMode === "material" && !materialId) {
+  if (normalizedScope === "TOPIC" && !topicId) {
     return {
-      error: "Kalau latihan ingin terhubung ke materi, pilih materinya juga.",
+      error: "Pilih topic tujuan untuk latihan ini.",
+    };
+  }
+
+  if (normalizedScope === "CATEGORY" && !categoryKey) {
+    return {
+      error: "Pilih kategori dan jenjang tujuan untuk latihan ini.",
     };
   }
 
@@ -1008,54 +1371,54 @@ export async function createExerciseAction(
     return prismaResult;
   }
 
-  let topic;
+  let topic:
+    | {
+        id: string;
+        title: string;
+        category: string;
+        difficulty: string;
+      }
+    | null = null;
 
   try {
-    topic = await prismaResult.prisma.topic.findUnique({
-      where: { id: topicId },
-      select: { id: true, title: true },
-    });
+    if (normalizedScope === "CATEGORY") {
+      const { category, difficulty } = parseExerciseCategoryKey(categoryKey);
+
+      topic = await prismaResult.prisma.topic.findFirst({
+        where: {
+          category,
+          difficulty,
+        },
+        orderBy: { createdAt: "asc" },
+        select: { id: true, title: true, category: true, difficulty: true },
+      });
+    } else {
+      topic = await prismaResult.prisma.topic.findUnique({
+        where: { id: topicId },
+        select: { id: true, title: true, category: true, difficulty: true },
+      });
+    }
   } catch (error) {
     return {
-      error: toDatabaseErrorMessage(error, "Gagal membaca topic dari database."),
+      error: toDatabaseErrorMessage(error, "Gagal membaca penempatan latihan dari database."),
     };
   }
 
   if (!topic) {
     return {
-      error: "Topic yang dipilih tidak ditemukan.",
-    };
-  }
-
-  if (relationMode === "material" && materialId) {
-    let material;
-
-    try {
-      material = await prismaResult.prisma.material.findFirst({
-        where: {
-          id: materialId,
-          topicId,
-        },
-        select: { id: true, title: true },
-      });
-    } catch (error) {
-      return {
-        error: toDatabaseErrorMessage(error, "Gagal membaca materi dari database."),
-      };
-    }
-
-    if (!material) {
-      return {
-        error: "Materi yang dipilih tidak cocok dengan topic ini.",
-      };
+      error:
+        normalizedScope === "CATEGORY"
+          ? "Belum ada topic pada kategori dan jenjang yang dipilih."
+          : "Topic yang dipilih tidak ditemukan.",
     }
   }
 
   try {
     await prismaResult.prisma.exercise.create({
       data: {
-        topicId,
-        materialId: relationMode === "material" ? materialId : null,
+        topicId: topic.id,
+        materialId: null,
+        scope: normalizedScope,
         title: exerciseTitle,
         questionCount: 0,
         status: mapContentStatus(exerciseStatus),
@@ -1074,9 +1437,9 @@ export async function createExerciseAction(
 
   return {
     success:
-      relationMode === "material"
-        ? `Latihan "${exerciseTitle}" berhasil ditambahkan dan siap diisi soal.` 
-        : `Latihan "${exerciseTitle}" berhasil ditambahkan ke topic "${topic.title}" dan siap diisi soal.`,
+      normalizedScope === "CATEGORY"
+        ? `Latihan "${exerciseTitle}" berhasil ditambahkan ke kategori ${topic.category} - ${topic.difficulty}.`
+        : `Latihan "${exerciseTitle}" berhasil ditambahkan ke topic "${topic.title}".`,
   };
 }
 
@@ -1091,23 +1454,30 @@ export async function updateExerciseAction(
   }
 
   const exerciseId = String(formData.get("exerciseId") ?? "").trim();
+  const placementScope = String(formData.get("placementScope") ?? "").trim();
   const topicId = String(formData.get("topicId") ?? "").trim();
-  const relationMode = String(formData.get("relationMode") ?? "").trim();
-  const materialId = String(formData.get("materialId") ?? "").trim();
+  const categoryKey = String(formData.get("categoryKey") ?? "").trim();
   const exerciseTitle = String(formData.get("exerciseTitle") ?? "").trim();
   const exerciseStatus = String(formData.get("exerciseStatus") ?? "").trim();
   const exerciseAccess = String(formData.get("exerciseAccess") ?? "").trim();
   const adminNotes = String(formData.get("adminNotes") ?? "").trim();
+  const normalizedScope = normalizeExerciseScope(placementScope);
 
-  if (!exerciseId || !topicId || !exerciseTitle) {
+  if (!exerciseId || !exerciseTitle) {
     return {
-      error: "Data latihan belum lengkap. Pilih topic dan isi judul latihan.",
+      error: "Data latihan belum lengkap. Isi judul dan penempatannya.",
     };
   }
 
-  if (relationMode === "material" && !materialId) {
+  if (normalizedScope === "TOPIC" && !topicId) {
     return {
-      error: "Kalau latihan ingin terhubung ke materi, pilih materinya juga.",
+      error: "Pilih topic tujuan untuk latihan ini.",
+    };
+  }
+
+  if (normalizedScope === "CATEGORY" && !categoryKey) {
+    return {
+      error: "Pilih kategori dan jenjang tujuan untuk latihan ini.",
     };
   }
 
@@ -1117,28 +1487,55 @@ export async function updateExerciseAction(
     return prismaResult;
   }
 
-  if (relationMode === "material" && materialId) {
-    const material = await prismaResult.prisma.material.findFirst({
-      where: {
-        id: materialId,
-        topicId,
-      },
-      select: { id: true },
-    });
+  let nextTopic:
+    | {
+        id: string;
+        title: string;
+        category: string;
+        difficulty: string;
+      }
+    | null = null;
 
-    if (!material) {
-      return {
-        error: "Materi yang dipilih tidak cocok dengan topic latihan ini.",
-      };
+  try {
+    if (normalizedScope === "CATEGORY") {
+      const { category, difficulty } = parseExerciseCategoryKey(categoryKey);
+
+      nextTopic = await prismaResult.prisma.topic.findFirst({
+        where: {
+          category,
+          difficulty,
+        },
+        orderBy: { createdAt: "asc" },
+        select: { id: true, title: true, category: true, difficulty: true },
+      });
+    } else {
+      nextTopic = await prismaResult.prisma.topic.findUnique({
+        where: { id: topicId },
+        select: { id: true, title: true, category: true, difficulty: true },
+      });
     }
+  } catch (error) {
+    return {
+      error: toDatabaseErrorMessage(error, "Gagal membaca penempatan latihan."),
+    };
+  }
+
+  if (!nextTopic) {
+    return {
+      error:
+        normalizedScope === "CATEGORY"
+          ? "Belum ada topic pada kategori dan jenjang yang dipilih."
+          : "Topic yang dipilih tidak ditemukan.",
+    };
   }
 
   try {
     await prismaResult.prisma.exercise.update({
       where: { id: exerciseId },
       data: {
-        topicId,
-        materialId: relationMode === "material" ? materialId : null,
+        topicId: nextTopic.id,
+        materialId: null,
+        scope: normalizedScope,
         title: exerciseTitle,
         status: mapContentStatus(exerciseStatus),
         accessLevel: mapAccessLevel(exerciseAccess),
@@ -1156,7 +1553,10 @@ export async function updateExerciseAction(
   revalidatePath(`/admin/exercises/${exerciseId}/edit`);
 
   return {
-    success: `Perubahan latihan "${exerciseTitle}" berhasil disimpan.`,
+    success:
+      normalizedScope === "CATEGORY"
+        ? `Perubahan latihan "${exerciseTitle}" berhasil disimpan untuk kategori ${nextTopic.category} - ${nextTopic.difficulty}.`
+        : `Perubahan latihan "${exerciseTitle}" berhasil disimpan.`,
   };
 }
 
@@ -1165,6 +1565,11 @@ export async function updateExercisePublishStatusAction(formData: FormData) {
 
   const exerciseId = String(formData.get("exerciseId") ?? "").trim();
   const intent = String(formData.get("intent") ?? "").trim();
+  const returnTo = String(formData.get("returnTo") ?? "").trim();
+  const redirectBase =
+    returnTo && returnTo.startsWith("/admin/exercises/") && returnTo.endsWith("/edit")
+      ? returnTo
+      : "/admin/content";
 
   if (!exerciseId) {
     redirect("/admin/content?status=exercise-missing");
@@ -1184,12 +1589,13 @@ export async function updateExercisePublishStatusAction(formData: FormData) {
       },
     });
   } catch {
-    redirect(`/admin/content?status=${intent === "publish" ? "exercise-publish-failed" : "exercise-unpublish-failed"}`);
+    redirect(`${redirectBase}?status=${intent === "publish" ? "exercise-publish-failed" : "exercise-unpublish-failed"}`);
   }
 
   revalidatePath("/admin");
   revalidatePath("/admin/content");
-  redirect(`/admin/content?status=${intent === "publish" ? "exercise-published" : "exercise-unpublished"}`);
+  revalidatePath(`/admin/exercises/${exerciseId}/edit`);
+  redirect(`${redirectBase}?status=${intent === "publish" ? "exercise-published" : "exercise-unpublished"}`);
 }
 
 export async function deleteExerciseAction(formData: FormData) {
@@ -1360,14 +1766,56 @@ export async function importQuestionsAction(
   const normalizedQuestions: Array<
     NonNullable<ReturnType<typeof buildQuestionPayloadFromInput>["data"]>
   > = [];
+  const importReviewItems: ImportQuestionReviewItem[] = [];
+
+  for (const [index, importedQuestion] of parsedResult.questions.entries()) {
+    const payloadInput = mapImportedQuestionToPayloadInput(importedQuestion);
+    const payloadResult = buildQuestionPayloadFromInput(payloadInput);
+
+    importReviewItems.push(
+      createImportReviewItem({
+        orderNumber: index + 1,
+        parserQuestion: importedQuestion,
+        payloadInput,
+        payloadResult,
+      }),
+    );
+  }
+
+  const importReview = createImportReview(importReviewItems);
+
+  if (importReview.errorCount > 0) {
+    return {
+      error:
+        importReview.errorCount === 1
+          ? "Ada 1 soal yang belum valid. Periksa detail soal yang berstatus error sebelum import dilanjutkan."
+          : `Ada ${importReview.errorCount} soal yang belum valid. Periksa detail soal yang berstatus error sebelum import dilanjutkan.`,
+      importedFileName,
+      importReview,
+    };
+  }
 
   for (const [index, importedQuestion] of parsedResult.questions.entries()) {
     const uploadedQuestion = await uploadImportedQuestionImages(importedQuestion, exerciseId, index);
     const payloadResult = buildQuestionPayloadFromInput(mapImportedQuestionToPayloadInput(uploadedQuestion));
 
     if ("error" in payloadResult) {
+      const failedReview = createImportReview(
+        importReviewItems.map((item) =>
+          item.orderNumber === index + 1
+            ? {
+                ...item,
+                status: "error",
+                errors: payloadResult.error ? [payloadResult.error] : item.errors,
+              }
+            : item,
+        ),
+      );
+
       return {
         error: `Soal ke-${index + 1} pada file import belum valid. ${payloadResult.error}`,
+        importedFileName,
+        importReview: failedReview,
       };
     }
 
@@ -1418,6 +1866,7 @@ export async function importQuestionsAction(
 
   return {
     importedFileName,
+    importReview,
     success: `${normalizedQuestions.length} soal dari file "${importedFileName}" berhasil diimport ke latihan "${exercise.title}" dengan mode ${importMode === "replace" ? '"ganti soal lama"' : '"tambahkan ke soal yang sudah ada"'}.`,
   };
 }

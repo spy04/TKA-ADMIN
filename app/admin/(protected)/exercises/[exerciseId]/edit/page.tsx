@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Alert } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getPrismaClient } from "@/lib/prisma";
 import { ExerciseEditForm } from "./ui/ExerciseEditForm";
 import { QuestionManager } from "./ui/QuestionManager";
@@ -9,6 +11,10 @@ const statusCopy: Record<string, string> = {
   "question-deleted": "Soal berhasil dihapus.",
   "question-delete-failed": "Soal gagal dihapus.",
   "database-offline": "Database belum aktif.",
+  "exercise-published": "Latihan berhasil dipublish.",
+  "exercise-unpublished": "Latihan dikembalikan ke draft.",
+  "exercise-publish-failed": "Status publish latihan gagal diubah.",
+  "exercise-unpublish-failed": "Status draft latihan gagal diubah.",
 };
 
 type ExerciseEditPageProps = {
@@ -38,26 +44,14 @@ export default async function ExerciseEditPage({ params, searchParams }: Exercis
         status: true,
         accessLevel: true,
         adminNotes: true,
+        scope: true,
         topicId: true,
-        materialId: true,
         questionCount: true,
-        questions: {
-          orderBy: { orderNumber: "asc" },
+        topic: {
           select: {
-            id: true,
-            questionType: true,
-            orderNumber: true,
-            points: true,
-            prompt: true,
-            optionA: true,
-            optionB: true,
-            optionC: true,
-            optionD: true,
-            optionE: true,
-            correctAnswer: true,
-            correctAnswers: true,
-            sampleAnswer: true,
-            explanation: true,
+            title: true,
+            category: true,
+            difficulty: true,
           },
         },
       },
@@ -67,10 +61,8 @@ export default async function ExerciseEditPage({ params, searchParams }: Exercis
       select: {
         id: true,
         title: true,
-        materials: {
-          orderBy: { createdAt: "asc" },
-          select: { id: true, title: true },
-        },
+        category: true,
+        difficulty: true,
       },
     }),
   ]);
@@ -81,26 +73,27 @@ export default async function ExerciseEditPage({ params, searchParams }: Exercis
 
   return (
     <main className="dashboard-shell">
-      <div className="dashboard-grid">
-        <header className="card topbar">
-          <div>
-            <span className="section-kicker">Latihan</span>
-            <h1 className="page-title" style={{ fontSize: "2.2rem", marginBottom: 8 }}>
-              {exercise.title}
-            </h1>
-            <p className="page-copy">{exercise.questionCount ?? 0} soal</p>
-          </div>
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-6">
+        <Card>
+          <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="space-y-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Latihan</span>
+              <CardTitle className="text-3xl sm:text-4xl">
+                {exercise.title}
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">{exercise.questionCount ?? 0} soal</p>
+            </div>
 
-          <div className="topbar-meta">
-            <Link className="button-secondary" href="/admin/content">
-              Kembali
-            </Link>
-          </div>
-        </header>
+            <Button asChild variant="outline">
+              <Link href="/admin/exercises">Kembali</Link>
+            </Button>
+          </CardHeader>
+        </Card>
 
         {status && statusCopy[status] ? <Alert variant="success">{statusCopy[status]}</Alert> : null}
 
-        <article className="card panel single-panel">
+        <Card>
+          <CardContent className="pt-6">
           <ExerciseEditForm
             exercise={{
               id: exercise.id,
@@ -108,16 +101,20 @@ export default async function ExerciseEditPage({ params, searchParams }: Exercis
               status: exercise.status,
               accessLevel: exercise.accessLevel,
               adminNotes: exercise.adminNotes,
+              scope: exercise.scope,
               topicId: exercise.topicId,
-              materialId: exercise.materialId,
+              topic: exercise.topic,
             }}
             topics={topics}
           />
-        </article>
+          </CardContent>
+        </Card>
 
-        <article className="card panel single-panel">
-          <QuestionManager exerciseId={exercise.id} exerciseTitle={exercise.title} questions={exercise.questions} />
-        </article>
+        <Card>
+          <CardContent className="pt-6">
+          <QuestionManager exerciseId={exercise.id} exerciseTitle={exercise.title} />
+          </CardContent>
+        </Card>
       </div>
     </main>
   );

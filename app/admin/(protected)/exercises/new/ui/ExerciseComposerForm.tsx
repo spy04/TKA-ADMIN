@@ -1,108 +1,157 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useMemo, useState } from "react";
 import { createExerciseAction, type ExerciseFormState } from "@/app/admin/actions";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
 type TopicOption = {
   id: string;
   title: string;
-  materials: {
-    id: string;
-    title: string;
-  }[];
+  category: string;
+  difficulty: string;
 };
 
 const initialState: ExerciseFormState = {};
 
+function buildCategoryKey(category: string, difficulty: string) {
+  return `${category}:::${difficulty}`;
+}
+
 export function ExerciseComposerForm({ topics }: { topics: TopicOption[] }) {
   const [state, formAction, isPending] = useActionState(createExerciseAction, initialState);
+  const [placementScope, setPlacementScope] = useState<"category" | "topic">("category");
+  const categoryOptions = useMemo(
+    () =>
+      Array.from(
+        new Map(
+          topics.map((topic) => [
+            buildCategoryKey(topic.category, topic.difficulty),
+            {
+              key: buildCategoryKey(topic.category, topic.difficulty),
+              label: `${topic.category} - ${topic.difficulty}`,
+            },
+          ]),
+        ).values(),
+      ),
+    [topics],
+  );
 
   return (
-    <form className="topic-form" action={formAction}>
+    <form className="space-y-4" action={formAction}>
       {state.error ? <Alert variant="destructive">{state.error}</Alert> : null}
       {state.success ? <Alert variant="success">{state.success}</Alert> : null}
 
       {topics.length === 0 ? (
-        <Alert variant="destructive">Belum ada topic. Buat topic dulu agar latihan bisa disimpan dengan rapi.</Alert>
+        <Alert variant="destructive">Belum ada topic. Buat topic dulu agar latihan bisa ditempatkan dengan rapi.</Alert>
       ) : null}
 
-      <section className="form-section">
-        <div className="form-grid">
-          <label className="field field-span-2">
-            <Label htmlFor="topicId">Pilih topic</Label>
-            <select className="shad-select" id="topicId" name="topicId" defaultValue="">
-              <option value="" disabled>
-                Pilih topic tujuan
-              </option>
-              {topics.map((topic) => (
-                <option key={topic.id} value={topic.id}>
-                  {topic.title}
-                </option>
-              ))}
-            </select>
-          </label>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Informasi latihan</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-4 pt-0 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="placementScope">Penempatan latihan</Label>
+            <Select
+              name="placementScope"
+              defaultValue="category"
+              onValueChange={(value) => setPlacementScope(value === "topic" ? "topic" : "category")}
+            >
+              <SelectTrigger id="placementScope">
+                <SelectValue placeholder="Pilih penempatan" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="category">Latihan kategori</SelectItem>
+                <SelectItem value="topic">Latihan topic</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-          <label className="field">
-            <Label htmlFor="relationMode">Relasi latihan</Label>
-            <select className="shad-select" id="relationMode" name="relationMode" defaultValue="topic">
-              <option value="topic">Langsung ke topic</option>
-              <option value="material">Terhubung ke materi tertentu</option>
-            </select>
-          </label>
-
-          <label className="field">
-            <Label htmlFor="materialId">Materi terkait</Label>
-            <select className="shad-select" id="materialId" name="materialId" defaultValue="">
-              <option value="">Tidak dipilih</option>
-              {topics.flatMap((topic) =>
-                topic.materials.map((material) => (
-                  <option key={material.id} value={material.id}>
-                    {topic.title} - {material.title}
-                  </option>
-                )),
-              )}
-            </select>
-          </label>
-
-          <label className="field field-span-2">
-            <Label htmlFor="exerciseTitle">Judul latihan soal</Label>
-            <Input id="exerciseTitle" name="exerciseTitle" type="text" placeholder="Contoh: Kuis Pecahan Dasar" />
-          </label>
-
-          <label className="field">
-            <Label htmlFor="questionCount">Jumlah soal</Label>
-            <Input id="questionCount" name="questionCount" type="number" min="1" placeholder="10" />
-          </label>
-
-          <label className="field">
+          <div className="space-y-2">
             <Label htmlFor="exerciseAccess">Akses latihan</Label>
-            <select className="shad-select" id="exerciseAccess" name="exerciseAccess" defaultValue="enrolled">
-              <option value="preview">Bisa dicoba user umum</option>
-              <option value="enrolled">Khusus user enrolled</option>
-            </select>
+            <Select name="exerciseAccess" defaultValue="enrolled">
+              <SelectTrigger id="exerciseAccess">
+                <SelectValue placeholder="Pilih akses" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="preview">Bisa dicoba user umum</SelectItem>
+                <SelectItem value="enrolled">Khusus user enrolled</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {placementScope === "category" ? (
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="categoryKey">Kategori dan jenjang</Label>
+              <Select name="categoryKey">
+                <SelectTrigger id="categoryKey">
+                  <SelectValue placeholder="Pilih kategori latihan" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categoryOptions.map((category) => (
+                    <SelectItem key={category.key} value={category.key}>
+                      {category.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Contoh: Math - SD. Latihan ini akan muncul sebagai paket kategori, bukan menempel ke satu materi.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="topicId">Topic tujuan</Label>
+              <Select name="topicId">
+                <SelectTrigger id="topicId">
+                  <SelectValue placeholder="Pilih topic tujuan" />
+                </SelectTrigger>
+                <SelectContent>
+                  {topics.map((topic) => (
+                    <SelectItem key={topic.id} value={topic.id}>
+                      {topic.title} • {topic.category} - {topic.difficulty}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Gunakan mode ini kalau latihan memang khusus untuk satu topic tertentu.
+              </p>
+            </div>
+          )}
+
+          <label className="space-y-2 md:col-span-2">
+            <Label htmlFor="exerciseTitle">Judul latihan soal</Label>
+            <Input id="exerciseTitle" name="exerciseTitle" type="text" placeholder="Contoh: Paket Math SD 01" />
           </label>
 
-          <label className="field">
+          <div className="space-y-2">
             <Label htmlFor="exerciseStatus">Status tayang</Label>
-            <select className="shad-select" id="exerciseStatus" name="exerciseStatus" defaultValue="draft">
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </label>
+            <Select name="exerciseStatus" defaultValue="draft">
+              <SelectTrigger id="exerciseStatus">
+                <SelectValue placeholder="Pilih status tayang" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="published">Published</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-          <label className="field field-span-2">
+          <label className="space-y-2 md:col-span-2">
             <Label htmlFor="adminNotes">Catatan admin</Label>
-            <Textarea id="adminNotes" name="adminNotes" placeholder="Catatan penempatan latihan." />
+            <Textarea id="adminNotes" name="adminNotes" placeholder="Catatan singkat tentang paket latihan ini." />
           </label>
-        </div>
-      </section>
+        </CardContent>
+      </Card>
 
-      <div className="button-row">
+      <div className="flex flex-wrap items-center gap-2">
         <Button type="submit" disabled={isPending || topics.length === 0}>
           {isPending ? "Menyimpan latihan..." : "Simpan Latihan"}
         </Button>

@@ -222,8 +222,8 @@ export type TopicWhereInput = {
   previewMode?: Prisma.EnumAccessLevelFilter<"Topic"> | $Enums.AccessLevel
   createdAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
-  materials?: Prisma.MaterialListRelationFilter
   exercises?: Prisma.ExerciseListRelationFilter
+  materials?: Prisma.MaterialListRelationFilter
 }
 
 export type TopicOrderByWithRelationInput = {
@@ -237,8 +237,8 @@ export type TopicOrderByWithRelationInput = {
   previewMode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  materials?: Prisma.MaterialOrderByRelationAggregateInput
   exercises?: Prisma.ExerciseOrderByRelationAggregateInput
+  materials?: Prisma.MaterialOrderByRelationAggregateInput
 }
 
 export type TopicWhereUniqueInput = Prisma.AtLeast<{
@@ -255,8 +255,8 @@ export type TopicWhereUniqueInput = Prisma.AtLeast<{
   previewMode?: Prisma.EnumAccessLevelFilter<"Topic"> | $Enums.AccessLevel
   createdAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Topic"> | Date | string
-  materials?: Prisma.MaterialListRelationFilter
   exercises?: Prisma.ExerciseListRelationFilter
+  materials?: Prisma.MaterialListRelationFilter
 }, "id" | "slug">
 
 export type TopicOrderByWithAggregationInput = {
@@ -302,8 +302,8 @@ export type TopicCreateInput = {
   previewMode: $Enums.AccessLevel
   createdAt?: Date | string
   updatedAt?: Date | string
-  materials?: Prisma.MaterialCreateNestedManyWithoutTopicInput
   exercises?: Prisma.ExerciseCreateNestedManyWithoutTopicInput
+  materials?: Prisma.MaterialCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUncheckedCreateInput = {
@@ -317,8 +317,8 @@ export type TopicUncheckedCreateInput = {
   previewMode: $Enums.AccessLevel
   createdAt?: Date | string
   updatedAt?: Date | string
-  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutTopicInput
   exercises?: Prisma.ExerciseUncheckedCreateNestedManyWithoutTopicInput
+  materials?: Prisma.MaterialUncheckedCreateNestedManyWithoutTopicInput
 }
 
 export type TopicUpdateInput = {
@@ -332,8 +332,8 @@ export type TopicUpdateInput = {
   previewMode?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  materials?: Prisma.MaterialUpdateManyWithoutTopicNestedInput
   exercises?: Prisma.ExerciseUpdateManyWithoutTopicNestedInput
+  materials?: Prisma.MaterialUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicUncheckedUpdateInput = {
@@ -347,8 +347,8 @@ export type TopicUncheckedUpdateInput = {
   previewMode?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  materials?: Prisma.MaterialUncheckedUpdateManyWithoutTopicNestedInput
   exercises?: Prisma.ExerciseUncheckedUpdateManyWithoutTopicNestedInput
+  materials?: Prisma.MaterialUncheckedUpdateManyWithoutTopicNestedInput
 }
 
 export type TopicCreateManyInput = {
@@ -632,13 +632,13 @@ export type TopicUncheckedUpdateWithoutExercisesInput = {
  */
 
 export type TopicCountOutputType = {
-  materials: number
   exercises: number
+  materials: number
 }
 
 export type TopicCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  materials?: boolean | TopicCountOutputTypeCountMaterialsArgs
   exercises?: boolean | TopicCountOutputTypeCountExercisesArgs
+  materials?: boolean | TopicCountOutputTypeCountMaterialsArgs
 }
 
 /**
@@ -654,15 +654,15 @@ export type TopicCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extens
 /**
  * TopicCountOutputType without action
  */
-export type TopicCountOutputTypeCountMaterialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MaterialWhereInput
+export type TopicCountOutputTypeCountExercisesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExerciseWhereInput
 }
 
 /**
  * TopicCountOutputType without action
  */
-export type TopicCountOutputTypeCountExercisesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.ExerciseWhereInput
+export type TopicCountOutputTypeCountMaterialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MaterialWhereInput
 }
 
 
@@ -677,8 +677,8 @@ export type TopicSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   previewMode?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  materials?: boolean | Prisma.Topic$materialsArgs<ExtArgs>
   exercises?: boolean | Prisma.Topic$exercisesArgs<ExtArgs>
+  materials?: boolean | Prisma.Topic$materialsArgs<ExtArgs>
   _count?: boolean | Prisma.TopicCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["topic"]>
 
@@ -723,8 +723,8 @@ export type TopicSelectScalar = {
 
 export type TopicOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "category" | "difficulty" | "summary" | "status" | "previewMode" | "createdAt" | "updatedAt", ExtArgs["result"]["topic"]>
 export type TopicInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  materials?: boolean | Prisma.Topic$materialsArgs<ExtArgs>
   exercises?: boolean | Prisma.Topic$exercisesArgs<ExtArgs>
+  materials?: boolean | Prisma.Topic$materialsArgs<ExtArgs>
   _count?: boolean | Prisma.TopicCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TopicIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -733,8 +733,8 @@ export type TopicIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type $TopicPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Topic"
   objects: {
-    materials: Prisma.$MaterialPayload<ExtArgs>[]
     exercises: Prisma.$ExercisePayload<ExtArgs>[]
+    materials: Prisma.$MaterialPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1141,8 +1141,8 @@ readonly fields: TopicFieldRefs;
  */
 export interface Prisma__TopicClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  materials<T extends Prisma.Topic$materialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$materialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MaterialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   exercises<T extends Prisma.Topic$exercisesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$exercisesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExercisePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  materials<T extends Prisma.Topic$materialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Topic$materialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MaterialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1575,30 +1575,6 @@ export type TopicDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * Topic.materials
- */
-export type Topic$materialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Material
-   */
-  select?: Prisma.MaterialSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Material
-   */
-  omit?: Prisma.MaterialOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MaterialInclude<ExtArgs> | null
-  where?: Prisma.MaterialWhereInput
-  orderBy?: Prisma.MaterialOrderByWithRelationInput | Prisma.MaterialOrderByWithRelationInput[]
-  cursor?: Prisma.MaterialWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MaterialScalarFieldEnum | Prisma.MaterialScalarFieldEnum[]
-}
-
-/**
  * Topic.exercises
  */
 export type Topic$exercisesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1620,6 +1596,30 @@ export type Topic$exercisesArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.ExerciseScalarFieldEnum | Prisma.ExerciseScalarFieldEnum[]
+}
+
+/**
+ * Topic.materials
+ */
+export type Topic$materialsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Material
+   */
+  select?: Prisma.MaterialSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Material
+   */
+  omit?: Prisma.MaterialOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MaterialInclude<ExtArgs> | null
+  where?: Prisma.MaterialWhereInput
+  orderBy?: Prisma.MaterialOrderByWithRelationInput | Prisma.MaterialOrderByWithRelationInput[]
+  cursor?: Prisma.MaterialWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MaterialScalarFieldEnum | Prisma.MaterialScalarFieldEnum[]
 }
 
 /**

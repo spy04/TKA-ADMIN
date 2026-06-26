@@ -54,6 +54,17 @@ const docxFieldAliases = new Map<string, keyof ImportedQuestionInput>([
 ]);
 
 const ignoredDocxLabels = new Set(["level", "tingkat"]);
+const choiceInstructionPattern =
+  /(pilih lebih dari satu|pilih semua|pilih satu|pilih jawaban|manakah|tentukan benar atau salah)/i;
+const metadataLabelPattern =
+  /^(jawaban|kunci|poin|point|skor|nilai|pembahasan|penjelasan|jawaban contoh|contoh jawaban)\s*:/i;
+const optionLinePattern = /^([ABCDE])(?:[\.\):\-]|\s)\s*(.*)$/i;
+const labeledOptionPattern = /^pilihan\s+([ABCDE])\s*:\s*(.*)$/i;
+const markdownImagePattern = /!\[[^\]]*]\([^)]+\)/g;
+const latexCommandPattern = /\\[a-zA-Z]+(?:\[[^\]]*])?/g;
+const latexScriptPattern = /\^\{[^}]*\}|_\{[^}]*\}/g;
+const questionFingerprintLimit = 150;
+const minimumQuestionSimilarity = 0.35;
 
 function cleanValue(value: unknown) {
   if (value == null) {
@@ -122,7 +133,7 @@ function normalizeQuestionType(value: string) {
   }
 
   if (["true_false", "benar_salah", "boolean"].includes(normalized)) {
-    return "single-choice";
+    return "true-false";
   }
 
   return "single-choice";
@@ -164,54 +175,354 @@ function isChoiceAnswerValue(value: string) {
   return /^([A-E],)*[A-E]$/.test(normalized);
 }
 
+function extractTableLineCandidates(line: string) {
+  const trimmed = line.trim();
+
+  if (!trimmed.startsWith("|") || !trimmed.endsWith("|")) {
+    return [trimmed];
+  }
+
+  const cells = trimmed
+    .slice(1, -1)
+    .split("|")
+    .map((cell) => cell.trim())
+    .filter(Boolean);
+
+  return cells.length > 0 ? cells : [trimmed];
+}
+
+function findOptionLineMatch(line: string) {
+  for (const candidate of extractTableLineCandidates(line)) {
+    const optionMatch = candidate.match(optionLinePattern);
+
+    if (optionMatch) {
+      return {
+        label: optionMatch[1].toUpperCase(),
+        value: optionMatch[2] ?? "",
+      };
+    }
+
+    const labeledOptionMatch = candidate.match(labeledOptionPattern);
+
+    if (labeledOptionMatch) {
+      return {
+        label: labeledOptionMatch[1].toUpperCase(),
+        value: labeledOptionMatch[2] ?? "",
+      };
+    }
+  }
+
+  return null;
+}
+
+function findLabeledLineMatch(line: string) {
+  for (const candidate of extractTableLineCandidates(line)) {
+    const labeledMatch = candidate.match(/^([^:]+):\s*(.*)$/);
+
+    if (labeledMatch) {
+      return labeledMatch;
+    }
+  }
+
+  return null;
+}
+
+function extractMarkdownTableCells(line: string) {
+  const trimmed = line.trim();
+
+  if (!trimmed.startsWith("|") || !trimmed.endsWith("|")) {
+    return null;
+  }
+
+  return trimmed
+    .slice(1, -1)
+    .split("|")
+    .map((cell) => cell.trim());
+}
+
+function isMarkdownDividerRow(cells: string[]) {
+  return cells.length > 0 && cells.every((cell) => !cell || /^:?-{3,}:?$/.test(cell));
+}
+
+function isTrueFalseTableHeader(line: string) {
+  const cells = extractMarkdownTableCells(line);
+
+  if (!cells || cells.length < 3) {
+    return false;
+  }
+
+  const normalizedCells = cells.map((cell) => cell.toLowerCase());
+
+  return normalizedCells.some((cell) => cell.includes("pernyataan")) &&
+    normalizedCells.some((cell) => cell === "benar") &&
+    normalizedCells.some((cell) => cell === "salah");
+}
+
+function stripStatementIdentifier(value: string) {
+  const trimmed = value.trim();
+  const prefixedMatch = trimmed.match(/^([A-E])(?:[\.\):\-]|\s)+(.*)$/i);
+
+  if (prefixedMatch) {
+    return {
+      key: prefixedMatch[1].toUpperCase(),
+      text: prefixedMatch[2].trim(),
+    };
+  }
+
+  if (/^[A-E]$/i.test(trimmed)) {
+    return {
+      key: trimmed.toUpperCase(),
+      text: "",
+    };
+  }
+
+  return {
+    key: "",
+    text: trimmed,
+  };
+}
+
+function extractTrueFalseStatementsFromPrompt(
+  prompt: string,
+): {
+  prompt: string;
+  statements: Array<{ key: string; text: string }>;
+} {
+  const lines = prompt
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const headerIndex = lines.findIndex((line) => isTrueFalseTableHeader(line));
+
+  if (headerIndex === -1) {
+    return {
+      prompt,
+      statements: [],
+    };
+  }
+
+  const headerCells = extractMarkdownTableCells(lines[headerIndex]) ?? [];
+  const statementColumnIndex = headerCells.findIndex((cell) => cell.toLowerCase().includes("pernyataan"));
+  const statements: Array<{ key: string; text: string }> = [];
+  const remainingLines: string[] = [];
+
+  for (let index = 0; index < lines.length; index += 1) {
+    if (index !== headerIndex) {
+      remainingLines.push(lines[index]);
+      continue;
+    }
+
+    for (let rowIndex = index + 1; rowIndex < lines.length; rowIndex += 1) {
+      const cells = extractMarkdownTableCells(lines[rowIndex]);
+
+      if (!cells) {
+        index = rowIndex - 1;
+        break;
+      }
+
+      if (isMarkdownDividerRow(cells)) {
+        index = rowIndex;
+        continue;
+      }
+
+      const statementCellCandidates =
+        statementColumnIndex >= 0 && cells[statementColumnIndex]
+          ? [cells[statementColumnIndex], ...cells.filter((_, cellIndex) => cellIndex !== statementColumnIndex)]
+          : cells;
+      const statementCandidate = statementCellCandidates.find(
+        (cell) => Boolean(cell) && !/^(benar|salah)$/i.test(cell) && !isMarkdownDividerRow([cell]),
+      );
+
+      if (statementCandidate) {
+        const parsedCandidate = stripStatementIdentifier(statementCandidate);
+        const keyCell = cells.find((cell) => /^[A-E]$/i.test(cell.trim()));
+
+        statements.push({
+          key: parsedCandidate.key || (keyCell ? keyCell.trim().toUpperCase() : String.fromCharCode(65 + statements.length)),
+          text: parsedCandidate.text || statementCandidate.trim(),
+        });
+      }
+
+      index = rowIndex;
+    }
+  }
+
+  return {
+    prompt: remainingLines.join("\n").replace(/\n{3,}/g, "\n\n").trim(),
+    statements,
+  };
+}
+
+function normalizePromptFingerprint(value: string) {
+  return stripPromptNumbering(cleanValue(value))
+    .replace(markdownImagePattern, " ")
+    .replace(latexCommandPattern, " ")
+    .replace(latexScriptPattern, " ")
+    .replace(/[\\{}[\]^_`*|]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase()
+    .slice(0, questionFingerprintLimit);
+}
+
+function createBigrams(value: string) {
+  if (value.length < 2) {
+    return value ? [value] : [];
+  }
+
+  const bigrams: string[] = [];
+
+  for (let index = 0; index < value.length - 1; index += 1) {
+    bigrams.push(value.slice(index, index + 2));
+  }
+
+  return bigrams;
+}
+
+function calculateBigramDiceScore(left: string, right: string) {
+  const leftBigrams = createBigrams(left);
+  const rightBigrams = createBigrams(right);
+
+  if (leftBigrams.length === 0 || rightBigrams.length === 0) {
+    return 0;
+  }
+
+  const rightCounts = new Map<string, number>();
+
+  for (const bigram of rightBigrams) {
+    rightCounts.set(bigram, (rightCounts.get(bigram) ?? 0) + 1);
+  }
+
+  let overlap = 0;
+
+  for (const bigram of leftBigrams) {
+    const count = rightCounts.get(bigram) ?? 0;
+
+    if (count > 0) {
+      overlap += 1;
+      rightCounts.set(bigram, count - 1);
+    }
+  }
+
+  return (2 * overlap) / (leftBigrams.length + rightBigrams.length);
+}
+
+function calculateTokenOverlapScore(left: string, right: string) {
+  const leftTokens = new Set(left.split(/\s+/).filter(Boolean));
+  const rightTokens = new Set(right.split(/\s+/).filter(Boolean));
+
+  if (leftTokens.size === 0 || rightTokens.size === 0) {
+    return 0;
+  }
+
+  let overlap = 0;
+
+  for (const token of leftTokens) {
+    if (rightTokens.has(token)) {
+      overlap += 1;
+    }
+  }
+
+  return (2 * overlap) / (leftTokens.size + rightTokens.size);
+}
+
+function calculatePromptSimilarity(left: string, right: string) {
+  const normalizedLeft = normalizePromptFingerprint(left);
+  const normalizedRight = normalizePromptFingerprint(right);
+
+  if (!normalizedLeft || !normalizedRight) {
+    return 0;
+  }
+
+  if (normalizedLeft === normalizedRight) {
+    return 1;
+  }
+
+  const shorter = normalizedLeft.length <= normalizedRight.length ? normalizedLeft : normalizedRight;
+  const longer = shorter === normalizedLeft ? normalizedRight : normalizedLeft;
+  const containsScore = longer.includes(shorter) ? shorter.length / longer.length : 0;
+
+  return Math.max(
+    calculateBigramDiceScore(normalizedLeft, normalizedRight),
+    calculateTokenOverlapScore(normalizedLeft, normalizedRight),
+    containsScore,
+  );
+}
+
+function isDocxImportDebugEnabled() {
+  return process.env.NODE_ENV === "development" || process.env.DEBUG_DOCX_IMPORT === "1";
+}
+
+function logDocxImportDebug(message: string, payload: unknown) {
+  if (!isDocxImportDebugEnabled()) {
+    return;
+  }
+
+  console.debug(`[docx-import] ${message}`, payload);
+}
+
+function warnDocxImport(message: string, payload: unknown) {
+  if (process.env.NODE_ENV === "production") {
+    return;
+  }
+
+  console.warn(`[docx-import] ${message}`, payload);
+}
+
 function parseDocxQuestionBlock(block: string): ImportedQuestionInput {
   const question = createEmptyQuestion();
   const lines = block
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);
-  const choiceInstructionIndex = lines.findIndex((line) =>
-    /(pilih lebih dari satu|pilih semua|pilih satu|pilih jawaban|manakah|tentukan benar atau salah)/i.test(line),
-  );
+  const containsTrueFalseTable = lines.some((line) => isTrueFalseTableHeader(stripPromptNumbering(line)));
+  const choiceInstructionIndex = lines.findIndex((line) => choiceInstructionPattern.test(line));
   const hasPromptStatementsBeforeChoiceInstruction =
     choiceInstructionIndex > 0 &&
-    lines
-      .slice(0, choiceInstructionIndex)
-      .some((line) => /^([ABCDE])(?:[\.\):\-]|\s)\s+.+$/i.test(line) || /^pilihan\s+([ABCDE])\s*:/i.test(line));
+      lines.slice(0, choiceInstructionIndex).some((line) => Boolean(findOptionLineMatch(line)));
   let sawAnswerLabel = false;
+  let insideTrueFalseTable = false;
 
   let currentField: keyof ImportedQuestionInput = "prompt";
 
   for (const [lineIndex, line] of lines.entries()) {
-    const optionMatch = line.match(/^([ABCDE])(?:[\.\):\-]|\s)\s*(.*)$/i);
+    const detectionLine = stripPromptNumbering(line);
+
+    if (isTrueFalseTableHeader(detectionLine)) {
+      question.questionType = "true-false";
+      insideTrueFalseTable = true;
+      appendFieldValue(question, "prompt", detectionLine);
+      currentField = "prompt";
+      continue;
+    }
+
+    if (insideTrueFalseTable) {
+      const tableCells = extractMarkdownTableCells(detectionLine);
+
+      if (tableCells) {
+        appendFieldValue(question, "prompt", detectionLine);
+        currentField = "prompt";
+        continue;
+      }
+
+      insideTrueFalseTable = false;
+    }
+
+    const optionMatch = containsTrueFalseTable ? null : findOptionLineMatch(detectionLine);
 
     if (optionMatch) {
       if (hasPromptStatementsBeforeChoiceInstruction && lineIndex < choiceInstructionIndex) {
-        appendFieldValue(question, "prompt", line);
+        appendFieldValue(question, "prompt", detectionLine);
         currentField = "prompt";
         continue;
       }
 
-      currentField = `option${optionMatch[1].toUpperCase()}` as keyof ImportedQuestionInput;
-      appendFieldValue(question, currentField, optionMatch[2] ?? "");
+      currentField = `option${optionMatch.label}` as keyof ImportedQuestionInput;
+      appendFieldValue(question, currentField, optionMatch.value);
       continue;
     }
 
-    const labeledOptionMatch = line.match(/^pilihan\s+([ABCDE])\s*:\s*(.*)$/i);
-
-    if (labeledOptionMatch) {
-      if (hasPromptStatementsBeforeChoiceInstruction && lineIndex < choiceInstructionIndex) {
-        appendFieldValue(question, "prompt", line);
-        currentField = "prompt";
-        continue;
-      }
-
-      currentField = `option${labeledOptionMatch[1].toUpperCase()}` as keyof ImportedQuestionInput;
-      appendFieldValue(question, currentField, labeledOptionMatch[2] ?? "");
-      continue;
-    }
-
-    const labeledMatch = line.match(/^([^:]+):\s*(.*)$/);
+    const labeledMatch = findLabeledLineMatch(detectionLine);
 
     if (labeledMatch) {
       const rawLabel = labeledMatch[1].trim().toLowerCase();
@@ -227,7 +538,12 @@ function parseDocxQuestionBlock(block: string): ImportedQuestionInput {
           sawAnswerLabel = true;
           const answerKeys = extractAnswerKeys(labeledValue);
 
-          if (answerKeys.length > 1) {
+          if (question.questionType === "true-false" || containsTrueFalseTable) {
+            question.questionType = "true-false";
+            question.correctAnswers = answerKeys.join(",");
+            question.correctAnswer = "";
+            currentField = "correctAnswers";
+          } else if (answerKeys.length > 1) {
             question.questionType = "multiple-choice";
             question.correctAnswers = answerKeys.join(",");
             currentField = "correctAnswers";
@@ -248,17 +564,49 @@ function parseDocxQuestionBlock(block: string): ImportedQuestionInput {
 
       if (mappedField) {
         currentField = mappedField;
-        appendFieldValue(question, currentField, labeledValue);
+
+        if (mappedField === "questionType") {
+          question.questionType = normalizeQuestionType(labeledValue);
+        } else {
+          appendFieldValue(question, currentField, labeledValue);
+        }
         continue;
       }
     }
 
-    appendFieldValue(question, currentField, line);
+    appendFieldValue(question, currentField, detectionLine);
   }
 
   question.prompt = stripPromptNumbering(question.prompt);
 
-  if (sawAnswerLabel || question.correctAnswer.trim() || question.correctAnswers.trim()) {
+  const { prompt: promptWithoutTrueFalseTable, statements: trueFalseStatements } =
+    extractTrueFalseStatementsFromPrompt(question.prompt);
+
+  if (trueFalseStatements.length > 0) {
+    question.prompt = promptWithoutTrueFalseTable;
+    const statementByKey = new Map(trueFalseStatements.map((statement) => [statement.key, statement.text]));
+    [question.optionA, question.optionB, question.optionC, question.optionD, question.optionE] = [
+      statementByKey.get("A") ?? trueFalseStatements[0]?.text ?? "",
+      statementByKey.get("B") ?? trueFalseStatements[1]?.text ?? "",
+      statementByKey.get("C") ?? trueFalseStatements[2]?.text ?? "",
+      statementByKey.get("D") ?? trueFalseStatements[3]?.text ?? "",
+      statementByKey.get("E") ?? trueFalseStatements[4]?.text ?? "",
+    ];
+
+    if (!question.correctAnswers.trim() && question.correctAnswer.trim()) {
+      question.correctAnswers = question.correctAnswer;
+      question.correctAnswer = "";
+    }
+
+    question.questionType = "true-false";
+  }
+
+  if (question.questionType === "true-false") {
+    if (!question.correctAnswers.trim() && question.correctAnswer.trim()) {
+      question.correctAnswers = question.correctAnswer;
+      question.correctAnswer = "";
+    }
+  } else if (sawAnswerLabel || question.correctAnswer.trim() || question.correctAnswers.trim()) {
     question.questionType = question.correctAnswers ? "multiple-choice" : "single-choice";
   } else {
     question.questionType = "essay";
@@ -267,8 +615,11 @@ function parseDocxQuestionBlock(block: string): ImportedQuestionInput {
   }
 
   question.questionType = normalizeQuestionType(question.questionType);
-  question.correctAnswer = question.correctAnswer.toUpperCase();
+  question.correctAnswer = question.questionType === "single-choice" ? question.correctAnswer.toUpperCase() : "";
   question.correctAnswers = question.correctAnswers.toUpperCase();
+  if (question.questionType === "true-false") {
+    question.optionE = "";
+  }
 
   if (question.questionType === "essay" && !question.sampleAnswer.trim() && question.explanation.trim()) {
     question.sampleAnswer = question.explanation.trim();
@@ -291,6 +642,19 @@ function hasMathMarkup(value: string) {
   return /\\(?:frac|sqrt|sum|int)|\^\{|_\{/.test(value);
 }
 
+function hasMathContent(question: ImportedQuestionInput) {
+  return [
+    question.prompt,
+    question.optionA,
+    question.optionB,
+    question.optionC,
+    question.optionD,
+    question.optionE,
+    question.sampleAnswer,
+    question.explanation,
+  ].some((value) => hasMathMarkup(value));
+}
+
 function pickMathAwareText(primaryValue: string, fallbackValue: string) {
   if (hasMathMarkup(fallbackValue) && !hasMathMarkup(primaryValue)) {
     return fallbackValue;
@@ -299,7 +663,96 @@ function pickMathAwareText(primaryValue: string, fallbackValue: string) {
   return primaryValue || fallbackValue;
 }
 
-function mergeImportedQuestion(primary: ImportedQuestionInput, fallback: ImportedQuestionInput | undefined) {
+function extractMarkdownImageTokens(value: string) {
+  return value.match(markdownImagePattern) ?? [];
+}
+
+function countNonEmptyLines(value: string) {
+  return value
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean).length;
+}
+
+function collapsePromptSpacing(value: string) {
+  return value
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+function insertImagesAfterNonEmptyLineCount(prompt: string, images: string[], lineCount: number) {
+  const lines = prompt.split("\n");
+  const imageBlock = images.join("\n");
+
+  if (lineCount <= 0) {
+    return collapsePromptSpacing([imageBlock, prompt].filter(Boolean).join("\n\n"));
+  }
+
+  let nonEmptyCount = 0;
+  let insertAfterIndex = -1;
+
+  for (const [index, line] of lines.entries()) {
+    if (line.trim()) {
+      nonEmptyCount += 1;
+    }
+
+    if (nonEmptyCount >= lineCount) {
+      insertAfterIndex = index;
+      break;
+    }
+  }
+
+  if (insertAfterIndex === -1) {
+    return collapsePromptSpacing([prompt, imageBlock].filter(Boolean).join("\n\n"));
+  }
+
+  const before = lines.slice(0, insertAfterIndex + 1).join("\n").trim();
+  const after = lines.slice(insertAfterIndex + 1).join("\n").trim();
+
+  return collapsePromptSpacing([before, imageBlock, after].filter(Boolean).join("\n\n"));
+}
+
+function mergePromptPreservingImages(htmlPrompt: string, mergedPrompt: string) {
+  const htmlImages = extractMarkdownImageTokens(htmlPrompt);
+
+  if (!mergedPrompt.trim() || htmlImages.length === 0) {
+    return mergedPrompt || htmlPrompt;
+  }
+
+  const mergedImages = extractMarkdownImageTokens(mergedPrompt);
+
+  if (mergedImages.length > 0) {
+    return mergedPrompt;
+  }
+
+  const firstImage = htmlImages[0];
+
+  if (!firstImage) {
+    return mergedPrompt;
+  }
+
+  const firstImageIndex = htmlPrompt.indexOf(firstImage);
+
+  if (firstImageIndex === -1) {
+    return mergedPrompt;
+  }
+
+  const beforeFirstImage = htmlPrompt.slice(0, firstImageIndex);
+  const nonEmptyLinesBeforeImage = countNonEmptyLines(beforeFirstImage);
+
+  return insertImagesAfterNonEmptyLineCount(mergedPrompt, htmlImages, nonEmptyLinesBeforeImage);
+}
+
+type MergeImportedQuestionOptions = {
+  preferFallbackPromptAndOptions?: boolean;
+};
+
+function mergeImportedQuestion(
+  primary: ImportedQuestionInput,
+  fallback: ImportedQuestionInput | undefined,
+  options: MergeImportedQuestionOptions = {},
+) {
   if (!fallback) {
     return primary;
   }
@@ -307,25 +760,27 @@ function mergeImportedQuestion(primary: ImportedQuestionInput, fallback: Importe
   const primaryOptionCount = countFilledOptions(primary);
   const fallbackOptionCount = countFilledOptions(fallback);
   const shouldUseFallbackText =
+    options.preferFallbackPromptAndOptions ||
     (hasChoiceAnswer(primary) && primaryOptionCount < 2 && fallbackOptionCount >= 2) ||
     (!primary.prompt.trim() && fallback.prompt.trim());
-
-  if (!shouldUseFallbackText) {
-    return {
-      ...primary,
-      prompt: pickMathAwareText(primary.prompt, fallback.prompt),
-      optionA: pickMathAwareText(primary.optionA, fallback.optionA),
-      optionB: pickMathAwareText(primary.optionB, fallback.optionB),
-      optionC: pickMathAwareText(primary.optionC, fallback.optionC),
-      optionD: pickMathAwareText(primary.optionD, fallback.optionD),
-      optionE: pickMathAwareText(primary.optionE, fallback.optionE),
-      sampleAnswer: pickMathAwareText(primary.sampleAnswer, fallback.sampleAnswer),
-      explanation: pickMathAwareText(primary.explanation, fallback.explanation),
-    };
-  }
+  const mergedPromptBase = shouldUseFallbackText
+    ? fallback.prompt || primary.prompt
+    : pickMathAwareText(primary.prompt, fallback.prompt);
 
   return {
-    ...fallback,
+    ...primary,
+    questionType: shouldUseFallbackText ? fallback.questionType || primary.questionType : primary.questionType,
+    prompt: mergePromptPreservingImages(primary.prompt, mergedPromptBase),
+    optionA: shouldUseFallbackText ? fallback.optionA || primary.optionA : pickMathAwareText(primary.optionA, fallback.optionA),
+    optionB: shouldUseFallbackText ? fallback.optionB || primary.optionB : pickMathAwareText(primary.optionB, fallback.optionB),
+    optionC: shouldUseFallbackText ? fallback.optionC || primary.optionC : pickMathAwareText(primary.optionC, fallback.optionC),
+    optionD: shouldUseFallbackText ? fallback.optionD || primary.optionD : pickMathAwareText(primary.optionD, fallback.optionD),
+    optionE: shouldUseFallbackText ? fallback.optionE || primary.optionE : pickMathAwareText(primary.optionE, fallback.optionE),
+    correctAnswer: primary.correctAnswer || fallback.correctAnswer,
+    correctAnswers: primary.correctAnswers || fallback.correctAnswers,
+    sampleAnswer: pickMathAwareText(primary.sampleAnswer, fallback.sampleAnswer),
+    explanation: pickMathAwareText(primary.explanation, fallback.explanation),
+    points: primary.points || fallback.points,
     imageQuestion: primary.imageQuestion || fallback.imageQuestion,
     imageOptionA: primary.imageOptionA || fallback.imageOptionA,
     imageOptionB: primary.imageOptionB || fallback.imageOptionB,
@@ -333,6 +788,68 @@ function mergeImportedQuestion(primary: ImportedQuestionInput, fallback: Importe
     imageOptionD: primary.imageOptionD || fallback.imageOptionD,
     imageOptionE: primary.imageOptionE || fallback.imageOptionE,
   };
+}
+
+type PromptMatch = {
+  similarity: number;
+  xmlIndex: number;
+};
+
+function matchQuestionsByPrompt(htmlQuestions: ImportedQuestionInput[], xmlQuestions: ImportedQuestionInput[]) {
+  const matches = new Map<number, PromptMatch>();
+  const candidates: Array<{ htmlIndex: number; xmlIndex: number; similarity: number }> = [];
+
+  htmlQuestions.forEach((htmlQuestion, htmlIndex) => {
+    const scoredCandidates = xmlQuestions
+      .map((xmlQuestion, xmlIndex) => ({
+        xmlIndex,
+        similarity: calculatePromptSimilarity(htmlQuestion.prompt, xmlQuestion.prompt),
+      }))
+      .filter((candidate) => candidate.similarity > 0)
+      .sort((left, right) => right.similarity - left.similarity);
+
+    logDocxImportDebug("prompt similarity", {
+      htmlIndex,
+      fingerprint: normalizePromptFingerprint(htmlQuestion.prompt),
+      topMatches: scoredCandidates.slice(0, 3).map((candidate) => ({
+        xmlIndex: candidate.xmlIndex,
+        similarity: Number(candidate.similarity.toFixed(3)),
+        fingerprint: normalizePromptFingerprint(xmlQuestions[candidate.xmlIndex]?.prompt ?? ""),
+      })),
+    });
+
+    for (const candidate of scoredCandidates) {
+      candidates.push({
+        htmlIndex,
+        xmlIndex: candidate.xmlIndex,
+        similarity: candidate.similarity,
+      });
+    }
+  });
+
+  const usedHtmlIndexes = new Set<number>();
+  const usedXmlIndexes = new Set<number>();
+
+  candidates
+    .sort((left, right) => right.similarity - left.similarity)
+    .forEach((candidate) => {
+      if (
+        candidate.similarity < minimumQuestionSimilarity ||
+        usedHtmlIndexes.has(candidate.htmlIndex) ||
+        usedXmlIndexes.has(candidate.xmlIndex)
+      ) {
+        return;
+      }
+
+      usedHtmlIndexes.add(candidate.htmlIndex);
+      usedXmlIndexes.add(candidate.xmlIndex);
+      matches.set(candidate.htmlIndex, {
+        similarity: candidate.similarity,
+        xmlIndex: candidate.xmlIndex,
+      });
+    });
+
+  return matches;
 }
 
 function extractZipEntry(buffer: Buffer, entryName: string) {
@@ -516,9 +1033,7 @@ function parseXmlQuestionBlocks(documentXml: string) {
   }
 
   function blockExpectsOptionList(lines: string[]) {
-    return lines.some((line) =>
-      /(pilih lebih dari satu|pilih semua|pilih satu|pilih jawaban|manakah|tentukan benar atau salah)/i.test(line),
-    );
+    return lines.some((line) => choiceInstructionPattern.test(line));
   }
 
   function hasMetadataAhead(nodes: Element[], startIndex: number) {
@@ -535,7 +1050,7 @@ function parseXmlQuestionBlocks(documentXml: string) {
         continue;
       }
 
-      if (/^(jawaban|kunci|poin|point|skor|nilai|pembahasan|penjelasan|jawaban contoh|contoh jawaban)\s*:/i.test(text)) {
+      if (metadataLabelPattern.test(text)) {
         return true;
       }
     }
@@ -584,11 +1099,9 @@ function parseXmlQuestionBlocks(documentXml: string) {
       }
 
       const currentBlockHasMetadata = currentLines.some((line) =>
-        /^(jawaban|kunci|poin|point|skor|nilai|pembahasan|penjelasan|jawaban contoh|contoh jawaban)\s*:/i.test(line),
+        metadataLabelPattern.test(line),
       );
-      const currentBlockHasOptions = currentLines.some(
-        (line) => /^([ABCDE])(?:[\.\):\-]|\s)/i.test(line) || /^pilihan\s+([ABCDE])\s*:/i.test(line),
-      );
+      const currentBlockHasOptions = currentLines.some((line) => Boolean(findOptionLineMatch(line)));
       const currentBlockExpectsOptionList = blockExpectsOptionList(currentLines);
       const metadataAhead = hasMetadataAhead(bodyNodes, index);
       const looksLikeCombinedQuestionAndOptions =
@@ -717,6 +1230,14 @@ async function parseDocxQuestions(buffer: Buffer): Promise<ParseImportResult> {
       return "\n";
     }
 
+    if (node.tagName === "sup") {
+      return `^{${normalizeInlineSpacing(await extractNodeTextChildren(node, imageCounter))}}`;
+    }
+
+    if (node.tagName === "sub") {
+      return `_{${normalizeInlineSpacing(await extractNodeTextChildren(node, imageCounter))}}`;
+    }
+
     if (node.tagName === "table") {
       const rowLines: string[] = [];
 
@@ -763,7 +1284,20 @@ async function parseDocxQuestions(buffer: Buffer): Promise<ParseImportResult> {
       }
     }
 
-    return normalizeInlineSpacing(parts.join(" "));
+    return joinInlineParts(parts);
+  }
+
+  async function extractNodeTextChildren(node: Element, imageCounter: { value: number }) {
+    const parts: string[] = [];
+
+    for (const child of node.children ?? []) {
+      const part = await extractNodeText(child, imageCounter);
+      if (part) {
+        parts.push(part);
+      }
+    }
+
+    return parts.join("");
   }
 
   async function nodeToLine(node: Element, imageCounter: { value: number }) {
@@ -781,9 +1315,7 @@ async function parseDocxQuestions(buffer: Buffer): Promise<ParseImportResult> {
   }
 
   function blockExpectsOptionList(currentBlockLines: string[]) {
-    return currentBlockLines.some((line) =>
-      /(pilih lebih dari satu|pilih semua|pilih satu|pilih jawaban|manakah|tentukan benar atau salah)/i.test(line),
-    );
+    return currentBlockLines.some((line) => choiceInstructionPattern.test(line));
   }
 
   function extractPlainText(node: ChildNode | Element): string {
@@ -799,7 +1331,22 @@ async function parseDocxQuestions(buffer: Buffer): Promise<ParseImportResult> {
       return "\n";
     }
 
-    return normalizeInlineSpacing((node.children ?? []).map((child) => extractPlainText(child)).join(" "));
+    if (node.tagName === "sup") {
+      return `^{${extractPlainTextChildren(node)}}`;
+    }
+
+    if (node.tagName === "sub") {
+      return `_{${extractPlainTextChildren(node)}}`;
+    }
+
+    return joinInlineParts((node.children ?? []).map((child) => extractPlainText(child)).filter(Boolean));
+  }
+
+  function extractPlainTextChildren(node: Element) {
+    return (node.children ?? [])
+      .map((child) => extractPlainText(child))
+      .filter(Boolean)
+      .join("");
   }
 
   function hasQuestionMetadataAhead(nodes: Element[], startIndex: number) {
@@ -816,7 +1363,7 @@ async function parseDocxQuestions(buffer: Buffer): Promise<ParseImportResult> {
         continue;
       }
 
-      if (/^(jawaban|kunci|poin|point|skor|nilai|pembahasan|penjelasan|jawaban contoh|contoh jawaban)\s*:/i.test(siblingText)) {
+      if (metadataLabelPattern.test(siblingText)) {
         return true;
       }
     }
@@ -851,11 +1398,9 @@ async function parseDocxQuestions(buffer: Buffer): Promise<ParseImportResult> {
       }
 
       const currentBlockHasMetadata = currentLines.some((line) =>
-        /^(jawaban|kunci|poin|point|skor|nilai|pembahasan|penjelasan|jawaban contoh|contoh jawaban)\s*:/i.test(line),
+        metadataLabelPattern.test(line),
       );
-      const currentBlockHasOptions = currentLines.some(
-        (line) => /^([ABCDE])(?:[\.\):\-]|\s)/i.test(line) || /^pilihan\s+([ABCDE])\s*:/i.test(line),
-      );
+      const currentBlockHasOptions = currentLines.some((line) => Boolean(findOptionLineMatch(line)));
       const currentBlockExpectsOptionList = blockExpectsOptionList(currentLines);
       const metadataAhead = hasQuestionMetadataAhead(rootNodes, nodeIndex);
       const looksLikeCombinedQuestionAndOptions =
@@ -933,8 +1478,33 @@ async function parseDocxQuestions(buffer: Buffer): Promise<ParseImportResult> {
     .filter((question) => question.prompt);
 
   const documentXmlBuffer = extractZipEntry(buffer, "word/document.xml");
-  const xmlQuestions = documentXmlBuffer ? parseXmlQuestionBlocks(documentXmlBuffer.toString("utf8")) : [];
-  const questions = htmlQuestions.map((question, index) => mergeImportedQuestion(question, xmlQuestions[index]));
+  const documentXml = documentXmlBuffer?.toString("utf8") ?? "";
+  const xmlQuestions = documentXml ? parseXmlQuestionBlocks(documentXml) : [];
+  const containsOmml = /<m:oMath(?:Para)?\b/.test(documentXml);
+  const promptMatches = matchQuestionsByPrompt(htmlQuestions, xmlQuestions);
+  const questions = htmlQuestions.map((question, index) => {
+    const match = promptMatches.get(index);
+    const fallback = match ? xmlQuestions[match.xmlIndex] : undefined;
+    const mergedQuestion = mergeImportedQuestion(question, fallback, {
+      preferFallbackPromptAndOptions: containsOmml && fallback ? hasMathContent(fallback) : false,
+    });
+
+    if (!match) {
+      warnDocxImport("html question has no xml prompt match", {
+        htmlIndex: index,
+        prompt: normalizePromptFingerprint(question.prompt),
+      });
+    } else if (countFilledOptions(question) === 0 && fallback && countFilledOptions(fallback) >= 2) {
+      warnDocxImport("html question lost options while xml still has them", {
+        htmlIndex: index,
+        xmlIndex: match.xmlIndex,
+        similarity: Number(match.similarity.toFixed(3)),
+        prompt: normalizePromptFingerprint(question.prompt),
+      });
+    }
+
+    return mergedQuestion;
+  });
 
   if (questions.length === 0) {
     return {
@@ -958,3 +1528,13 @@ export async function parseImportedQuestionsFile(file: File): Promise<ParseImpor
     error: "Format file belum didukung. Gunakan file .docx.",
   };
 }
+
+export const __questionImportTestUtils = {
+  calculatePromptSimilarity,
+  findOptionLineMatch,
+  mergeImportedQuestion,
+  mergePromptPreservingImages,
+  matchQuestionsByPrompt,
+  normalizePromptFingerprint,
+  parseDocxQuestionBlock,
+};

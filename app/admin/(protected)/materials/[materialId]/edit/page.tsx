@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AdminPageHeader, AdminPageSection, AdminPageShell } from "@/components/admin/admin-page-shell";
+import { Button } from "@/components/ui/button";
 import { getPrismaClient } from "@/lib/prisma";
 import { MaterialEditForm } from "./ui/MaterialEditForm";
 
@@ -43,27 +45,26 @@ export default async function MaterialEditPage({ params }: MaterialEditPageProps
   }
 
   return (
-    <main className="dashboard-shell">
-      <div className="dashboard-grid">
-        <header className="card topbar">
-          <div>
-            <span className="section-kicker">Materi</span>
-            <h1 className="page-title" style={{ fontSize: "2.2rem", marginBottom: 8 }}>
-              Edit materi
-            </h1>
-          </div>
+    <AdminPageShell maxWidthClassName="max-w-4xl">
+      <AdminPageHeader
+        kicker="Materi"
+        title="Edit materi"
+        description="Perbarui isi materi, file, cover, akses, dan status tayang dalam satu pola yang konsisten."
+        actions={
+          <>
+            <Button asChild variant="secondary">
+              <Link href={`/admin/topics/${material.topicId}`}>Detail Topic</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/admin/topics">Kembali</Link>
+            </Button>
+          </>
+        }
+      />
 
-          <div className="topbar-meta">
-            <Link className="button-secondary" href="/admin/content">
-              Kembali
-            </Link>
-          </div>
-        </header>
-
-        <article className="card panel single-panel">
-          <MaterialEditForm material={material} topics={topics} />
-        </article>
-      </div>
-    </main>
+      <AdminPageSection>
+        <MaterialEditForm material={material} topics={topics} />
+      </AdminPageSection>
+    </AdminPageShell>
   );
 }
