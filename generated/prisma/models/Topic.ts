@@ -390,6 +390,11 @@ export type TopicUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type TopicScalarRelationFilter = {
+  is?: Prisma.TopicWhereInput
+  isNot?: Prisma.TopicWhereInput
+}
+
 export type TopicCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
@@ -429,45 +434,6 @@ export type TopicMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type TopicScalarRelationFilter = {
-  is?: Prisma.TopicWhereInput
-  isNot?: Prisma.TopicWhereInput
-}
-
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
-export type EnumTopicStatusFieldUpdateOperationsInput = {
-  set?: $Enums.TopicStatus
-}
-
-export type EnumAccessLevelFieldUpdateOperationsInput = {
-  set?: $Enums.AccessLevel
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
-export type TopicCreateNestedOneWithoutMaterialsInput = {
-  create?: Prisma.XOR<Prisma.TopicCreateWithoutMaterialsInput, Prisma.TopicUncheckedCreateWithoutMaterialsInput>
-  connectOrCreate?: Prisma.TopicCreateOrConnectWithoutMaterialsInput
-  connect?: Prisma.TopicWhereUniqueInput
-}
-
-export type TopicUpdateOneRequiredWithoutMaterialsNestedInput = {
-  create?: Prisma.XOR<Prisma.TopicCreateWithoutMaterialsInput, Prisma.TopicUncheckedCreateWithoutMaterialsInput>
-  connectOrCreate?: Prisma.TopicCreateOrConnectWithoutMaterialsInput
-  upsert?: Prisma.TopicUpsertWithoutMaterialsInput
-  connect?: Prisma.TopicWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.TopicUpdateToOneWithWhereWithoutMaterialsInput, Prisma.TopicUpdateWithoutMaterialsInput>, Prisma.TopicUncheckedUpdateWithoutMaterialsInput>
-}
-
 export type TopicCreateNestedOneWithoutExercisesInput = {
   create?: Prisma.XOR<Prisma.TopicCreateWithoutExercisesInput, Prisma.TopicUncheckedCreateWithoutExercisesInput>
   connectOrCreate?: Prisma.TopicCreateOrConnectWithoutExercisesInput
@@ -482,76 +448,18 @@ export type TopicUpdateOneRequiredWithoutExercisesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TopicUpdateToOneWithWhereWithoutExercisesInput, Prisma.TopicUpdateWithoutExercisesInput>, Prisma.TopicUncheckedUpdateWithoutExercisesInput>
 }
 
-export type TopicCreateWithoutMaterialsInput = {
-  id?: string
-  title: string
-  slug: string
-  category: string
-  difficulty: string
-  summary?: string | null
-  status?: $Enums.TopicStatus
-  previewMode: $Enums.AccessLevel
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  exercises?: Prisma.ExerciseCreateNestedManyWithoutTopicInput
+export type TopicCreateNestedOneWithoutMaterialsInput = {
+  create?: Prisma.XOR<Prisma.TopicCreateWithoutMaterialsInput, Prisma.TopicUncheckedCreateWithoutMaterialsInput>
+  connectOrCreate?: Prisma.TopicCreateOrConnectWithoutMaterialsInput
+  connect?: Prisma.TopicWhereUniqueInput
 }
 
-export type TopicUncheckedCreateWithoutMaterialsInput = {
-  id?: string
-  title: string
-  slug: string
-  category: string
-  difficulty: string
-  summary?: string | null
-  status?: $Enums.TopicStatus
-  previewMode: $Enums.AccessLevel
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  exercises?: Prisma.ExerciseUncheckedCreateNestedManyWithoutTopicInput
-}
-
-export type TopicCreateOrConnectWithoutMaterialsInput = {
-  where: Prisma.TopicWhereUniqueInput
-  create: Prisma.XOR<Prisma.TopicCreateWithoutMaterialsInput, Prisma.TopicUncheckedCreateWithoutMaterialsInput>
-}
-
-export type TopicUpsertWithoutMaterialsInput = {
-  update: Prisma.XOR<Prisma.TopicUpdateWithoutMaterialsInput, Prisma.TopicUncheckedUpdateWithoutMaterialsInput>
-  create: Prisma.XOR<Prisma.TopicCreateWithoutMaterialsInput, Prisma.TopicUncheckedCreateWithoutMaterialsInput>
-  where?: Prisma.TopicWhereInput
-}
-
-export type TopicUpdateToOneWithWhereWithoutMaterialsInput = {
-  where?: Prisma.TopicWhereInput
-  data: Prisma.XOR<Prisma.TopicUpdateWithoutMaterialsInput, Prisma.TopicUncheckedUpdateWithoutMaterialsInput>
-}
-
-export type TopicUpdateWithoutMaterialsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.StringFieldUpdateOperationsInput | string
-  difficulty?: Prisma.StringFieldUpdateOperationsInput | string
-  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
-  previewMode?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  exercises?: Prisma.ExerciseUpdateManyWithoutTopicNestedInput
-}
-
-export type TopicUncheckedUpdateWithoutMaterialsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  category?: Prisma.StringFieldUpdateOperationsInput | string
-  difficulty?: Prisma.StringFieldUpdateOperationsInput | string
-  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
-  previewMode?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  exercises?: Prisma.ExerciseUncheckedUpdateManyWithoutTopicNestedInput
+export type TopicUpdateOneRequiredWithoutMaterialsNestedInput = {
+  create?: Prisma.XOR<Prisma.TopicCreateWithoutMaterialsInput, Prisma.TopicUncheckedCreateWithoutMaterialsInput>
+  connectOrCreate?: Prisma.TopicCreateOrConnectWithoutMaterialsInput
+  upsert?: Prisma.TopicUpsertWithoutMaterialsInput
+  connect?: Prisma.TopicWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TopicUpdateToOneWithWhereWithoutMaterialsInput, Prisma.TopicUpdateWithoutMaterialsInput>, Prisma.TopicUncheckedUpdateWithoutMaterialsInput>
 }
 
 export type TopicCreateWithoutExercisesInput = {
@@ -624,6 +532,78 @@ export type TopicUncheckedUpdateWithoutExercisesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   materials?: Prisma.MaterialUncheckedUpdateManyWithoutTopicNestedInput
+}
+
+export type TopicCreateWithoutMaterialsInput = {
+  id?: string
+  title: string
+  slug: string
+  category: string
+  difficulty: string
+  summary?: string | null
+  status?: $Enums.TopicStatus
+  previewMode: $Enums.AccessLevel
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  exercises?: Prisma.ExerciseCreateNestedManyWithoutTopicInput
+}
+
+export type TopicUncheckedCreateWithoutMaterialsInput = {
+  id?: string
+  title: string
+  slug: string
+  category: string
+  difficulty: string
+  summary?: string | null
+  status?: $Enums.TopicStatus
+  previewMode: $Enums.AccessLevel
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  exercises?: Prisma.ExerciseUncheckedCreateNestedManyWithoutTopicInput
+}
+
+export type TopicCreateOrConnectWithoutMaterialsInput = {
+  where: Prisma.TopicWhereUniqueInput
+  create: Prisma.XOR<Prisma.TopicCreateWithoutMaterialsInput, Prisma.TopicUncheckedCreateWithoutMaterialsInput>
+}
+
+export type TopicUpsertWithoutMaterialsInput = {
+  update: Prisma.XOR<Prisma.TopicUpdateWithoutMaterialsInput, Prisma.TopicUncheckedUpdateWithoutMaterialsInput>
+  create: Prisma.XOR<Prisma.TopicCreateWithoutMaterialsInput, Prisma.TopicUncheckedCreateWithoutMaterialsInput>
+  where?: Prisma.TopicWhereInput
+}
+
+export type TopicUpdateToOneWithWhereWithoutMaterialsInput = {
+  where?: Prisma.TopicWhereInput
+  data: Prisma.XOR<Prisma.TopicUpdateWithoutMaterialsInput, Prisma.TopicUncheckedUpdateWithoutMaterialsInput>
+}
+
+export type TopicUpdateWithoutMaterialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  difficulty?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
+  previewMode?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exercises?: Prisma.ExerciseUpdateManyWithoutTopicNestedInput
+}
+
+export type TopicUncheckedUpdateWithoutMaterialsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  difficulty?: Prisma.StringFieldUpdateOperationsInput | string
+  summary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
+  previewMode?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  exercises?: Prisma.ExerciseUncheckedUpdateManyWithoutTopicNestedInput
 }
 
 

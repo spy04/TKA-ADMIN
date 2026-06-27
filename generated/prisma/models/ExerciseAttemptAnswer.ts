@@ -457,48 +457,6 @@ export type ExerciseAttemptAnswerSumOrderByAggregateInput = {
   awardedPoints?: Prisma.SortOrder
 }
 
-export type ExerciseAttemptAnswerCreateNestedManyWithoutQuestionInput = {
-  create?: Prisma.XOR<Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput> | Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput[] | Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput[]
-  connectOrCreate?: Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput | Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput[]
-  createMany?: Prisma.ExerciseAttemptAnswerCreateManyQuestionInputEnvelope
-  connect?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
-}
-
-export type ExerciseAttemptAnswerUncheckedCreateNestedManyWithoutQuestionInput = {
-  create?: Prisma.XOR<Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput> | Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput[] | Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput[]
-  connectOrCreate?: Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput | Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput[]
-  createMany?: Prisma.ExerciseAttemptAnswerCreateManyQuestionInputEnvelope
-  connect?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
-}
-
-export type ExerciseAttemptAnswerUpdateManyWithoutQuestionNestedInput = {
-  create?: Prisma.XOR<Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput> | Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput[] | Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput[]
-  connectOrCreate?: Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput | Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput[]
-  upsert?: Prisma.ExerciseAttemptAnswerUpsertWithWhereUniqueWithoutQuestionInput | Prisma.ExerciseAttemptAnswerUpsertWithWhereUniqueWithoutQuestionInput[]
-  createMany?: Prisma.ExerciseAttemptAnswerCreateManyQuestionInputEnvelope
-  set?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
-  disconnect?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
-  delete?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
-  connect?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
-  update?: Prisma.ExerciseAttemptAnswerUpdateWithWhereUniqueWithoutQuestionInput | Prisma.ExerciseAttemptAnswerUpdateWithWhereUniqueWithoutQuestionInput[]
-  updateMany?: Prisma.ExerciseAttemptAnswerUpdateManyWithWhereWithoutQuestionInput | Prisma.ExerciseAttemptAnswerUpdateManyWithWhereWithoutQuestionInput[]
-  deleteMany?: Prisma.ExerciseAttemptAnswerScalarWhereInput | Prisma.ExerciseAttemptAnswerScalarWhereInput[]
-}
-
-export type ExerciseAttemptAnswerUncheckedUpdateManyWithoutQuestionNestedInput = {
-  create?: Prisma.XOR<Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput> | Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput[] | Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput[]
-  connectOrCreate?: Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput | Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput[]
-  upsert?: Prisma.ExerciseAttemptAnswerUpsertWithWhereUniqueWithoutQuestionInput | Prisma.ExerciseAttemptAnswerUpsertWithWhereUniqueWithoutQuestionInput[]
-  createMany?: Prisma.ExerciseAttemptAnswerCreateManyQuestionInputEnvelope
-  set?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
-  disconnect?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
-  delete?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
-  connect?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
-  update?: Prisma.ExerciseAttemptAnswerUpdateWithWhereUniqueWithoutQuestionInput | Prisma.ExerciseAttemptAnswerUpdateWithWhereUniqueWithoutQuestionInput[]
-  updateMany?: Prisma.ExerciseAttemptAnswerUpdateManyWithWhereWithoutQuestionInput | Prisma.ExerciseAttemptAnswerUpdateManyWithWhereWithoutQuestionInput[]
-  deleteMany?: Prisma.ExerciseAttemptAnswerScalarWhereInput | Prisma.ExerciseAttemptAnswerScalarWhereInput[]
-}
-
 export type ExerciseAttemptAnswerCreateNestedManyWithoutExerciseAttemptInput = {
   create?: Prisma.XOR<Prisma.ExerciseAttemptAnswerCreateWithoutExerciseAttemptInput, Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutExerciseAttemptInput> | Prisma.ExerciseAttemptAnswerCreateWithoutExerciseAttemptInput[] | Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutExerciseAttemptInput[]
   connectOrCreate?: Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutExerciseAttemptInput | Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutExerciseAttemptInput[]
@@ -541,71 +499,54 @@ export type ExerciseAttemptAnswerUncheckedUpdateManyWithoutExerciseAttemptNested
   deleteMany?: Prisma.ExerciseAttemptAnswerScalarWhereInput | Prisma.ExerciseAttemptAnswerScalarWhereInput[]
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
 export type NullableBoolFieldUpdateOperationsInput = {
   set?: boolean | null
 }
 
-export type ExerciseAttemptAnswerCreateWithoutQuestionInput = {
-  id: string
-  selectedOptions?: string | null
-  essayAnswer?: string | null
-  isCorrect?: boolean | null
-  awardedPoints?: number
-  createdAt?: Date | string
-  updatedAt: Date | string
-  ExerciseAttempt: Prisma.ExerciseAttemptCreateNestedOneWithoutExerciseAttemptAnswerInput
+export type ExerciseAttemptAnswerCreateNestedManyWithoutQuestionInput = {
+  create?: Prisma.XOR<Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput> | Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput[] | Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput[]
+  connectOrCreate?: Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput | Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput[]
+  createMany?: Prisma.ExerciseAttemptAnswerCreateManyQuestionInputEnvelope
+  connect?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
 }
 
-export type ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput = {
-  id: string
-  selectedOptions?: string | null
-  essayAnswer?: string | null
-  isCorrect?: boolean | null
-  awardedPoints?: number
-  createdAt?: Date | string
-  updatedAt: Date | string
-  attemptId: string
+export type ExerciseAttemptAnswerUncheckedCreateNestedManyWithoutQuestionInput = {
+  create?: Prisma.XOR<Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput> | Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput[] | Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput[]
+  connectOrCreate?: Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput | Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput[]
+  createMany?: Prisma.ExerciseAttemptAnswerCreateManyQuestionInputEnvelope
+  connect?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
 }
 
-export type ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput = {
-  where: Prisma.ExerciseAttemptAnswerWhereUniqueInput
-  create: Prisma.XOR<Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput>
+export type ExerciseAttemptAnswerUpdateManyWithoutQuestionNestedInput = {
+  create?: Prisma.XOR<Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput> | Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput[] | Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput[]
+  connectOrCreate?: Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput | Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput[]
+  upsert?: Prisma.ExerciseAttemptAnswerUpsertWithWhereUniqueWithoutQuestionInput | Prisma.ExerciseAttemptAnswerUpsertWithWhereUniqueWithoutQuestionInput[]
+  createMany?: Prisma.ExerciseAttemptAnswerCreateManyQuestionInputEnvelope
+  set?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
+  disconnect?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
+  delete?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
+  connect?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
+  update?: Prisma.ExerciseAttemptAnswerUpdateWithWhereUniqueWithoutQuestionInput | Prisma.ExerciseAttemptAnswerUpdateWithWhereUniqueWithoutQuestionInput[]
+  updateMany?: Prisma.ExerciseAttemptAnswerUpdateManyWithWhereWithoutQuestionInput | Prisma.ExerciseAttemptAnswerUpdateManyWithWhereWithoutQuestionInput[]
+  deleteMany?: Prisma.ExerciseAttemptAnswerScalarWhereInput | Prisma.ExerciseAttemptAnswerScalarWhereInput[]
 }
 
-export type ExerciseAttemptAnswerCreateManyQuestionInputEnvelope = {
-  data: Prisma.ExerciseAttemptAnswerCreateManyQuestionInput | Prisma.ExerciseAttemptAnswerCreateManyQuestionInput[]
-  skipDuplicates?: boolean
-}
-
-export type ExerciseAttemptAnswerUpsertWithWhereUniqueWithoutQuestionInput = {
-  where: Prisma.ExerciseAttemptAnswerWhereUniqueInput
-  update: Prisma.XOR<Prisma.ExerciseAttemptAnswerUpdateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedUpdateWithoutQuestionInput>
-  create: Prisma.XOR<Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput>
-}
-
-export type ExerciseAttemptAnswerUpdateWithWhereUniqueWithoutQuestionInput = {
-  where: Prisma.ExerciseAttemptAnswerWhereUniqueInput
-  data: Prisma.XOR<Prisma.ExerciseAttemptAnswerUpdateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedUpdateWithoutQuestionInput>
-}
-
-export type ExerciseAttemptAnswerUpdateManyWithWhereWithoutQuestionInput = {
-  where: Prisma.ExerciseAttemptAnswerScalarWhereInput
-  data: Prisma.XOR<Prisma.ExerciseAttemptAnswerUpdateManyMutationInput, Prisma.ExerciseAttemptAnswerUncheckedUpdateManyWithoutQuestionInput>
-}
-
-export type ExerciseAttemptAnswerScalarWhereInput = {
-  AND?: Prisma.ExerciseAttemptAnswerScalarWhereInput | Prisma.ExerciseAttemptAnswerScalarWhereInput[]
-  OR?: Prisma.ExerciseAttemptAnswerScalarWhereInput[]
-  NOT?: Prisma.ExerciseAttemptAnswerScalarWhereInput | Prisma.ExerciseAttemptAnswerScalarWhereInput[]
-  id?: Prisma.StringFilter<"ExerciseAttemptAnswer"> | string
-  selectedOptions?: Prisma.StringNullableFilter<"ExerciseAttemptAnswer"> | string | null
-  essayAnswer?: Prisma.StringNullableFilter<"ExerciseAttemptAnswer"> | string | null
-  isCorrect?: Prisma.BoolNullableFilter<"ExerciseAttemptAnswer"> | boolean | null
-  awardedPoints?: Prisma.IntFilter<"ExerciseAttemptAnswer"> | number
-  createdAt?: Prisma.DateTimeFilter<"ExerciseAttemptAnswer"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"ExerciseAttemptAnswer"> | Date | string
-  attemptId?: Prisma.StringFilter<"ExerciseAttemptAnswer"> | string
-  questionId?: Prisma.StringFilter<"ExerciseAttemptAnswer"> | string
+export type ExerciseAttemptAnswerUncheckedUpdateManyWithoutQuestionNestedInput = {
+  create?: Prisma.XOR<Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput> | Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput[] | Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput[]
+  connectOrCreate?: Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput | Prisma.ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput[]
+  upsert?: Prisma.ExerciseAttemptAnswerUpsertWithWhereUniqueWithoutQuestionInput | Prisma.ExerciseAttemptAnswerUpsertWithWhereUniqueWithoutQuestionInput[]
+  createMany?: Prisma.ExerciseAttemptAnswerCreateManyQuestionInputEnvelope
+  set?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
+  disconnect?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
+  delete?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
+  connect?: Prisma.ExerciseAttemptAnswerWhereUniqueInput | Prisma.ExerciseAttemptAnswerWhereUniqueInput[]
+  update?: Prisma.ExerciseAttemptAnswerUpdateWithWhereUniqueWithoutQuestionInput | Prisma.ExerciseAttemptAnswerUpdateWithWhereUniqueWithoutQuestionInput[]
+  updateMany?: Prisma.ExerciseAttemptAnswerUpdateManyWithWhereWithoutQuestionInput | Prisma.ExerciseAttemptAnswerUpdateManyWithWhereWithoutQuestionInput[]
+  deleteMany?: Prisma.ExerciseAttemptAnswerScalarWhereInput | Prisma.ExerciseAttemptAnswerScalarWhereInput[]
 }
 
 export type ExerciseAttemptAnswerCreateWithoutExerciseAttemptInput = {
@@ -656,7 +597,33 @@ export type ExerciseAttemptAnswerUpdateManyWithWhereWithoutExerciseAttemptInput 
   data: Prisma.XOR<Prisma.ExerciseAttemptAnswerUpdateManyMutationInput, Prisma.ExerciseAttemptAnswerUncheckedUpdateManyWithoutExerciseAttemptInput>
 }
 
-export type ExerciseAttemptAnswerCreateManyQuestionInput = {
+export type ExerciseAttemptAnswerScalarWhereInput = {
+  AND?: Prisma.ExerciseAttemptAnswerScalarWhereInput | Prisma.ExerciseAttemptAnswerScalarWhereInput[]
+  OR?: Prisma.ExerciseAttemptAnswerScalarWhereInput[]
+  NOT?: Prisma.ExerciseAttemptAnswerScalarWhereInput | Prisma.ExerciseAttemptAnswerScalarWhereInput[]
+  id?: Prisma.StringFilter<"ExerciseAttemptAnswer"> | string
+  selectedOptions?: Prisma.StringNullableFilter<"ExerciseAttemptAnswer"> | string | null
+  essayAnswer?: Prisma.StringNullableFilter<"ExerciseAttemptAnswer"> | string | null
+  isCorrect?: Prisma.BoolNullableFilter<"ExerciseAttemptAnswer"> | boolean | null
+  awardedPoints?: Prisma.IntFilter<"ExerciseAttemptAnswer"> | number
+  createdAt?: Prisma.DateTimeFilter<"ExerciseAttemptAnswer"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"ExerciseAttemptAnswer"> | Date | string
+  attemptId?: Prisma.StringFilter<"ExerciseAttemptAnswer"> | string
+  questionId?: Prisma.StringFilter<"ExerciseAttemptAnswer"> | string
+}
+
+export type ExerciseAttemptAnswerCreateWithoutQuestionInput = {
+  id: string
+  selectedOptions?: string | null
+  essayAnswer?: string | null
+  isCorrect?: boolean | null
+  awardedPoints?: number
+  createdAt?: Date | string
+  updatedAt: Date | string
+  ExerciseAttempt: Prisma.ExerciseAttemptCreateNestedOneWithoutExerciseAttemptAnswerInput
+}
+
+export type ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput = {
   id: string
   selectedOptions?: string | null
   essayAnswer?: string | null
@@ -667,37 +634,30 @@ export type ExerciseAttemptAnswerCreateManyQuestionInput = {
   attemptId: string
 }
 
-export type ExerciseAttemptAnswerUpdateWithoutQuestionInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  selectedOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  essayAnswer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  awardedPoints?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  ExerciseAttempt?: Prisma.ExerciseAttemptUpdateOneRequiredWithoutExerciseAttemptAnswerNestedInput
+export type ExerciseAttemptAnswerCreateOrConnectWithoutQuestionInput = {
+  where: Prisma.ExerciseAttemptAnswerWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput>
 }
 
-export type ExerciseAttemptAnswerUncheckedUpdateWithoutQuestionInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  selectedOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  essayAnswer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  awardedPoints?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  attemptId?: Prisma.StringFieldUpdateOperationsInput | string
+export type ExerciseAttemptAnswerCreateManyQuestionInputEnvelope = {
+  data: Prisma.ExerciseAttemptAnswerCreateManyQuestionInput | Prisma.ExerciseAttemptAnswerCreateManyQuestionInput[]
+  skipDuplicates?: boolean
 }
 
-export type ExerciseAttemptAnswerUncheckedUpdateManyWithoutQuestionInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  selectedOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  essayAnswer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  awardedPoints?: Prisma.IntFieldUpdateOperationsInput | number
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  attemptId?: Prisma.StringFieldUpdateOperationsInput | string
+export type ExerciseAttemptAnswerUpsertWithWhereUniqueWithoutQuestionInput = {
+  where: Prisma.ExerciseAttemptAnswerWhereUniqueInput
+  update: Prisma.XOR<Prisma.ExerciseAttemptAnswerUpdateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedUpdateWithoutQuestionInput>
+  create: Prisma.XOR<Prisma.ExerciseAttemptAnswerCreateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedCreateWithoutQuestionInput>
+}
+
+export type ExerciseAttemptAnswerUpdateWithWhereUniqueWithoutQuestionInput = {
+  where: Prisma.ExerciseAttemptAnswerWhereUniqueInput
+  data: Prisma.XOR<Prisma.ExerciseAttemptAnswerUpdateWithoutQuestionInput, Prisma.ExerciseAttemptAnswerUncheckedUpdateWithoutQuestionInput>
+}
+
+export type ExerciseAttemptAnswerUpdateManyWithWhereWithoutQuestionInput = {
+  where: Prisma.ExerciseAttemptAnswerScalarWhereInput
+  data: Prisma.XOR<Prisma.ExerciseAttemptAnswerUpdateManyMutationInput, Prisma.ExerciseAttemptAnswerUncheckedUpdateManyWithoutQuestionInput>
 }
 
 export type ExerciseAttemptAnswerCreateManyExerciseAttemptInput = {
@@ -742,6 +702,50 @@ export type ExerciseAttemptAnswerUncheckedUpdateManyWithoutExerciseAttemptInput 
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   questionId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type ExerciseAttemptAnswerCreateManyQuestionInput = {
+  id: string
+  selectedOptions?: string | null
+  essayAnswer?: string | null
+  isCorrect?: boolean | null
+  awardedPoints?: number
+  createdAt?: Date | string
+  updatedAt: Date | string
+  attemptId: string
+}
+
+export type ExerciseAttemptAnswerUpdateWithoutQuestionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  selectedOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  essayAnswer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  awardedPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ExerciseAttempt?: Prisma.ExerciseAttemptUpdateOneRequiredWithoutExerciseAttemptAnswerNestedInput
+}
+
+export type ExerciseAttemptAnswerUncheckedUpdateWithoutQuestionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  selectedOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  essayAnswer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  awardedPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attemptId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type ExerciseAttemptAnswerUncheckedUpdateManyWithoutQuestionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  selectedOptions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  essayAnswer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isCorrect?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  awardedPoints?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attemptId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 

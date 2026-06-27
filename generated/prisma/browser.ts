@@ -18,26 +18,6 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
- * Model Topic
- * 
- */
-export type Topic = Prisma.TopicModel
-/**
- * Model Material
- * 
- */
-export type Material = Prisma.MaterialModel
-/**
- * Model Exercise
- * 
- */
-export type Exercise = Prisma.ExerciseModel
-/**
- * Model Question
- * 
- */
-export type Question = Prisma.QuestionModel
-/**
  * Model ExerciseAttempt
  * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
  */
@@ -57,3 +37,23 @@ export type Session = Prisma.SessionModel
  * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
  */
 export type User = Prisma.UserModel
+/**
+ * Model Exercise
+ * 
+ */
+export type Exercise = Prisma.ExerciseModel
+/**
+ * Model Question
+ * 
+ */
+export type Question = Prisma.QuestionModel
+/**
+ * Model Topic
+ * 
+ */
+export type Topic = Prisma.TopicModel
+/**
+ * Model Material
+ * 
+ */
+export type Material = Prisma.MaterialModel

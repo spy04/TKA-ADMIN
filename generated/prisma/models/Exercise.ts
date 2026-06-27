@@ -449,14 +449,9 @@ export type ExerciseUncheckedUpdateManyInput = {
   status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
 }
 
-export type ExerciseListRelationFilter = {
-  every?: Prisma.ExerciseWhereInput
-  some?: Prisma.ExerciseWhereInput
-  none?: Prisma.ExerciseWhereInput
-}
-
-export type ExerciseOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type ExerciseScalarRelationFilter = {
+  is?: Prisma.ExerciseWhereInput
+  isNot?: Prisma.ExerciseWhereInput
 }
 
 export type ExerciseCountOrderByAggregateInput = {
@@ -509,9 +504,62 @@ export type ExerciseSumOrderByAggregateInput = {
   questionCount?: Prisma.SortOrder
 }
 
-export type ExerciseScalarRelationFilter = {
-  is?: Prisma.ExerciseWhereInput
-  isNot?: Prisma.ExerciseWhereInput
+export type ExerciseListRelationFilter = {
+  every?: Prisma.ExerciseWhereInput
+  some?: Prisma.ExerciseWhereInput
+  none?: Prisma.ExerciseWhereInput
+}
+
+export type ExerciseOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
+export type ExerciseCreateNestedOneWithoutExerciseAttemptInput = {
+  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutExerciseAttemptInput, Prisma.ExerciseUncheckedCreateWithoutExerciseAttemptInput>
+  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutExerciseAttemptInput
+  connect?: Prisma.ExerciseWhereUniqueInput
+}
+
+export type ExerciseUpdateOneRequiredWithoutExerciseAttemptNestedInput = {
+  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutExerciseAttemptInput, Prisma.ExerciseUncheckedCreateWithoutExerciseAttemptInput>
+  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutExerciseAttemptInput
+  upsert?: Prisma.ExerciseUpsertWithoutExerciseAttemptInput
+  connect?: Prisma.ExerciseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ExerciseUpdateToOneWithWhereWithoutExerciseAttemptInput, Prisma.ExerciseUpdateWithoutExerciseAttemptInput>, Prisma.ExerciseUncheckedUpdateWithoutExerciseAttemptInput>
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type EnumExerciseScopeFieldUpdateOperationsInput = {
+  set?: $Enums.ExerciseScope
+}
+
+export type EnumAccessLevelFieldUpdateOperationsInput = {
+  set?: $Enums.AccessLevel
+}
+
+export type EnumTopicStatusFieldUpdateOperationsInput = {
+  set?: $Enums.TopicStatus
+}
+
+export type ExerciseCreateNestedOneWithoutQuestionsInput = {
+  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutQuestionsInput, Prisma.ExerciseUncheckedCreateWithoutQuestionsInput>
+  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutQuestionsInput
+  connect?: Prisma.ExerciseWhereUniqueInput
+}
+
+export type ExerciseUpdateOneRequiredWithoutQuestionsNestedInput = {
+  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutQuestionsInput, Prisma.ExerciseUncheckedCreateWithoutQuestionsInput>
+  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutQuestionsInput
+  upsert?: Prisma.ExerciseUpsertWithoutQuestionsInput
+  connect?: Prisma.ExerciseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ExerciseUpdateToOneWithWhereWithoutQuestionsInput, Prisma.ExerciseUpdateWithoutQuestionsInput>, Prisma.ExerciseUncheckedUpdateWithoutQuestionsInput>
 }
 
 export type ExerciseCreateNestedManyWithoutTopicInput = {
@@ -598,44 +646,156 @@ export type ExerciseUncheckedUpdateManyWithoutMaterialNestedInput = {
   deleteMany?: Prisma.ExerciseScalarWhereInput | Prisma.ExerciseScalarWhereInput[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type ExerciseCreateWithoutExerciseAttemptInput = {
+  id?: string
+  title: string
+  questionCount?: number | null
+  scope?: $Enums.ExerciseScope
+  accessLevel: $Enums.AccessLevel
+  adminNotes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  status?: $Enums.TopicStatus
+  material?: Prisma.MaterialCreateNestedOneWithoutExercisesInput
+  topic: Prisma.TopicCreateNestedOneWithoutExercisesInput
+  questions?: Prisma.QuestionCreateNestedManyWithoutExerciseInput
 }
 
-export type EnumExerciseScopeFieldUpdateOperationsInput = {
-  set?: $Enums.ExerciseScope
+export type ExerciseUncheckedCreateWithoutExerciseAttemptInput = {
+  id?: string
+  title: string
+  questionCount?: number | null
+  scope?: $Enums.ExerciseScope
+  accessLevel: $Enums.AccessLevel
+  adminNotes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  topicId: string
+  materialId?: string | null
+  status?: $Enums.TopicStatus
+  questions?: Prisma.QuestionUncheckedCreateNestedManyWithoutExerciseInput
 }
 
-export type ExerciseCreateNestedOneWithoutQuestionsInput = {
-  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutQuestionsInput, Prisma.ExerciseUncheckedCreateWithoutQuestionsInput>
-  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutQuestionsInput
-  connect?: Prisma.ExerciseWhereUniqueInput
+export type ExerciseCreateOrConnectWithoutExerciseAttemptInput = {
+  where: Prisma.ExerciseWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExerciseCreateWithoutExerciseAttemptInput, Prisma.ExerciseUncheckedCreateWithoutExerciseAttemptInput>
 }
 
-export type ExerciseUpdateOneRequiredWithoutQuestionsNestedInput = {
-  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutQuestionsInput, Prisma.ExerciseUncheckedCreateWithoutQuestionsInput>
-  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutQuestionsInput
-  upsert?: Prisma.ExerciseUpsertWithoutQuestionsInput
-  connect?: Prisma.ExerciseWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ExerciseUpdateToOneWithWhereWithoutQuestionsInput, Prisma.ExerciseUpdateWithoutQuestionsInput>, Prisma.ExerciseUncheckedUpdateWithoutQuestionsInput>
+export type ExerciseUpsertWithoutExerciseAttemptInput = {
+  update: Prisma.XOR<Prisma.ExerciseUpdateWithoutExerciseAttemptInput, Prisma.ExerciseUncheckedUpdateWithoutExerciseAttemptInput>
+  create: Prisma.XOR<Prisma.ExerciseCreateWithoutExerciseAttemptInput, Prisma.ExerciseUncheckedCreateWithoutExerciseAttemptInput>
+  where?: Prisma.ExerciseWhereInput
 }
 
-export type ExerciseCreateNestedOneWithoutExerciseAttemptInput = {
-  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutExerciseAttemptInput, Prisma.ExerciseUncheckedCreateWithoutExerciseAttemptInput>
-  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutExerciseAttemptInput
-  connect?: Prisma.ExerciseWhereUniqueInput
+export type ExerciseUpdateToOneWithWhereWithoutExerciseAttemptInput = {
+  where?: Prisma.ExerciseWhereInput
+  data: Prisma.XOR<Prisma.ExerciseUpdateWithoutExerciseAttemptInput, Prisma.ExerciseUncheckedUpdateWithoutExerciseAttemptInput>
 }
 
-export type ExerciseUpdateOneRequiredWithoutExerciseAttemptNestedInput = {
-  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutExerciseAttemptInput, Prisma.ExerciseUncheckedCreateWithoutExerciseAttemptInput>
-  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutExerciseAttemptInput
-  upsert?: Prisma.ExerciseUpsertWithoutExerciseAttemptInput
-  connect?: Prisma.ExerciseWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ExerciseUpdateToOneWithWhereWithoutExerciseAttemptInput, Prisma.ExerciseUpdateWithoutExerciseAttemptInput>, Prisma.ExerciseUncheckedUpdateWithoutExerciseAttemptInput>
+export type ExerciseUpdateWithoutExerciseAttemptInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  scope?: Prisma.EnumExerciseScopeFieldUpdateOperationsInput | $Enums.ExerciseScope
+  accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
+  adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
+  material?: Prisma.MaterialUpdateOneWithoutExercisesNestedInput
+  topic?: Prisma.TopicUpdateOneRequiredWithoutExercisesNestedInput
+  questions?: Prisma.QuestionUpdateManyWithoutExerciseNestedInput
+}
+
+export type ExerciseUncheckedUpdateWithoutExerciseAttemptInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  scope?: Prisma.EnumExerciseScopeFieldUpdateOperationsInput | $Enums.ExerciseScope
+  accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
+  adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  topicId?: Prisma.StringFieldUpdateOperationsInput | string
+  materialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
+  questions?: Prisma.QuestionUncheckedUpdateManyWithoutExerciseNestedInput
+}
+
+export type ExerciseCreateWithoutQuestionsInput = {
+  id?: string
+  title: string
+  questionCount?: number | null
+  scope?: $Enums.ExerciseScope
+  accessLevel: $Enums.AccessLevel
+  adminNotes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  status?: $Enums.TopicStatus
+  material?: Prisma.MaterialCreateNestedOneWithoutExercisesInput
+  topic: Prisma.TopicCreateNestedOneWithoutExercisesInput
+  ExerciseAttempt?: Prisma.ExerciseAttemptCreateNestedManyWithoutExerciseInput
+}
+
+export type ExerciseUncheckedCreateWithoutQuestionsInput = {
+  id?: string
+  title: string
+  questionCount?: number | null
+  scope?: $Enums.ExerciseScope
+  accessLevel: $Enums.AccessLevel
+  adminNotes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  topicId: string
+  materialId?: string | null
+  status?: $Enums.TopicStatus
+  ExerciseAttempt?: Prisma.ExerciseAttemptUncheckedCreateNestedManyWithoutExerciseInput
+}
+
+export type ExerciseCreateOrConnectWithoutQuestionsInput = {
+  where: Prisma.ExerciseWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExerciseCreateWithoutQuestionsInput, Prisma.ExerciseUncheckedCreateWithoutQuestionsInput>
+}
+
+export type ExerciseUpsertWithoutQuestionsInput = {
+  update: Prisma.XOR<Prisma.ExerciseUpdateWithoutQuestionsInput, Prisma.ExerciseUncheckedUpdateWithoutQuestionsInput>
+  create: Prisma.XOR<Prisma.ExerciseCreateWithoutQuestionsInput, Prisma.ExerciseUncheckedCreateWithoutQuestionsInput>
+  where?: Prisma.ExerciseWhereInput
+}
+
+export type ExerciseUpdateToOneWithWhereWithoutQuestionsInput = {
+  where?: Prisma.ExerciseWhereInput
+  data: Prisma.XOR<Prisma.ExerciseUpdateWithoutQuestionsInput, Prisma.ExerciseUncheckedUpdateWithoutQuestionsInput>
+}
+
+export type ExerciseUpdateWithoutQuestionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  scope?: Prisma.EnumExerciseScopeFieldUpdateOperationsInput | $Enums.ExerciseScope
+  accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
+  adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
+  material?: Prisma.MaterialUpdateOneWithoutExercisesNestedInput
+  topic?: Prisma.TopicUpdateOneRequiredWithoutExercisesNestedInput
+  ExerciseAttempt?: Prisma.ExerciseAttemptUpdateManyWithoutExerciseNestedInput
+}
+
+export type ExerciseUncheckedUpdateWithoutQuestionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  scope?: Prisma.EnumExerciseScopeFieldUpdateOperationsInput | $Enums.ExerciseScope
+  accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
+  adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  topicId?: Prisma.StringFieldUpdateOperationsInput | string
+  materialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
+  ExerciseAttempt?: Prisma.ExerciseAttemptUncheckedUpdateManyWithoutExerciseNestedInput
 }
 
 export type ExerciseCreateWithoutTopicInput = {
@@ -765,158 +925,6 @@ export type ExerciseUpdateWithWhereUniqueWithoutMaterialInput = {
 export type ExerciseUpdateManyWithWhereWithoutMaterialInput = {
   where: Prisma.ExerciseScalarWhereInput
   data: Prisma.XOR<Prisma.ExerciseUpdateManyMutationInput, Prisma.ExerciseUncheckedUpdateManyWithoutMaterialInput>
-}
-
-export type ExerciseCreateWithoutQuestionsInput = {
-  id?: string
-  title: string
-  questionCount?: number | null
-  scope?: $Enums.ExerciseScope
-  accessLevel: $Enums.AccessLevel
-  adminNotes?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  status?: $Enums.TopicStatus
-  material?: Prisma.MaterialCreateNestedOneWithoutExercisesInput
-  topic: Prisma.TopicCreateNestedOneWithoutExercisesInput
-  ExerciseAttempt?: Prisma.ExerciseAttemptCreateNestedManyWithoutExerciseInput
-}
-
-export type ExerciseUncheckedCreateWithoutQuestionsInput = {
-  id?: string
-  title: string
-  questionCount?: number | null
-  scope?: $Enums.ExerciseScope
-  accessLevel: $Enums.AccessLevel
-  adminNotes?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  topicId: string
-  materialId?: string | null
-  status?: $Enums.TopicStatus
-  ExerciseAttempt?: Prisma.ExerciseAttemptUncheckedCreateNestedManyWithoutExerciseInput
-}
-
-export type ExerciseCreateOrConnectWithoutQuestionsInput = {
-  where: Prisma.ExerciseWhereUniqueInput
-  create: Prisma.XOR<Prisma.ExerciseCreateWithoutQuestionsInput, Prisma.ExerciseUncheckedCreateWithoutQuestionsInput>
-}
-
-export type ExerciseUpsertWithoutQuestionsInput = {
-  update: Prisma.XOR<Prisma.ExerciseUpdateWithoutQuestionsInput, Prisma.ExerciseUncheckedUpdateWithoutQuestionsInput>
-  create: Prisma.XOR<Prisma.ExerciseCreateWithoutQuestionsInput, Prisma.ExerciseUncheckedCreateWithoutQuestionsInput>
-  where?: Prisma.ExerciseWhereInput
-}
-
-export type ExerciseUpdateToOneWithWhereWithoutQuestionsInput = {
-  where?: Prisma.ExerciseWhereInput
-  data: Prisma.XOR<Prisma.ExerciseUpdateWithoutQuestionsInput, Prisma.ExerciseUncheckedUpdateWithoutQuestionsInput>
-}
-
-export type ExerciseUpdateWithoutQuestionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  scope?: Prisma.EnumExerciseScopeFieldUpdateOperationsInput | $Enums.ExerciseScope
-  accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
-  adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
-  material?: Prisma.MaterialUpdateOneWithoutExercisesNestedInput
-  topic?: Prisma.TopicUpdateOneRequiredWithoutExercisesNestedInput
-  ExerciseAttempt?: Prisma.ExerciseAttemptUpdateManyWithoutExerciseNestedInput
-}
-
-export type ExerciseUncheckedUpdateWithoutQuestionsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  scope?: Prisma.EnumExerciseScopeFieldUpdateOperationsInput | $Enums.ExerciseScope
-  accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
-  adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  topicId?: Prisma.StringFieldUpdateOperationsInput | string
-  materialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
-  ExerciseAttempt?: Prisma.ExerciseAttemptUncheckedUpdateManyWithoutExerciseNestedInput
-}
-
-export type ExerciseCreateWithoutExerciseAttemptInput = {
-  id?: string
-  title: string
-  questionCount?: number | null
-  scope?: $Enums.ExerciseScope
-  accessLevel: $Enums.AccessLevel
-  adminNotes?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  status?: $Enums.TopicStatus
-  material?: Prisma.MaterialCreateNestedOneWithoutExercisesInput
-  topic: Prisma.TopicCreateNestedOneWithoutExercisesInput
-  questions?: Prisma.QuestionCreateNestedManyWithoutExerciseInput
-}
-
-export type ExerciseUncheckedCreateWithoutExerciseAttemptInput = {
-  id?: string
-  title: string
-  questionCount?: number | null
-  scope?: $Enums.ExerciseScope
-  accessLevel: $Enums.AccessLevel
-  adminNotes?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  topicId: string
-  materialId?: string | null
-  status?: $Enums.TopicStatus
-  questions?: Prisma.QuestionUncheckedCreateNestedManyWithoutExerciseInput
-}
-
-export type ExerciseCreateOrConnectWithoutExerciseAttemptInput = {
-  where: Prisma.ExerciseWhereUniqueInput
-  create: Prisma.XOR<Prisma.ExerciseCreateWithoutExerciseAttemptInput, Prisma.ExerciseUncheckedCreateWithoutExerciseAttemptInput>
-}
-
-export type ExerciseUpsertWithoutExerciseAttemptInput = {
-  update: Prisma.XOR<Prisma.ExerciseUpdateWithoutExerciseAttemptInput, Prisma.ExerciseUncheckedUpdateWithoutExerciseAttemptInput>
-  create: Prisma.XOR<Prisma.ExerciseCreateWithoutExerciseAttemptInput, Prisma.ExerciseUncheckedCreateWithoutExerciseAttemptInput>
-  where?: Prisma.ExerciseWhereInput
-}
-
-export type ExerciseUpdateToOneWithWhereWithoutExerciseAttemptInput = {
-  where?: Prisma.ExerciseWhereInput
-  data: Prisma.XOR<Prisma.ExerciseUpdateWithoutExerciseAttemptInput, Prisma.ExerciseUncheckedUpdateWithoutExerciseAttemptInput>
-}
-
-export type ExerciseUpdateWithoutExerciseAttemptInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  scope?: Prisma.EnumExerciseScopeFieldUpdateOperationsInput | $Enums.ExerciseScope
-  accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
-  adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
-  material?: Prisma.MaterialUpdateOneWithoutExercisesNestedInput
-  topic?: Prisma.TopicUpdateOneRequiredWithoutExercisesNestedInput
-  questions?: Prisma.QuestionUpdateManyWithoutExerciseNestedInput
-}
-
-export type ExerciseUncheckedUpdateWithoutExerciseAttemptInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  questionCount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  scope?: Prisma.EnumExerciseScopeFieldUpdateOperationsInput | $Enums.ExerciseScope
-  accessLevel?: Prisma.EnumAccessLevelFieldUpdateOperationsInput | $Enums.AccessLevel
-  adminNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  topicId?: Prisma.StringFieldUpdateOperationsInput | string
-  materialId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
-  questions?: Prisma.QuestionUncheckedUpdateManyWithoutExerciseNestedInput
 }
 
 export type ExerciseCreateManyTopicInput = {

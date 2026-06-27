@@ -559,6 +559,11 @@ export type QuestionUncheckedUpdateManyInput = {
   optionE?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
+export type QuestionScalarRelationFilter = {
+  is?: Prisma.QuestionWhereInput
+  isNot?: Prisma.QuestionWhereInput
+}
+
 export type QuestionListRelationFilter = {
   every?: Prisma.QuestionWhereInput
   some?: Prisma.QuestionWhereInput
@@ -644,9 +649,18 @@ export type QuestionSumOrderByAggregateInput = {
   points?: Prisma.SortOrder
 }
 
-export type QuestionScalarRelationFilter = {
-  is?: Prisma.QuestionWhereInput
-  isNot?: Prisma.QuestionWhereInput
+export type QuestionCreateNestedOneWithoutExerciseAttemptAnswerInput = {
+  create?: Prisma.XOR<Prisma.QuestionCreateWithoutExerciseAttemptAnswerInput, Prisma.QuestionUncheckedCreateWithoutExerciseAttemptAnswerInput>
+  connectOrCreate?: Prisma.QuestionCreateOrConnectWithoutExerciseAttemptAnswerInput
+  connect?: Prisma.QuestionWhereUniqueInput
+}
+
+export type QuestionUpdateOneRequiredWithoutExerciseAttemptAnswerNestedInput = {
+  create?: Prisma.XOR<Prisma.QuestionCreateWithoutExerciseAttemptAnswerInput, Prisma.QuestionUncheckedCreateWithoutExerciseAttemptAnswerInput>
+  connectOrCreate?: Prisma.QuestionCreateOrConnectWithoutExerciseAttemptAnswerInput
+  upsert?: Prisma.QuestionUpsertWithoutExerciseAttemptAnswerInput
+  connect?: Prisma.QuestionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.QuestionUpdateToOneWithWhereWithoutExerciseAttemptAnswerInput, Prisma.QuestionUpdateWithoutExerciseAttemptAnswerInput>, Prisma.QuestionUncheckedUpdateWithoutExerciseAttemptAnswerInput>
 }
 
 export type QuestionCreateNestedManyWithoutExerciseInput = {
@@ -697,117 +711,6 @@ export type EnumQuestionTypeFieldUpdateOperationsInput = {
 
 export type NullableEnumAnswerKeyFieldUpdateOperationsInput = {
   set?: $Enums.AnswerKey | null
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
-export type QuestionCreateNestedOneWithoutExerciseAttemptAnswerInput = {
-  create?: Prisma.XOR<Prisma.QuestionCreateWithoutExerciseAttemptAnswerInput, Prisma.QuestionUncheckedCreateWithoutExerciseAttemptAnswerInput>
-  connectOrCreate?: Prisma.QuestionCreateOrConnectWithoutExerciseAttemptAnswerInput
-  connect?: Prisma.QuestionWhereUniqueInput
-}
-
-export type QuestionUpdateOneRequiredWithoutExerciseAttemptAnswerNestedInput = {
-  create?: Prisma.XOR<Prisma.QuestionCreateWithoutExerciseAttemptAnswerInput, Prisma.QuestionUncheckedCreateWithoutExerciseAttemptAnswerInput>
-  connectOrCreate?: Prisma.QuestionCreateOrConnectWithoutExerciseAttemptAnswerInput
-  upsert?: Prisma.QuestionUpsertWithoutExerciseAttemptAnswerInput
-  connect?: Prisma.QuestionWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.QuestionUpdateToOneWithWhereWithoutExerciseAttemptAnswerInput, Prisma.QuestionUpdateWithoutExerciseAttemptAnswerInput>, Prisma.QuestionUncheckedUpdateWithoutExerciseAttemptAnswerInput>
-}
-
-export type QuestionCreateWithoutExerciseInput = {
-  id?: string
-  questionType?: $Enums.QuestionType
-  prompt: string
-  optionA?: string | null
-  optionB?: string | null
-  optionC?: string | null
-  optionD?: string | null
-  correctAnswer?: $Enums.AnswerKey | null
-  correctAnswers?: string | null
-  sampleAnswer?: string | null
-  explanation?: string | null
-  orderNumber: number
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  points?: number
-  optionE?: string | null
-  ExerciseAttemptAnswer?: Prisma.ExerciseAttemptAnswerCreateNestedManyWithoutQuestionInput
-}
-
-export type QuestionUncheckedCreateWithoutExerciseInput = {
-  id?: string
-  questionType?: $Enums.QuestionType
-  prompt: string
-  optionA?: string | null
-  optionB?: string | null
-  optionC?: string | null
-  optionD?: string | null
-  correctAnswer?: $Enums.AnswerKey | null
-  correctAnswers?: string | null
-  sampleAnswer?: string | null
-  explanation?: string | null
-  orderNumber: number
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  points?: number
-  optionE?: string | null
-  ExerciseAttemptAnswer?: Prisma.ExerciseAttemptAnswerUncheckedCreateNestedManyWithoutQuestionInput
-}
-
-export type QuestionCreateOrConnectWithoutExerciseInput = {
-  where: Prisma.QuestionWhereUniqueInput
-  create: Prisma.XOR<Prisma.QuestionCreateWithoutExerciseInput, Prisma.QuestionUncheckedCreateWithoutExerciseInput>
-}
-
-export type QuestionCreateManyExerciseInputEnvelope = {
-  data: Prisma.QuestionCreateManyExerciseInput | Prisma.QuestionCreateManyExerciseInput[]
-  skipDuplicates?: boolean
-}
-
-export type QuestionUpsertWithWhereUniqueWithoutExerciseInput = {
-  where: Prisma.QuestionWhereUniqueInput
-  update: Prisma.XOR<Prisma.QuestionUpdateWithoutExerciseInput, Prisma.QuestionUncheckedUpdateWithoutExerciseInput>
-  create: Prisma.XOR<Prisma.QuestionCreateWithoutExerciseInput, Prisma.QuestionUncheckedCreateWithoutExerciseInput>
-}
-
-export type QuestionUpdateWithWhereUniqueWithoutExerciseInput = {
-  where: Prisma.QuestionWhereUniqueInput
-  data: Prisma.XOR<Prisma.QuestionUpdateWithoutExerciseInput, Prisma.QuestionUncheckedUpdateWithoutExerciseInput>
-}
-
-export type QuestionUpdateManyWithWhereWithoutExerciseInput = {
-  where: Prisma.QuestionScalarWhereInput
-  data: Prisma.XOR<Prisma.QuestionUpdateManyMutationInput, Prisma.QuestionUncheckedUpdateManyWithoutExerciseInput>
-}
-
-export type QuestionScalarWhereInput = {
-  AND?: Prisma.QuestionScalarWhereInput | Prisma.QuestionScalarWhereInput[]
-  OR?: Prisma.QuestionScalarWhereInput[]
-  NOT?: Prisma.QuestionScalarWhereInput | Prisma.QuestionScalarWhereInput[]
-  id?: Prisma.StringFilter<"Question"> | string
-  questionType?: Prisma.EnumQuestionTypeFilter<"Question"> | $Enums.QuestionType
-  prompt?: Prisma.StringFilter<"Question"> | string
-  optionA?: Prisma.StringNullableFilter<"Question"> | string | null
-  optionB?: Prisma.StringNullableFilter<"Question"> | string | null
-  optionC?: Prisma.StringNullableFilter<"Question"> | string | null
-  optionD?: Prisma.StringNullableFilter<"Question"> | string | null
-  correctAnswer?: Prisma.EnumAnswerKeyNullableFilter<"Question"> | $Enums.AnswerKey | null
-  correctAnswers?: Prisma.StringNullableFilter<"Question"> | string | null
-  sampleAnswer?: Prisma.StringNullableFilter<"Question"> | string | null
-  explanation?: Prisma.StringNullableFilter<"Question"> | string | null
-  orderNumber?: Prisma.IntFilter<"Question"> | number
-  createdAt?: Prisma.DateTimeFilter<"Question"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Question"> | Date | string
-  exerciseId?: Prisma.StringFilter<"Question"> | string
-  points?: Prisma.IntFilter<"Question"> | number
-  optionE?: Prisma.StringNullableFilter<"Question"> | string | null
 }
 
 export type QuestionCreateWithoutExerciseAttemptAnswerInput = {
@@ -904,6 +807,95 @@ export type QuestionUncheckedUpdateWithoutExerciseAttemptAnswerInput = {
   exerciseId?: Prisma.StringFieldUpdateOperationsInput | string
   points?: Prisma.IntFieldUpdateOperationsInput | number
   optionE?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type QuestionCreateWithoutExerciseInput = {
+  id?: string
+  questionType?: $Enums.QuestionType
+  prompt: string
+  optionA?: string | null
+  optionB?: string | null
+  optionC?: string | null
+  optionD?: string | null
+  correctAnswer?: $Enums.AnswerKey | null
+  correctAnswers?: string | null
+  sampleAnswer?: string | null
+  explanation?: string | null
+  orderNumber: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  points?: number
+  optionE?: string | null
+  ExerciseAttemptAnswer?: Prisma.ExerciseAttemptAnswerCreateNestedManyWithoutQuestionInput
+}
+
+export type QuestionUncheckedCreateWithoutExerciseInput = {
+  id?: string
+  questionType?: $Enums.QuestionType
+  prompt: string
+  optionA?: string | null
+  optionB?: string | null
+  optionC?: string | null
+  optionD?: string | null
+  correctAnswer?: $Enums.AnswerKey | null
+  correctAnswers?: string | null
+  sampleAnswer?: string | null
+  explanation?: string | null
+  orderNumber: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  points?: number
+  optionE?: string | null
+  ExerciseAttemptAnswer?: Prisma.ExerciseAttemptAnswerUncheckedCreateNestedManyWithoutQuestionInput
+}
+
+export type QuestionCreateOrConnectWithoutExerciseInput = {
+  where: Prisma.QuestionWhereUniqueInput
+  create: Prisma.XOR<Prisma.QuestionCreateWithoutExerciseInput, Prisma.QuestionUncheckedCreateWithoutExerciseInput>
+}
+
+export type QuestionCreateManyExerciseInputEnvelope = {
+  data: Prisma.QuestionCreateManyExerciseInput | Prisma.QuestionCreateManyExerciseInput[]
+  skipDuplicates?: boolean
+}
+
+export type QuestionUpsertWithWhereUniqueWithoutExerciseInput = {
+  where: Prisma.QuestionWhereUniqueInput
+  update: Prisma.XOR<Prisma.QuestionUpdateWithoutExerciseInput, Prisma.QuestionUncheckedUpdateWithoutExerciseInput>
+  create: Prisma.XOR<Prisma.QuestionCreateWithoutExerciseInput, Prisma.QuestionUncheckedCreateWithoutExerciseInput>
+}
+
+export type QuestionUpdateWithWhereUniqueWithoutExerciseInput = {
+  where: Prisma.QuestionWhereUniqueInput
+  data: Prisma.XOR<Prisma.QuestionUpdateWithoutExerciseInput, Prisma.QuestionUncheckedUpdateWithoutExerciseInput>
+}
+
+export type QuestionUpdateManyWithWhereWithoutExerciseInput = {
+  where: Prisma.QuestionScalarWhereInput
+  data: Prisma.XOR<Prisma.QuestionUpdateManyMutationInput, Prisma.QuestionUncheckedUpdateManyWithoutExerciseInput>
+}
+
+export type QuestionScalarWhereInput = {
+  AND?: Prisma.QuestionScalarWhereInput | Prisma.QuestionScalarWhereInput[]
+  OR?: Prisma.QuestionScalarWhereInput[]
+  NOT?: Prisma.QuestionScalarWhereInput | Prisma.QuestionScalarWhereInput[]
+  id?: Prisma.StringFilter<"Question"> | string
+  questionType?: Prisma.EnumQuestionTypeFilter<"Question"> | $Enums.QuestionType
+  prompt?: Prisma.StringFilter<"Question"> | string
+  optionA?: Prisma.StringNullableFilter<"Question"> | string | null
+  optionB?: Prisma.StringNullableFilter<"Question"> | string | null
+  optionC?: Prisma.StringNullableFilter<"Question"> | string | null
+  optionD?: Prisma.StringNullableFilter<"Question"> | string | null
+  correctAnswer?: Prisma.EnumAnswerKeyNullableFilter<"Question"> | $Enums.AnswerKey | null
+  correctAnswers?: Prisma.StringNullableFilter<"Question"> | string | null
+  sampleAnswer?: Prisma.StringNullableFilter<"Question"> | string | null
+  explanation?: Prisma.StringNullableFilter<"Question"> | string | null
+  orderNumber?: Prisma.IntFilter<"Question"> | number
+  createdAt?: Prisma.DateTimeFilter<"Question"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Question"> | Date | string
+  exerciseId?: Prisma.StringFilter<"Question"> | string
+  points?: Prisma.IntFilter<"Question"> | number
+  optionE?: Prisma.StringNullableFilter<"Question"> | string | null
 }
 
 export type QuestionCreateManyExerciseInput = {

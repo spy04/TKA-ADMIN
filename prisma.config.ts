@@ -19,7 +19,7 @@ if (!process.env.DATABASE_URL && existsSync(localEnvPath)) {
 }
 
 export default defineConfig({
-  schema: "prisma/schema.prisma",
+  schema: "prisma",
   migrations: {
     path: "prisma/migrations",
   },

@@ -51,14 +51,14 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  Topic: 'Topic',
-  Material: 'Material',
-  Exercise: 'Exercise',
-  Question: 'Question',
   ExerciseAttempt: 'ExerciseAttempt',
   ExerciseAttemptAnswer: 'ExerciseAttemptAnswer',
   Session: 'Session',
-  User: 'User'
+  User: 'User',
+  Exercise: 'Exercise',
+  Question: 'Question',
+  Topic: 'Topic',
+  Material: 'Material'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -75,83 +75,6 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
-
-
-export const TopicScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  slug: 'slug',
-  category: 'category',
-  difficulty: 'difficulty',
-  summary: 'summary',
-  status: 'status',
-  previewMode: 'previewMode',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type TopicScalarFieldEnum = (typeof TopicScalarFieldEnum)[keyof typeof TopicScalarFieldEnum]
-
-
-export const MaterialScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  description: 'description',
-  type: 'type',
-  accessLevel: 'accessLevel',
-  fileName: 'fileName',
-  coverName: 'coverName',
-  filePath: 'filePath',
-  coverPath: 'coverPath',
-  fileUrl: 'fileUrl',
-  coverUrl: 'coverUrl',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  topicId: 'topicId',
-  status: 'status'
-} as const
-
-export type MaterialScalarFieldEnum = (typeof MaterialScalarFieldEnum)[keyof typeof MaterialScalarFieldEnum]
-
-
-export const ExerciseScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  questionCount: 'questionCount',
-  scope: 'scope',
-  accessLevel: 'accessLevel',
-  adminNotes: 'adminNotes',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  topicId: 'topicId',
-  materialId: 'materialId',
-  status: 'status'
-} as const
-
-export type ExerciseScalarFieldEnum = (typeof ExerciseScalarFieldEnum)[keyof typeof ExerciseScalarFieldEnum]
-
-
-export const QuestionScalarFieldEnum = {
-  id: 'id',
-  questionType: 'questionType',
-  prompt: 'prompt',
-  optionA: 'optionA',
-  optionB: 'optionB',
-  optionC: 'optionC',
-  optionD: 'optionD',
-  correctAnswer: 'correctAnswer',
-  correctAnswers: 'correctAnswers',
-  sampleAnswer: 'sampleAnswer',
-  explanation: 'explanation',
-  orderNumber: 'orderNumber',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  exerciseId: 'exerciseId',
-  points: 'points',
-  optionE: 'optionE'
-} as const
-
-export type QuestionScalarFieldEnum = (typeof QuestionScalarFieldEnum)[keyof typeof QuestionScalarFieldEnum]
 
 
 export const ExerciseAttemptScalarFieldEnum = {
@@ -212,6 +135,83 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const ExerciseScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  questionCount: 'questionCount',
+  scope: 'scope',
+  accessLevel: 'accessLevel',
+  adminNotes: 'adminNotes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  topicId: 'topicId',
+  materialId: 'materialId',
+  status: 'status'
+} as const
+
+export type ExerciseScalarFieldEnum = (typeof ExerciseScalarFieldEnum)[keyof typeof ExerciseScalarFieldEnum]
+
+
+export const QuestionScalarFieldEnum = {
+  id: 'id',
+  questionType: 'questionType',
+  prompt: 'prompt',
+  optionA: 'optionA',
+  optionB: 'optionB',
+  optionC: 'optionC',
+  optionD: 'optionD',
+  correctAnswer: 'correctAnswer',
+  correctAnswers: 'correctAnswers',
+  sampleAnswer: 'sampleAnswer',
+  explanation: 'explanation',
+  orderNumber: 'orderNumber',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  exerciseId: 'exerciseId',
+  points: 'points',
+  optionE: 'optionE'
+} as const
+
+export type QuestionScalarFieldEnum = (typeof QuestionScalarFieldEnum)[keyof typeof QuestionScalarFieldEnum]
+
+
+export const TopicScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  category: 'category',
+  difficulty: 'difficulty',
+  summary: 'summary',
+  status: 'status',
+  previewMode: 'previewMode',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TopicScalarFieldEnum = (typeof TopicScalarFieldEnum)[keyof typeof TopicScalarFieldEnum]
+
+
+export const MaterialScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  accessLevel: 'accessLevel',
+  fileName: 'fileName',
+  coverName: 'coverName',
+  filePath: 'filePath',
+  coverPath: 'coverPath',
+  fileUrl: 'fileUrl',
+  coverUrl: 'coverUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  topicId: 'topicId',
+  status: 'status'
+} as const
+
+export type MaterialScalarFieldEnum = (typeof MaterialScalarFieldEnum)[keyof typeof MaterialScalarFieldEnum]
 
 
 export const SortOrder = {

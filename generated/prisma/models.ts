@@ -8,12 +8,12 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/Topic'
-export type * from './models/Material'
-export type * from './models/Exercise'
-export type * from './models/Question'
 export type * from './models/ExerciseAttempt'
 export type * from './models/ExerciseAttemptAnswer'
 export type * from './models/Session'
 export type * from './models/User'
+export type * from './models/Exercise'
+export type * from './models/Question'
+export type * from './models/Topic'
+export type * from './models/Material'
 export type * from './commonInputTypes'

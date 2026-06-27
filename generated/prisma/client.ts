@@ -31,8 +31,8 @@ export * from "./enums"
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Topics
- * const topics = await prisma.topic.findMany()
+ * // Fetch zero or more ExerciseAttempts
+ * const exerciseAttempts = await prisma.exerciseAttempt.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -41,26 +41,6 @@ export const PrismaClient = $Class.getPrismaClientClass()
 export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts extends Prisma.PrismaClientOptions["omit"] = Prisma.PrismaClientOptions["omit"], ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
 export { Prisma }
 
-/**
- * Model Topic
- * 
- */
-export type Topic = Prisma.TopicModel
-/**
- * Model Material
- * 
- */
-export type Material = Prisma.MaterialModel
-/**
- * Model Exercise
- * 
- */
-export type Exercise = Prisma.ExerciseModel
-/**
- * Model Question
- * 
- */
-export type Question = Prisma.QuestionModel
 /**
  * Model ExerciseAttempt
  * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -81,3 +61,23 @@ export type Session = Prisma.SessionModel
  * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
  */
 export type User = Prisma.UserModel
+/**
+ * Model Exercise
+ * 
+ */
+export type Exercise = Prisma.ExerciseModel
+/**
+ * Model Question
+ * 
+ */
+export type Question = Prisma.QuestionModel
+/**
+ * Model Topic
+ * 
+ */
+export type Topic = Prisma.TopicModel
+/**
+ * Model Material
+ * 
+ */
+export type Material = Prisma.MaterialModel

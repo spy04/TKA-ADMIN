@@ -1,0 +1,38 @@
+model Topic {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String      @unique
+  category    String
+  difficulty  String
+  summary     String?
+  status      TopicStatus @default(DRAFT)
+  previewMode AccessLevel
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  exercises   Exercise[]
+  materials   Material[]
+
+  @@index([category])
+}
+
+model Material {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  type        MaterialType
+  accessLevel AccessLevel
+  fileName    String?
+  coverName   String?
+  filePath    String?
+  coverPath   String?
+  fileUrl     String?
+  coverUrl    String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  topicId     String
+  status      TopicStatus  @default(DRAFT)
+  exercises   Exercise[]
+  topic       Topic        @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@index([topicId])
+}

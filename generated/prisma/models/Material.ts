@@ -480,6 +480,11 @@ export type MaterialUncheckedUpdateManyInput = {
   status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
 }
 
+export type MaterialNullableScalarRelationFilter = {
+  is?: Prisma.MaterialWhereInput | null
+  isNot?: Prisma.MaterialWhereInput | null
+}
+
 export type MaterialListRelationFilter = {
   every?: Prisma.MaterialWhereInput
   some?: Prisma.MaterialWhereInput
@@ -544,9 +549,20 @@ export type MaterialMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
 }
 
-export type MaterialNullableScalarRelationFilter = {
-  is?: Prisma.MaterialWhereInput | null
-  isNot?: Prisma.MaterialWhereInput | null
+export type MaterialCreateNestedOneWithoutExercisesInput = {
+  create?: Prisma.XOR<Prisma.MaterialCreateWithoutExercisesInput, Prisma.MaterialUncheckedCreateWithoutExercisesInput>
+  connectOrCreate?: Prisma.MaterialCreateOrConnectWithoutExercisesInput
+  connect?: Prisma.MaterialWhereUniqueInput
+}
+
+export type MaterialUpdateOneWithoutExercisesNestedInput = {
+  create?: Prisma.XOR<Prisma.MaterialCreateWithoutExercisesInput, Prisma.MaterialUncheckedCreateWithoutExercisesInput>
+  connectOrCreate?: Prisma.MaterialCreateOrConnectWithoutExercisesInput
+  upsert?: Prisma.MaterialUpsertWithoutExercisesInput
+  disconnect?: Prisma.MaterialWhereInput | boolean
+  delete?: Prisma.MaterialWhereInput | boolean
+  connect?: Prisma.MaterialWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MaterialUpdateToOneWithWhereWithoutExercisesInput, Prisma.MaterialUpdateWithoutExercisesInput>, Prisma.MaterialUncheckedUpdateWithoutExercisesInput>
 }
 
 export type MaterialCreateNestedManyWithoutTopicInput = {
@@ -593,105 +609,6 @@ export type MaterialUncheckedUpdateManyWithoutTopicNestedInput = {
 
 export type EnumMaterialTypeFieldUpdateOperationsInput = {
   set?: $Enums.MaterialType
-}
-
-export type MaterialCreateNestedOneWithoutExercisesInput = {
-  create?: Prisma.XOR<Prisma.MaterialCreateWithoutExercisesInput, Prisma.MaterialUncheckedCreateWithoutExercisesInput>
-  connectOrCreate?: Prisma.MaterialCreateOrConnectWithoutExercisesInput
-  connect?: Prisma.MaterialWhereUniqueInput
-}
-
-export type MaterialUpdateOneWithoutExercisesNestedInput = {
-  create?: Prisma.XOR<Prisma.MaterialCreateWithoutExercisesInput, Prisma.MaterialUncheckedCreateWithoutExercisesInput>
-  connectOrCreate?: Prisma.MaterialCreateOrConnectWithoutExercisesInput
-  upsert?: Prisma.MaterialUpsertWithoutExercisesInput
-  disconnect?: Prisma.MaterialWhereInput | boolean
-  delete?: Prisma.MaterialWhereInput | boolean
-  connect?: Prisma.MaterialWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.MaterialUpdateToOneWithWhereWithoutExercisesInput, Prisma.MaterialUpdateWithoutExercisesInput>, Prisma.MaterialUncheckedUpdateWithoutExercisesInput>
-}
-
-export type MaterialCreateWithoutTopicInput = {
-  id?: string
-  title: string
-  description?: string | null
-  type: $Enums.MaterialType
-  accessLevel: $Enums.AccessLevel
-  fileName?: string | null
-  coverName?: string | null
-  filePath?: string | null
-  coverPath?: string | null
-  fileUrl?: string | null
-  coverUrl?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  status?: $Enums.TopicStatus
-  exercises?: Prisma.ExerciseCreateNestedManyWithoutMaterialInput
-}
-
-export type MaterialUncheckedCreateWithoutTopicInput = {
-  id?: string
-  title: string
-  description?: string | null
-  type: $Enums.MaterialType
-  accessLevel: $Enums.AccessLevel
-  fileName?: string | null
-  coverName?: string | null
-  filePath?: string | null
-  coverPath?: string | null
-  fileUrl?: string | null
-  coverUrl?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  status?: $Enums.TopicStatus
-  exercises?: Prisma.ExerciseUncheckedCreateNestedManyWithoutMaterialInput
-}
-
-export type MaterialCreateOrConnectWithoutTopicInput = {
-  where: Prisma.MaterialWhereUniqueInput
-  create: Prisma.XOR<Prisma.MaterialCreateWithoutTopicInput, Prisma.MaterialUncheckedCreateWithoutTopicInput>
-}
-
-export type MaterialCreateManyTopicInputEnvelope = {
-  data: Prisma.MaterialCreateManyTopicInput | Prisma.MaterialCreateManyTopicInput[]
-  skipDuplicates?: boolean
-}
-
-export type MaterialUpsertWithWhereUniqueWithoutTopicInput = {
-  where: Prisma.MaterialWhereUniqueInput
-  update: Prisma.XOR<Prisma.MaterialUpdateWithoutTopicInput, Prisma.MaterialUncheckedUpdateWithoutTopicInput>
-  create: Prisma.XOR<Prisma.MaterialCreateWithoutTopicInput, Prisma.MaterialUncheckedCreateWithoutTopicInput>
-}
-
-export type MaterialUpdateWithWhereUniqueWithoutTopicInput = {
-  where: Prisma.MaterialWhereUniqueInput
-  data: Prisma.XOR<Prisma.MaterialUpdateWithoutTopicInput, Prisma.MaterialUncheckedUpdateWithoutTopicInput>
-}
-
-export type MaterialUpdateManyWithWhereWithoutTopicInput = {
-  where: Prisma.MaterialScalarWhereInput
-  data: Prisma.XOR<Prisma.MaterialUpdateManyMutationInput, Prisma.MaterialUncheckedUpdateManyWithoutTopicInput>
-}
-
-export type MaterialScalarWhereInput = {
-  AND?: Prisma.MaterialScalarWhereInput | Prisma.MaterialScalarWhereInput[]
-  OR?: Prisma.MaterialScalarWhereInput[]
-  NOT?: Prisma.MaterialScalarWhereInput | Prisma.MaterialScalarWhereInput[]
-  id?: Prisma.StringFilter<"Material"> | string
-  title?: Prisma.StringFilter<"Material"> | string
-  description?: Prisma.StringNullableFilter<"Material"> | string | null
-  type?: Prisma.EnumMaterialTypeFilter<"Material"> | $Enums.MaterialType
-  accessLevel?: Prisma.EnumAccessLevelFilter<"Material"> | $Enums.AccessLevel
-  fileName?: Prisma.StringNullableFilter<"Material"> | string | null
-  coverName?: Prisma.StringNullableFilter<"Material"> | string | null
-  filePath?: Prisma.StringNullableFilter<"Material"> | string | null
-  coverPath?: Prisma.StringNullableFilter<"Material"> | string | null
-  fileUrl?: Prisma.StringNullableFilter<"Material"> | string | null
-  coverUrl?: Prisma.StringNullableFilter<"Material"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Material"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Material"> | Date | string
-  topicId?: Prisma.StringFilter<"Material"> | string
-  status?: Prisma.EnumTopicStatusFilter<"Material"> | $Enums.TopicStatus
 }
 
 export type MaterialCreateWithoutExercisesInput = {
@@ -780,6 +697,89 @@ export type MaterialUncheckedUpdateWithoutExercisesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   topicId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumTopicStatusFieldUpdateOperationsInput | $Enums.TopicStatus
+}
+
+export type MaterialCreateWithoutTopicInput = {
+  id?: string
+  title: string
+  description?: string | null
+  type: $Enums.MaterialType
+  accessLevel: $Enums.AccessLevel
+  fileName?: string | null
+  coverName?: string | null
+  filePath?: string | null
+  coverPath?: string | null
+  fileUrl?: string | null
+  coverUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  status?: $Enums.TopicStatus
+  exercises?: Prisma.ExerciseCreateNestedManyWithoutMaterialInput
+}
+
+export type MaterialUncheckedCreateWithoutTopicInput = {
+  id?: string
+  title: string
+  description?: string | null
+  type: $Enums.MaterialType
+  accessLevel: $Enums.AccessLevel
+  fileName?: string | null
+  coverName?: string | null
+  filePath?: string | null
+  coverPath?: string | null
+  fileUrl?: string | null
+  coverUrl?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  status?: $Enums.TopicStatus
+  exercises?: Prisma.ExerciseUncheckedCreateNestedManyWithoutMaterialInput
+}
+
+export type MaterialCreateOrConnectWithoutTopicInput = {
+  where: Prisma.MaterialWhereUniqueInput
+  create: Prisma.XOR<Prisma.MaterialCreateWithoutTopicInput, Prisma.MaterialUncheckedCreateWithoutTopicInput>
+}
+
+export type MaterialCreateManyTopicInputEnvelope = {
+  data: Prisma.MaterialCreateManyTopicInput | Prisma.MaterialCreateManyTopicInput[]
+  skipDuplicates?: boolean
+}
+
+export type MaterialUpsertWithWhereUniqueWithoutTopicInput = {
+  where: Prisma.MaterialWhereUniqueInput
+  update: Prisma.XOR<Prisma.MaterialUpdateWithoutTopicInput, Prisma.MaterialUncheckedUpdateWithoutTopicInput>
+  create: Prisma.XOR<Prisma.MaterialCreateWithoutTopicInput, Prisma.MaterialUncheckedCreateWithoutTopicInput>
+}
+
+export type MaterialUpdateWithWhereUniqueWithoutTopicInput = {
+  where: Prisma.MaterialWhereUniqueInput
+  data: Prisma.XOR<Prisma.MaterialUpdateWithoutTopicInput, Prisma.MaterialUncheckedUpdateWithoutTopicInput>
+}
+
+export type MaterialUpdateManyWithWhereWithoutTopicInput = {
+  where: Prisma.MaterialScalarWhereInput
+  data: Prisma.XOR<Prisma.MaterialUpdateManyMutationInput, Prisma.MaterialUncheckedUpdateManyWithoutTopicInput>
+}
+
+export type MaterialScalarWhereInput = {
+  AND?: Prisma.MaterialScalarWhereInput | Prisma.MaterialScalarWhereInput[]
+  OR?: Prisma.MaterialScalarWhereInput[]
+  NOT?: Prisma.MaterialScalarWhereInput | Prisma.MaterialScalarWhereInput[]
+  id?: Prisma.StringFilter<"Material"> | string
+  title?: Prisma.StringFilter<"Material"> | string
+  description?: Prisma.StringNullableFilter<"Material"> | string | null
+  type?: Prisma.EnumMaterialTypeFilter<"Material"> | $Enums.MaterialType
+  accessLevel?: Prisma.EnumAccessLevelFilter<"Material"> | $Enums.AccessLevel
+  fileName?: Prisma.StringNullableFilter<"Material"> | string | null
+  coverName?: Prisma.StringNullableFilter<"Material"> | string | null
+  filePath?: Prisma.StringNullableFilter<"Material"> | string | null
+  coverPath?: Prisma.StringNullableFilter<"Material"> | string | null
+  fileUrl?: Prisma.StringNullableFilter<"Material"> | string | null
+  coverUrl?: Prisma.StringNullableFilter<"Material"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Material"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Material"> | Date | string
+  topicId?: Prisma.StringFilter<"Material"> | string
+  status?: Prisma.EnumTopicStatusFilter<"Material"> | $Enums.TopicStatus
 }
 
 export type MaterialCreateManyTopicInput = {

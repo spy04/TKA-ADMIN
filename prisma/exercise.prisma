@@ -1,0 +1,45 @@
+model Exercise {
+  id              String            @id @default(cuid())
+  title           String
+  questionCount   Int?
+  scope           ExerciseScope     @default(TOPIC)
+  accessLevel     AccessLevel
+  adminNotes      String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  topicId         String
+  materialId      String?
+  status          TopicStatus       @default(DRAFT)
+  material        Material?         @relation(fields: [materialId], references: [id])
+  topic           Topic             @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  ExerciseAttempt ExerciseAttempt[]
+  questions       Question[]
+
+  @@index([topicId])
+  @@index([materialId])
+}
+
+model Question {
+  id                    String                  @id @default(cuid())
+  questionType          QuestionType            @default(SINGLE_CHOICE)
+  prompt                String
+  optionA               String?
+  optionB               String?
+  optionC               String?
+  optionD               String?
+  correctAnswer         AnswerKey?
+  correctAnswers        String?
+  sampleAnswer          String?
+  explanation           String?
+  orderNumber           Int
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  exerciseId            String
+  points                Int                     @default(10)
+  optionE               String?
+  ExerciseAttemptAnswer ExerciseAttemptAnswer[]
+  exercise              Exercise                @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@unique([exerciseId, orderNumber])
+  @@index([exerciseId])
+}

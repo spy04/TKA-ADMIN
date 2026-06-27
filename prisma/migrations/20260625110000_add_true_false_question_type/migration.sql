@@ -1,2 +1,0 @@
--- AlterEnum
-ALTER TYPE "QuestionType" ADD VALUE IF NOT EXISTS 'TRUE_FALSE';

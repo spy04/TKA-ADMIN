@@ -1,4 +1,0 @@
-ALTER TYPE "AnswerKey" ADD VALUE IF NOT EXISTS 'E';
-
-ALTER TABLE "Question"
-ADD COLUMN "optionE" TEXT NULL;

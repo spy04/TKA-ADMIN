@@ -1,0 +1,41 @@
+enum TopicStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum AccessLevel {
+  PREVIEW
+  ENROLLED
+}
+
+enum MaterialType {
+  VIDEO
+  PDF
+  SLIDE
+  DOCUMENT
+}
+
+enum AnswerKey {
+  A
+  B
+  C
+  D
+  E
+}
+
+enum QuestionType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  ESSAY
+}
+
+enum ExerciseScope {
+  CATEGORY
+  TOPIC
+}
+
+enum UserRole {
+  ADMIN
+  STUDENT
+}
